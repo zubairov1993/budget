@@ -1,0 +1,76 @@
+<button tuiButton type="button" size="m" (click)="forEntirePeriod()">
+  За весь период
+</button>
+
+<div class="calendars">
+  <tui-calendar
+      [value]="date"
+      [showAdjacent]="false"
+      [maxViewedMonth]="firstMonth"
+      [month]="firstMonth"
+      [(hoveredItem)]="hoveredItem"
+      (monthChange)="onMonthChangeFirst($event)"
+      (dayClick)="onDayClick($event)"
+  ></tui-calendar>
+  <tui-calendar
+      [value]="date"
+      [showAdjacent]="false"
+      [month]="middleMonth"
+      [minViewedMonth]="middleMonth"
+      [maxViewedMonth]="middleMonth"
+      [(hoveredItem)]="hoveredItem"
+      (monthChange)="onMonthChangeMiddle($event)"
+      (dayClick)="onDayClick($event)"
+  ></tui-calendar>
+  <tui-calendar
+      [value]="date"
+      [showAdjacent]="false"
+      [minViewedMonth]="lastMonth"
+      [month]="lastMonth"
+      [(hoveredItem)]="hoveredItem"
+      (monthChange)="onMonthChangeLast($event)"
+      (dayClick)="onDayClick($event)"
+  ></tui-calendar>
+</div>
+
+<div class="charts">
+  <div class="charts__chart">
+
+    <tui-ring-chart [size]="'xl'" [value]="totalsKZ$.value" [(activeItemIndex)]="activeIndexKZ">
+      <div>Общее {{ sumArrayValues(totalsKZ$.value) }} &#8376;</div>
+    </tui-ring-chart>
+
+    <div class="charts__chart_legend">
+      <tui-legend-item class="charts__chart_legend-item"
+        *ngFor="let label of sharedService.catogories; let index = index"
+        size="s"
+        [color]="getColor(index)"
+        [text]="label"
+        [active]="isItemActiveKZ(index)"
+        (tuiHoveredChange)="onHoverKZ(index, $event)">
+        <div>{{ totalsKZ$.value[index] }} &#8376;</div>
+      </tui-legend-item>
+    </div>
+
+  </div>
+
+  <div class="charts__chart">
+
+    <tui-ring-chart [size]="'xl'" [value]="totalsRU$.value" [(activeItemIndex)]="activeIndexRU">
+      <div>Общее {{ sumArrayValues(totalsRU$.value) }} &#8381;</div>
+    </tui-ring-chart>
+
+    <div class="charts__chart_legend">
+      <tui-legend-item class="charts__chart_legend-item"
+        *ngFor="let label of sharedService.catogories; let index = index"
+        size="s"
+        [color]="getColor(index)"
+        [text]="label"
+        [active]="isItemActiveRU(index)"
+        (tuiHoveredChange)="onHoverRU(index, $event)">
+        <div>{{ totalsRU$.value[index] }} &#8381;</div>
+      </tui-legend-item>
+    </div>
+
+  </div>
+</div>

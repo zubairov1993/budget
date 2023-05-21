@@ -1,0 +1,38 @@
+.add_product {
+
+  &__checkbox {
+    width: 100%;
+    margin-bottom: 10px;
+
+    &_tooltip {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  &__fields {
+    display: flex;
+    margin-bottom: 10px;
+
+    &_item {
+      width: 100%;
+
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  &__btns {
+    button {
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+::ng-deep [tuioption]:focus {
+  background-color: red !important;
+}
+

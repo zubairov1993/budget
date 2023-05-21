@@ -1,0 +1,17 @@
+::ng-deep.months {
+
+  &__container {
+    margin-bottom: 10px;
+
+    &_header {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  ._expanded {
+    height: 73vh !important;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+}

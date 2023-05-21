@@ -1,0 +1,41 @@
+.table {
+  width: 100%;
+
+  th:last-child {
+    width: 80px;
+  }
+}
+
+::ng-deep.days {
+
+  &__container {
+    margin-bottom: 10px;
+
+    &_header {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  ._expanded {
+    height: auto !important;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__btns {
+    margin-top: 20px;
+
+    button {
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+}

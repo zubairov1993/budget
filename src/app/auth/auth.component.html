@@ -1,0 +1,25 @@
+<form class="b-form auth" [formGroup]="loginForm">
+  <div class="auth__wrapper">
+    <p>
+      <tui-input tuiTextfieldSize="s" formControlName="email">
+        Email
+        <input tuiTextfield type="email" />
+      </tui-input>
+    </p>
+    <p>
+      <tui-input tuiTextfieldSize="s" formControlName="password">
+        Password
+        <input tuiTextfield type="password" />
+      </tui-input>
+    </p>
+    <button
+      (click)="onSubmit()"
+      tuiButton
+      type="button"
+      appearance="primary"
+      class="tui-space_right-3 tui-space_bottom-3"
+      [disabled]="loginForm.invalid || isSubmitted">
+      Login
+    </button>
+  </div>
+</form>

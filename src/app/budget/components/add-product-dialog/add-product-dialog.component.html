@@ -1,0 +1,52 @@
+<form class="add_product" [formGroup]="form">
+  <div>
+    <tui-checkbox-block
+      class="add_product__checkbox"
+      formControlName="yesterday"
+      contentAlign="left"
+      nativeId="example3"
+      size="l">
+      <div class="add_product__checkbox_tooltip">
+        Добавить за вчерашний день
+        <tui-tooltip describeId="example3" content="если вы выберите данный пункт данные добавятся за вчерашний день"></tui-tooltip>
+      </div>
+    </tui-checkbox-block>
+  </div>
+
+  <div class="add_product__fields">
+    <tui-input class="add_product__fields_item" formControlName="name">
+      Введите название продукта
+      <tui-data-list-wrapper
+        *tuiDataList
+        emptyContent="No results found"
+        size="xs"
+        [items]="getNamesPopular() | tuiFilterByInput"
+      ></tui-data-list-wrapper>
+    </tui-input>
+
+    <tui-select class="add_product__fields_item" formControlName="category">
+      Выберите категорию продукта
+      <input tuiTextfield />
+      <tui-data-list-wrapper *tuiDataList [items]="sharedService.catogories"></tui-data-list-wrapper>
+    </tui-select>
+  </div>
+
+  <div class="add_product__fields">
+    <tui-input-number class="add_product__fields_item" decimal="never" formControlName="priceT">
+      Цена в Тенге &#8376;
+    </tui-input-number>
+
+    <tui-input-number class="add_product__fields_item" decimal="never" formControlName="priceRu">
+      Цена в Рублях &#8381;
+    </tui-input-number>
+  </div>
+
+  <div class="add_product__btns">
+    <button tuiButton type="button" appearance="accent" size="m" (click)="submit()">
+      готово
+    </button>
+    <button tuiButton type="button" appearance="outline" size="m" (click)="clear()">
+      очистить
+    </button>
+  </div>
+</form>

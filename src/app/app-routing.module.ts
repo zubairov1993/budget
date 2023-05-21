@@ -1,7 +1,31 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
 
-const routes: Routes = [];
+import { AuthGuard } from './shared/auth.guard'
+
+const routes: Routes = [
+  {
+    path: '',
+    children: [
+      {
+        path: 'auth',
+        loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+        data: { idx: 1 }
+      },
+      {
+        path: 'list',
+        canActivate: [AuthGuard],
+        loadChildren: () => import('./budget/budget.module').then(m => m.BudgetModule),
+      },
+      {
+        path: 'chart',
+        canActivate: [AuthGuard],
+        loadChildren: () => import('./chart/chart.module').then(m => m.ChartModule),
+      },
+      { path: '**', redirectTo: '/list' }
+    ]
+  }
+]
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

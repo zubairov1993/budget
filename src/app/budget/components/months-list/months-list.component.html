@@ -1,0 +1,18 @@
+<div class="months" *ngFor="let month of months | slice:-2">
+  <tui-accordion class="months__container">
+    <tui-accordion-item [open]="isCurrentMonth(month.month)">
+      <div class="months__container_header">
+        <div>{{ getMonthNameByIndex(month.month - 1) }} месяц</div>
+        <div>
+          <b>потрачено за месяц:</b>
+          тенге - {{ month.totalPriceMonth }} &#8376;,
+          рублей - {{ budgetService.convertToRub(month.totalPriceMonth) }} &#8381;
+        </div>
+      </div>
+      <ng-template tuiAccordionItemContent>
+        <app-days-list [yearId]="yearId" [monthId]="month.id!" [days]="month.days"></app-days-list>
+      </ng-template>
+
+    </tui-accordion-item>
+  </tui-accordion>
+</div>
