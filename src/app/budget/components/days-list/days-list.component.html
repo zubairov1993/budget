@@ -8,8 +8,9 @@
 
         <div>
           <b>потрачено за день:</b>
-          тенге - {{ day.totalPriceDay }} &#8376;,
-          рублей - {{ budgetService.convertToRub(day.totalPriceDay) }} &#8381;
+
+          тенге - {{ day.totalPriceDay | isShowPrice }} &#8376;,
+          рублей - {{ budgetService.convertToRub(day.totalPriceDay) | isShowPrice }} &#8381;
         </div>
       </div>
 
@@ -43,10 +44,10 @@
                 {{ item.category }}
               </td>
               <td *tuiCell="'priceT'" tuiTd>
-                {{ item.priceT }} &#8376;
+                {{ item.priceT | isShowPrice }} &#8376;
               </td>
               <td *tuiCell="'priceRu'" tuiTd>
-                {{ item.priceRu }} &#8381;
+                {{ item.priceRu | isShowPrice }} &#8381;
               </td>
               <td *tuiCell="'other'" tuiTd>
 

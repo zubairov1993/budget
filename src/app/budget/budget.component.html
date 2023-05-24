@@ -15,8 +15,8 @@
 
             <div>
               <b>потрачено за год:</b>
-              тенге - {{ year.totalPriceYear }} &#8376;,
-              рублей - {{ budgetService.convertToRub(year.totalPriceYear) }} &#8381;
+              тенге - {{ year.totalPriceYear | isShowPrice }} &#8376;,
+              рублей - {{ budgetService.convertToRub(year.totalPriceYear) | isShowPrice }} &#8381;
             </div>
           </div>
           <ng-template tuiAccordionItemContent>

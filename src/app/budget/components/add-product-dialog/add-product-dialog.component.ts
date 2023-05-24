@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core'
 import { TuiDialogContext } from '@taiga-ui/core'
-import { FormGroup, FormBuilder } from '@angular/forms'
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus'
 import { Router } from '@angular/router'
 
@@ -18,10 +18,10 @@ import { IYearData, IMonthData, IDayData, IItemData } from '../../interfaces/bud
 export class AddProductDialogComponent implements OnInit {
   years: IYearData[] = []
   form: FormGroup = this.formBuilder.group({
-    name: [null],
-    category: [null],
-    priceT: [null],
-    priceRu: [null],
+    name: [null, [ Validators.required ]],
+    category: [null, [ Validators.required ]],
+    priceT: [null, [ Validators.required ]],
+    priceRu: [null, [ Validators.required ]],
     yesterday: [null],
   })
 

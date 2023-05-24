@@ -28,12 +28,11 @@ export class ChartComponent implements OnInit {
     public sharedService: SharedService,
     public chartService: ChartService,
     public cdr: ChangeDetectorRef,
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this.forEntirePeriod()
+    this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
   }
 
   forEntirePeriod() {

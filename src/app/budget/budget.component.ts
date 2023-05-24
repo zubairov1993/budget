@@ -48,6 +48,8 @@ export class BudgetComponent implements OnInit {
       console.log('this.years', this.years)
       this.cdr.detectChanges()
     })
+
+    this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
   }
 
   showDialog() {

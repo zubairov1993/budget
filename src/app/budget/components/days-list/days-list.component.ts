@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core'
+import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 
 import { BudgetService } from '../../services/budget.service'
@@ -12,7 +12,7 @@ import { IDayData } from '../../interfaces/budget.interface'
   styleUrls: ['./days-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DaysListComponent {
+export class DaysListComponent implements OnInit {
   open = false
 
   @Input() yearId: string | null = null
@@ -26,6 +26,10 @@ export class DaysListComponent {
     private cdr: ChangeDetectorRef,
     private router: Router,
   ) {}
+
+  ngOnInit() {
+    this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
+  }
 
   scrollToElement() {
     const today = new Date()

@@ -1,6 +1,7 @@
-import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core'
+import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit } from '@angular/core'
 
 import { BudgetService } from '../../services/budget.service'
+import { SharedService } from '../../../shared/services/shared.service'
 
 import { IMonthData } from '../../interfaces/budget.interface'
 
@@ -11,15 +12,19 @@ import { IMonthData } from '../../interfaces/budget.interface'
   styleUrls: ['./months-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MonthsListComponent {
+export class MonthsListComponent implements OnInit {
   @Input() yearId: string | null = null
   @Input() months: IMonthData[] = []
 
   constructor(
     public budgetService: BudgetService,
+    public sharedService: SharedService,
     private cdr: ChangeDetectorRef
   ) {}
 
+  ngOnInit() {
+    this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
+  }
 
   isCurrentMonth(month: number): boolean {
     const currentDate: Date = new Date()

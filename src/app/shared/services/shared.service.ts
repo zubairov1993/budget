@@ -9,6 +9,7 @@ import { IYearData, IMonthData, IDayData, IItemData } from '../../budget/interfa
 @Injectable({ providedIn: "root" })
 
 export class SharedService {
+  showPrice$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
   dataItems$: BehaviorSubject<IYearData[]> = new BehaviorSubject<IYearData[]>([])
   popularItems$: BehaviorSubject<IItemData[]> = new BehaviorSubject<IItemData[]>([])
   catogories = [

@@ -9,6 +9,11 @@
     <button [routerLink]="['/chart']" tuiButton type="button" size="m">
       Диаграма
     </button>
+    <button tuiButton type="button" size="m" (click)="toggleShowPrice()">
+      <span *ngIf="!sharedService.showPrice$.value">Показать</span>
+      <span *ngIf="sharedService.showPrice$.value">Скрыть</span>
+       цену
+    </button>
   </div>
   <router-outlet></router-outlet>
 

@@ -1,11 +1,6 @@
 <form class="add_product" [formGroup]="form">
   <div>
-    <tui-checkbox-block
-      class="add_product__checkbox"
-      formControlName="yesterday"
-      contentAlign="left"
-      nativeId="example3"
-      size="l">
+    <tui-checkbox-block class="add_product__checkbox" formControlName="yesterday" contentAlign="left" nativeId="example3" size="l">
       <div class="add_product__checkbox_tooltip">
         Добавить за вчерашний день
         <tui-tooltip describeId="example3" content="если вы выберите данный пункт данные добавятся за вчерашний день"></tui-tooltip>
@@ -16,12 +11,7 @@
   <div class="add_product__fields">
     <tui-input class="add_product__fields_item" formControlName="name">
       Введите название продукта
-      <tui-data-list-wrapper
-        *tuiDataList
-        emptyContent="No results found"
-        size="xs"
-        [items]="getNamesPopular() | tuiFilterByInput"
-      ></tui-data-list-wrapper>
+      <tui-data-list-wrapper *tuiDataList emptyContent="No results found" size="xs" [items]="getNamesPopular() | tuiFilterByInput"></tui-data-list-wrapper>
     </tui-input>
 
     <tui-select class="add_product__fields_item" formControlName="category">
@@ -42,11 +32,20 @@
   </div>
 
   <div class="add_product__btns">
-    <button tuiButton type="button" appearance="accent" size="m" (click)="submit()">
-      готово
-    </button>
-    <button tuiButton type="button" appearance="outline" size="m" (click)="clear()">
-      очистить
-    </button>
+    <div [tuiHint]="tooltip" tuiHintAppearance="onDark" tuiHintDirection="left">
+      <button tuiButton type="button" [disabled]="form.invalid" appearance="accent" size="m" (click)="submit()">
+        готово
+      </button>
+
+      <ng-template #tooltip>
+        <span></span>
+        Заполните все поля формы
+      </ng-template>
+    </div>
+    <div>
+      <button tuiButton type="button" appearance="outline" size="m" (click)="clear()">
+        очистить
+      </button>
+    </div>
   </div>
 </form>
