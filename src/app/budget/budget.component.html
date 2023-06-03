@@ -1,32 +1,14 @@
-<div class="budget">
+<div>
+  <button tuiButton type="button" size="m" (click)="showDialog()">
+    Добавить
+  </button>
 
-  <div class="budget__header">
-    <button tuiButton type="button" size="m" (click)="showDialog()">
-      Добавить
-    </button>
-  </div>
+  <app-years-list #YearsListComponent></app-years-list>
 
-  <div *ngIf="years.length !== 0">
-    <div *ngFor="let year of years">
-      <tui-accordion class="budget__container">
-        <tui-accordion-item [open]="isCurrentYear(year.year)">
-          <div class="budget__container_header">
-            <div>{{ year.year }} год</div>
-
-            <div>
-              <b>потрачено за год:</b>
-              тенге - {{ year.totalPriceYear | isShowPrice }} &#8376;,
-              рублей - {{ budgetService.convertToRub(year.totalPriceYear) | isShowPrice }} &#8381;
-            </div>
-          </div>
-          <ng-template tuiAccordionItemContent>
-            <app-months-list [yearId]="year.id!" [months]="year.months">
-            </app-months-list>
-          </ng-template>
-
-        </tui-accordion-item>
-      </tui-accordion>
-    </div>
-
-  </div>
+  <!-- <button
+  tuiButton
+  icon="tuiIconPlusLarge"
+  type="button"
+  class="action">
+</button> -->
 </div>

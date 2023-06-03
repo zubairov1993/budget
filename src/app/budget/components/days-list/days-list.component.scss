@@ -2,7 +2,14 @@
   width: 100%;
 
   th:last-child {
-    width: 80px;
+    width: 150px;
+  }
+
+  td:last-child {
+
+    button:first-child {
+      margin-right: 10px;
+    }
   }
 }
 
@@ -15,12 +22,6 @@
       display: flex;
       justify-content: space-between;
     }
-  }
-
-  ._expanded {
-    height: auto !important;
-    overflow-x: hidden;
-    overflow-y: scroll;
   }
 }
 

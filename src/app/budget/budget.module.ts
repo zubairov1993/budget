@@ -10,11 +10,12 @@ import { BudgetService } from './services/budget.service'
 import { BudgetComponent } from './budget.component'
 import { AddProductDialogComponent } from './components/add-product-dialog/add-product-dialog.component'
 import { MonthsListComponent } from './components/months-list/months-list.component'
-import { DaysListComponent } from './components/days-list/days-list.component'
+import { DaysListComponent } from './components/days-list/days-list.component';
+import { YearsListComponent } from './components/years-list/years-list.component'
 
 
 @NgModule({
-  declarations: [ BudgetComponent, AddProductDialogComponent, MonthsListComponent, DaysListComponent ],
+  declarations: [ BudgetComponent, AddProductDialogComponent, MonthsListComponent, DaysListComponent, YearsListComponent ],
   imports: [
     CommonModule,
     SharedModule,

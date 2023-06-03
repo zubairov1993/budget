@@ -1,18 +1,5 @@
-::ng-deep.budget {
-
-  &__container {
-    margin-top: 10px;
-
-    &_header {
-      display: flex;
-      justify-content: space-between;
-    }
-  }
-
-  ._expanded {
-    height: 87vh !important;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    position: relative;
-  }
+.action {
+  position: fixed;
+  bottom: 0;
+  right: 0;
 }

@@ -15,6 +15,7 @@ import { IMonthData } from '../../interfaces/budget.interface'
 export class MonthsListComponent implements OnInit {
   @Input() yearId: string | null = null
   @Input() months: IMonthData[] = []
+  @Input() numberOfMonths: number = -2
 
   constructor(
     public budgetService: BudgetService,
@@ -24,6 +25,12 @@ export class MonthsListComponent implements OnInit {
 
   ngOnInit() {
     this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
+  }
+
+  changeNumberOfDays(event: any, month: IMonthData) {
+    event.stopPropagation()
+    if (month.numberOfDays === -month.days.length) month.numberOfDays = -2
+    else month.numberOfDays = -month.days.length
   }
 
   isCurrentMonth(month: number): boolean {

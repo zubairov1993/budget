@@ -1,4 +1,4 @@
-<div class="days" *ngFor="let day of days | slice:-2">
+<div class="days" *ngFor="let day of days | slice:numberOfDays">
   <tui-accordion class="days__container">
     <tui-accordion-item [open]="isCurrentDay(day.day)">
       <div class="days__container_header">
@@ -50,6 +50,13 @@
                 {{ item.priceRu | isShowPrice }} &#8381;
               </td>
               <td *tuiCell="'other'" tuiTd>
+
+                <!-- <button
+                  tuiIconButton
+                  type="button"
+                  icon="tuiIconEdit2Large"
+                  (click)="showDialog()"
+                ></button> -->
 
                 <button
                   tuiIconButton

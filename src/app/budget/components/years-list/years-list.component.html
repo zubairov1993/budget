@@ -1,0 +1,32 @@
+<div class="years" *ngIf="years.length !== 0">
+  <div *ngFor="let year of years">
+    <tui-accordion class="years__container">
+      <tui-accordion-item [open]="isCurrentYear(year.year)">
+        <div class="years__container_header">
+          <div>{{ year.year }} год</div>
+
+          <div class="years__container_header-right">
+
+            <button tuiButton type="button" size="s" *ngIf="year.months.length > 2">
+              <span *ngIf="year.numberOfMonths === -year.months.length" (click)="changeNumberOfMonths($event, year)">Показать последние 2 месяца</span>
+              <span *ngIf="year.numberOfMonths === -2" (click)="changeNumberOfMonths($event, year)">Показать все месяцы</span>
+            </button>
+
+            <div>
+              <b>потрачено за год:</b>
+              тенге - {{ year.totalPriceYear | isShowPrice }} &#8376;,
+              рублей - {{ budgetService.convertToRub(year.totalPriceYear) | isShowPrice }} &#8381;
+            </div>
+          </div>
+        </div>
+
+        <ng-template tuiAccordionItemContent>
+          <app-months-list [yearId]="year.id!" [months]="year.months" [numberOfMonths]="year.numberOfMonths!">
+          </app-months-list>
+        </ng-template>
+
+      </tui-accordion-item>
+    </tui-accordion>
+  </div>
+
+</div>

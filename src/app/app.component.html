@@ -1,8 +1,5 @@
 <tui-root>
   <div class="header">
-    <button [routerLink]="['/auth']" routerLinkActive="router-link-active"  tuiButton type="button" size="m">
-      Войти
-    </button>
     <button [routerLink]="['/list']" routerLinkActive="router-link-active"  tuiButton type="button" size="m">
       Список
     </button>
@@ -10,9 +7,8 @@
       Диаграма
     </button>
     <button tuiButton type="button" size="m" (click)="toggleShowPrice()">
-      <span *ngIf="!sharedService.showPrice$.value">Показать</span>
-      <span *ngIf="sharedService.showPrice$.value">Скрыть</span>
-       цену
+      <span *ngIf="!sharedService.showPrice$.value">Показать цену</span>
+      <span *ngIf="sharedService.showPrice$.value">Скрыть цену</span>
     </button>
   </div>
   <router-outlet></router-outlet>

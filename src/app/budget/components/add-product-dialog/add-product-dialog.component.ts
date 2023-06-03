@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core'
 import { TuiDialogContext } from '@taiga-ui/core'
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus'
 import { Router } from '@angular/router'
 
@@ -32,6 +32,7 @@ export class AddProductDialogComponent implements OnInit {
     private router: Router,
     @Inject(POLYMORPHEUS_CONTEXT) private readonly context: TuiDialogContext<number, number>,
   ) {
+
     this.form.controls['name'].valueChanges.subscribe(data => {
       if (this.getCategory(data)) {
         this.form.controls['category'].setValue(this.getCategory(data).category)

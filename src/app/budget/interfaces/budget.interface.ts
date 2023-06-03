@@ -2,6 +2,7 @@ export interface IYearData {
   id?: string
   year: number
   totalPriceYear: number | null
+  numberOfMonths?: number
   months: IMonthData[]
 }
 
@@ -9,6 +10,7 @@ export interface IMonthData {
   id?: string
   month: number
   totalPriceMonth: number | null
+  numberOfDays?: number
   days: IDayData[]
 }
 

@@ -1,7 +1,7 @@
-::ng-deep.months {
+::ng-deep.years {
 
   &__container {
-    margin-bottom: 10px;
+    margin-top: 10px;
 
     &_header {
       display: flex;
@@ -20,8 +20,9 @@
   }
 
   // ._expanded {
-  //   height: 73vh !important;
+  //   height: 87vh !important;
   //   overflow-x: hidden;
   //   overflow-y: scroll;
+  //   position: relative;
   // }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 
 import { BudgetService } from '../../services/budget.service'
@@ -18,6 +18,8 @@ export class DaysListComponent implements OnInit {
   @Input() yearId: string | null = null
   @Input() monthId: string | null = null
   @Input() days: IDayData[] = []
+  @Input() numberOfDays: number = -2
+
   readonly columns = [ 'name', 'category', 'priceT', 'priceRu', 'other' ]
 
   constructor(
@@ -29,11 +31,6 @@ export class DaysListComponent implements OnInit {
 
   ngOnInit() {
     this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
-  }
-
-  scrollToElement() {
-    const today = new Date()
-    const day = today.getDate()
   }
 
   getDayInfo(dateString: string): { dayName: string, dayNumber: number } {

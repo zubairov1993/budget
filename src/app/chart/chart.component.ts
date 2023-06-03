@@ -49,6 +49,8 @@ export class ChartComponent implements OnInit {
   }
 
   changeDate(dateFrom: any, dateTo: any) {
+    // console.log('dateFrom', dateFrom);
+    // console.log('dateTo', dateTo);
     this.totalsKZ$.next([])
     this.totalsRU$.next([])
 
@@ -67,6 +69,8 @@ export class ChartComponent implements OnInit {
         this.totalsKZ$.next(totalsKZ)
         this.totalsRU$.next(totalsRU)
         setTimeout(() => this.cdr.detectChanges(), 1000)
+      } else {
+        this.sharedService.getData()
       }
     })
   }
