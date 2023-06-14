@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Inject, Injector, ViewChild } from '@angular/core'
+import { Component, ChangeDetectionStrategy, Inject, Injector, ViewChild, inject } from '@angular/core'
 import { TuiDialogService } from '@taiga-ui/core'
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus'
 import { Router } from '@angular/router'
@@ -10,7 +10,7 @@ import { SharedService } from '../shared/services/shared.service'
 import { BudgetService } from './services/budget.service'
 import { AuthService } from '../auth/services/auth.service'
 
-import { IYearData } from './interfaces/budget.interface'
+import { YearDataI } from './interfaces/budget.interface'
 
 
 @Component({
@@ -20,9 +20,14 @@ import { IYearData } from './interfaces/budget.interface'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BudgetComponent {
+  sharedService = inject(SharedService)
+  budgetService = inject(BudgetService)
+  authService = inject(AuthService)
+  router = inject(Router)
+
   @ViewChild('YearsListComponent') yearsListComponent!: YearsListComponent
 
-  years: IYearData[] = []
+  years: YearDataI[] = []
   rubConverter: number | null = null
 
   private readonly dialog = this.dialogs.open<number>(
@@ -37,13 +42,9 @@ export class BudgetComponent {
   constructor(
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService,
     @Inject(Injector) private readonly injector: Injector,
-    public budgetService: BudgetService,
-    public sharedService: SharedService,
-    private authService: AuthService,
-    private router: Router
   ) {}
 
-  showDialog() {
+  showDialog(): void {
     if (this.authService.isAuthenticated()) {
       this.dialog.subscribe({
         next: () => this.yearsListComponent.updateData(),

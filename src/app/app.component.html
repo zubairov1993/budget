@@ -1,5 +1,8 @@
 <tui-root>
   <div class="header">
+    <button *ngIf="authService.isAuthenticated()" [routerLink]="['/auth']" tuiButton type="button" size="m">
+      Выйти
+    </button>
     <button [routerLink]="['/list']" routerLinkActive="router-link-active"  tuiButton type="button" size="m">
       Список
     </button>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, OnInit, inject } from '@angular/core'
 import { TuiDialogContext } from '@taiga-ui/core'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus'
@@ -7,7 +7,7 @@ import { Router } from '@angular/router'
 import { BudgetService } from '../../services/budget.service'
 import { SharedService } from '../../../shared/services/shared.service'
 
-import { IYearData, IMonthData, IDayData, IItemData } from '../../interfaces/budget.interface'
+import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../../interfaces/budget.interface'
 
 @Component({
   selector: 'app-add-product-dialog',
@@ -16,7 +16,12 @@ import { IYearData, IMonthData, IDayData, IItemData } from '../../interfaces/bud
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddProductDialogComponent implements OnInit {
-  years: IYearData[] = []
+  router = inject(Router)
+  budgetService = inject(BudgetService)
+  sharedService = inject(SharedService)
+  formBuilder = inject(FormBuilder)
+
+  years: YearDataI[] = []
   form: FormGroup = this.formBuilder.group({
     name: [null, [ Validators.required ]],
     category: [null, [ Validators.required ]],
@@ -26,10 +31,6 @@ export class AddProductDialogComponent implements OnInit {
   })
 
   constructor(
-    public budgetService: BudgetService,
-    public sharedService: SharedService,
-    private formBuilder: FormBuilder,
-    private router: Router,
     @Inject(POLYMORPHEUS_CONTEXT) private readonly context: TuiDialogContext<number, number>,
   ) {
 
@@ -43,7 +44,7 @@ export class AddProductDialogComponent implements OnInit {
     this.form.controls['priceT'].valueChanges.subscribe(data => this.form.controls['priceRu'].setValue(this.budgetService.convertToRub(data)))
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.sharedService.dataItems$.subscribe((items) => this.years = items)
   }
 
@@ -51,11 +52,11 @@ export class AddProductDialogComponent implements OnInit {
     return this.sharedService.popularItems$.getValue().map((item) => item.name)
   }
 
-  getCategory(name: string): IItemData {
+  getCategory(name: string): ItemDataI {
     return this.sharedService.popularItems$.value.filter((item) => item.name === name)[0]
   }
 
-  submit() {
+  submit(): void {
     const currentDate: Date = new Date()
     const year: number = currentDate.getFullYear()
     const month: number = currentDate.getMonth() + 1
@@ -70,11 +71,11 @@ export class AddProductDialogComponent implements OnInit {
       date = new Date()
     }
     const isoDate = date.toISOString()
-    const currentYear: IYearData = this.years.find(item => item.year === year)!
+    const currentYear: YearDataI = this.years.find(item => item.year === year)!
     if (currentYear) {
-      const currentMonth: IMonthData = currentYear.months.find(item => item.month === month)!
+      const currentMonth: MonthDataI = currentYear.months.find(item => item.month === month)!
       if (currentMonth) {
-        const selectedDay: IDayData = currentMonth.days.find(item => item.day === day)!
+        const selectedDay: DayDataI = currentMonth.days.find(item => item.day === day)!
         if (selectedDay) {
           this.createItem(currentYear?.id!, currentMonth?.id!, selectedDay?.id!)
         } else {
@@ -88,7 +89,7 @@ export class AddProductDialogComponent implements OnInit {
     }
   }
 
-  createYear(year:number, month: number, day: number, isoDate: string) {
+  createYear(year:number, month: number, day: number, isoDate: string): void {
     const data = {
       year: year,
       totalPriceYear: null,
@@ -102,7 +103,7 @@ export class AddProductDialogComponent implements OnInit {
 
   }
 
-  createMonth(yearId: string, month: number, day: number, isoDate: string) {
+  createMonth(yearId: string, month: number, day: number, isoDate: string): void {
     const months = {
       month: month,
       totalPriceMonth: null,
@@ -115,7 +116,7 @@ export class AddProductDialogComponent implements OnInit {
     }, (error: any) => this.errorProcessing(error))
   }
 
-  createDay(yearId: string, monthId: string, day: number, isoDate: string) {
+  createDay(yearId: string, monthId: string, day: number, isoDate: string): void {
     const days = {
       day: day,
       date: isoDate,
@@ -129,7 +130,7 @@ export class AddProductDialogComponent implements OnInit {
     }, (error: any) => this.errorProcessing(error))
   }
 
-  createItem(yearId: string, monthId: string, dayId: string) {
+  createItem(yearId: string, monthId: string, dayId: string): void {
     const item = {
       name: this.form.value.name,
       category: this.form.value.category,
@@ -143,12 +144,12 @@ export class AddProductDialogComponent implements OnInit {
     }, (error: any) => this.errorProcessing(error))
   }
 
-  errorProcessing(error: any) {
+  errorProcessing(error: any): void {
     console.log('error', error)
     if (error.status === 401) this.router.navigate(['/auth'])
   }
 
-  clear() {
+  clear(): void {
     this.form.reset()
   }
 }

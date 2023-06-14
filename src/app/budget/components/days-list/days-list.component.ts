@@ -1,10 +1,10 @@
-import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit } from '@angular/core'
+import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, inject } from '@angular/core'
 import { Router } from '@angular/router'
 
 import { BudgetService } from '../../services/budget.service'
 import { SharedService } from '../../../shared/services/shared.service'
 
-import { IDayData } from '../../interfaces/budget.interface'
+import { DayDataI } from '../../interfaces/budget.interface'
 
 @Component({
   selector: 'app-days-list',
@@ -13,23 +13,23 @@ import { IDayData } from '../../interfaces/budget.interface'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DaysListComponent implements OnInit {
+  budgetService = inject(BudgetService)
+  sharedService = inject(SharedService)
+  cdr = inject(ChangeDetectorRef)
+  router = inject(Router)
+
   open = false
 
   @Input() yearId: string | null = null
   @Input() monthId: string | null = null
-  @Input() days: IDayData[] = []
+  @Input() days: DayDataI[] = []
   @Input() numberOfDays: number = -2
 
   readonly columns = [ 'name', 'category', 'priceT', 'priceRu', 'other' ]
 
-  constructor(
-    public budgetService: BudgetService,
-    public sharedService: SharedService,
-    private cdr: ChangeDetectorRef,
-    private router: Router,
-  ) {}
+  constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
   }
 
@@ -40,7 +40,7 @@ export class DaysListComponent implements OnInit {
     return { dayName, dayNumber }
   }
 
-  getDayNameByNumber(dayNumber: number) {
+  getDayNameByNumber(dayNumber: number): string {
     dayNumber = dayNumber === 0 ? 7 : dayNumber
     const daysOfWeek = [ "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" ]
     return daysOfWeek[dayNumber - 1]
@@ -51,24 +51,24 @@ export class DaysListComponent implements OnInit {
     return day === currentDate.getDate()
   }
 
-  deleteItem(yearID: string, monthID: string, dayID: string, itemId: string) {
+  deleteItem(yearID: string, monthID: string, dayID: string, itemId: string): void {
     this.budgetService.deleteItem(yearID, monthID, dayID, itemId).subscribe(() => this.updateData(), (error: any) => this.errorProcessing(error))
   }
 
-  errorProcessing(error: any) {
+  errorProcessing(error: any): void {
     console.log('error', error)
     if (error.status === 401) this.router.navigate(['/auth'])
   }
 
-  updateData() {
+  updateData(): void {
     this.sharedService.getData()
   }
 
-  showDialog() {
+  showDialog(): void {
     this.open = true
   }
 
-  close() {
+  close(): void {
     this.open = false
   }
 }

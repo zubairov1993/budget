@@ -1,17 +1,19 @@
-import { Injectable } from "@angular/core"
+import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { filter, map, BehaviorSubject } from 'rxjs'
 
 import { environment } from "src/environments/environment"
 
-import { IYearData, IMonthData, IDayData, IItemData } from '../../budget/interfaces/budget.interface'
+import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../../budget/interfaces/budget.interface'
 
 @Injectable({ providedIn: "root" })
 
 export class SharedService {
+  http = inject(HttpClient)
+
   showPrice$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
-  dataItems$: BehaviorSubject<IYearData[]> = new BehaviorSubject<IYearData[]>([])
-  popularItems$: BehaviorSubject<IItemData[]> = new BehaviorSubject<IItemData[]>([])
+  dataItems$: BehaviorSubject<YearDataI[]> = new BehaviorSubject<YearDataI[]>([])
+  popularItems$: BehaviorSubject<ItemDataI[]> = new BehaviorSubject<ItemDataI[]>([])
   catogories = [
     'Еда',
     'Вещи',
@@ -24,20 +26,17 @@ export class SharedService {
     'Прочее',
   ]
 
-  constructor(
-    private http: HttpClient,
-  ) {
-  }
+  constructor() {}
 
-  getData() {
+  getData(): void {
     this.http.get(`${environment.firebaseConfig.databaseURL}/years.json`).pipe(
       filter((response: any) => response !== null),
       map((response: any) => this.dataItems$.next(this.parseData(response)))
     ).subscribe()
   }
 
-  parseData(data: {[key: string]: any}): IYearData[] {
-    const result: IYearData[] = []
+  parseData(data: {[key: string]: any}): YearDataI[] {
+    const result: YearDataI[] = []
 
     if (data) {
       Object.keys(data).forEach((id) => {
@@ -46,21 +45,21 @@ export class SharedService {
         let totalPriceYear = 0
 
         if (monthsData) {
-          const months: IMonthData[] = Object.keys(monthsData).map((monthId) => {
+          const months: MonthDataI[] = Object.keys(monthsData).map((monthId) => {
             const daysData = monthsData[monthId].days
             let totalPriceMonth = 0
-            let days: IDayData[] = []
+            let days: DayDataI[] = []
 
             if (daysData) {
               days = Object.keys(daysData).map((dayId) => {
                 const dayData = daysData[dayId]
                 let totalPriceDay = 0
-                let items: IItemData[] = []
+                let items: ItemDataI[] = []
 
                 if (dayData?.items) {
                   items = Object.keys(dayData?.items).map((itemId) => {
                     const itemData = dayData.items[itemId]
-                    const item: IItemData = {
+                    const item: ItemDataI = {
                       id: itemId,
                       name: itemData.name,
                       category: itemData.category,
@@ -73,7 +72,7 @@ export class SharedService {
                   })
                 }
 
-                const day: IDayData = {
+                const day: DayDataI = {
                   id: dayId,
                   day: dayData.day,
                   date: dayData.date,
@@ -86,7 +85,7 @@ export class SharedService {
               })
             }
 
-            const month: IMonthData = {
+            const month: MonthDataI = {
               id: monthId,
               month: monthsData[monthId].month,
               totalPriceMonth: totalPriceMonth,
@@ -98,7 +97,7 @@ export class SharedService {
 
           })
 
-          const resultData: IYearData = {
+          const resultData: YearDataI = {
             id: id,
             year: year,
             totalPriceYear: totalPriceYear,
@@ -112,7 +111,7 @@ export class SharedService {
     return this.sortData(result)
   }
 
-  sortData(data: IYearData[]): IYearData[] {
+  sortData(data: YearDataI[]): YearDataI[] {
     if (data) {
       data.sort((a, b) => a.year - b.year)
       for (const year of data) {
@@ -124,8 +123,8 @@ export class SharedService {
     return data
   }
 
-  createPopularItemList(data: IYearData[] ): IItemData[] {
-    let popularItems: IItemData[] = []
+  createPopularItemList(data: YearDataI[] ): ItemDataI[] {
+    let popularItems: ItemDataI[] = []
     let uniqueItems = new Set<string>()
 
     for (const year of data) {

@@ -1,4 +1,4 @@
-export interface Environment {
+export interface EnvironmentI {
   production: boolean
   locales: string[]
   defaultLocale: string

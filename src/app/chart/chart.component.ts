@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core'
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, inject } from '@angular/core'
 import { TuiDay, TuiDayRange, TuiMonth } from '@taiga-ui/cdk'
 import { BehaviorSubject } from 'rxjs'
 
@@ -12,6 +12,10 @@ import { ChartService } from './services/chart.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartComponent implements OnInit {
+  sharedService = inject(SharedService)
+  chartService = inject(ChartService)
+  cdr = inject(ChangeDetectorRef)
+
   totalsKZ$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([])
   totalsRU$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([])
 
@@ -24,18 +28,14 @@ export class ChartComponent implements OnInit {
   activeIndexKZ = NaN
   activeIndexRU = NaN
 
-  constructor(
-    public sharedService: SharedService,
-    public chartService: ChartService,
-    public cdr: ChangeDetectorRef,
-  ) {}
+  constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.forEntirePeriod()
     this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
   }
 
-  forEntirePeriod() {
+  forEntirePeriod(): void {
     const dateFrom = { year: 2023, month: 5, day: 1 }
     const today = new Date()
     const year = today.getFullYear()
@@ -48,7 +48,7 @@ export class ChartComponent implements OnInit {
     this.changeDate(dateFrom, dateTO)
   }
 
-  changeDate(dateFrom: any, dateTo: any) {
+  changeDate(dateFrom: any, dateTo: any): void {
     // console.log('dateFrom', dateFrom);
     // console.log('dateTo', dateTo);
     this.totalsKZ$.next([])
@@ -75,7 +75,7 @@ export class ChartComponent implements OnInit {
     })
   }
 
-  onDayClick(day: TuiDay) {
+  onDayClick(day: TuiDay): void {
     if (this.date === null || !this.date.isSingleDay) this.date = new TuiDayRange(day, day)
     this.date = TuiDayRange.sort(this.date.from, day)
     const dateFrom = { year: this.date.from.year, month: this.date.from.month + 1, day: this.date.from.day }
@@ -83,19 +83,19 @@ export class ChartComponent implements OnInit {
     this.changeDate(dateFrom, dateTO)
   }
 
-  onMonthChangeFirst(month: TuiMonth) {
+  onMonthChangeFirst(month: TuiMonth): void {
     this.firstMonth = month
     this.middleMonth = month.append({ month: 1 })
     this.lastMonth = month.append({ month: 2 })
   }
 
-  onMonthChangeMiddle(month: TuiMonth) {
+  onMonthChangeMiddle(month: TuiMonth): void {
     this.firstMonth = month.append({ month: -1 })
     this.middleMonth = month
     this.lastMonth = month.append({ month: 1 })
   }
 
-  onMonthChangeLast(month: TuiMonth) {
+  onMonthChangeLast(month: TuiMonth): void {
     this.firstMonth = month.append({ month: -2 })
     this.middleMonth = month.append({ month: -1 })
     this.lastMonth = month

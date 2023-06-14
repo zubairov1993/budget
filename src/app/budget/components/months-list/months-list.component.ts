@@ -1,9 +1,9 @@
-import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit } from '@angular/core'
+import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, inject } from '@angular/core'
 
 import { BudgetService } from '../../services/budget.service'
 import { SharedService } from '../../../shared/services/shared.service'
 
-import { IMonthData } from '../../interfaces/budget.interface'
+import { MonthDataI } from '../../interfaces/budget.interface'
 
 
 @Component({
@@ -13,21 +13,21 @@ import { IMonthData } from '../../interfaces/budget.interface'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonthsListComponent implements OnInit {
+  budgetService = inject(BudgetService)
+  sharedService = inject(SharedService)
+  cdr = inject(ChangeDetectorRef)
+
   @Input() yearId: string | null = null
-  @Input() months: IMonthData[] = []
+  @Input() months: MonthDataI[] = []
   @Input() numberOfMonths: number = -2
 
-  constructor(
-    public budgetService: BudgetService,
-    public sharedService: SharedService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor() {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
   }
 
-  changeNumberOfDays(event: any, month: IMonthData) {
+  changeNumberOfDays(event: any, month: MonthDataI): void {
     event.stopPropagation()
     if (month.numberOfDays === -month.days.length) month.numberOfDays = -2
     else month.numberOfDays = -month.days.length

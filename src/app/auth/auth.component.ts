@@ -1,10 +1,19 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
+import { select, Store } from '@ngrx/store'
+
+import { Observable } from 'rxjs'
+import { defaultIfEmpty } from 'rxjs/operators'
 
 import { AuthService } from './services/auth.service'
 
-import { IUser } from './interfaces/auth.interface'
+import { loginAction } from './store/actions/login.action'
+
+import { isSubmittingSelector } from './store/selectors'
+
+import { UserI } from './interfaces/auth.interface'
+import { AppStateI } from '../shared/interfaces/app-state.interface'
 
 @Component({
   selector: 'app-login',
@@ -13,37 +22,40 @@ import { IUser } from './interfaces/auth.interface'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthComponent {
+  router = inject(Router)
+  authService = inject(AuthService)
+  formBuilder = inject(FormBuilder)
+  private store = inject(Store<AppStateI>)
+
+  isSubmitting$: Observable<boolean>
+
   loginForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]]
   })
-  isSubmitted: boolean = false
 
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private formBuilder: FormBuilder,
-  ) {}
+  constructor() {
+    this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector))
+  }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.loginForm.invalid) return
 
-    this.isSubmitted = true
-
-    const user: IUser = {
+    const user: UserI = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
       returnSecureToken: true
     }
 
+    this.store.dispatch(loginAction(user))
+
     this.authService.login(user).subscribe(() => {
       this.loginForm.reset()
-      this.isSubmitted = false
       this.router.navigate(['/'])
     }, (error: any) => this.errorProcessing(error))
   }
 
-  errorProcessing(error: any) {
+  errorProcessing(error: any): void {
     console.log('error', error)
   }
 }

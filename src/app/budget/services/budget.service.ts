@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { catchError, map, Observable, of } from 'rxjs'
 import { Router } from '@angular/router'
@@ -7,16 +7,16 @@ import { environment } from 'src/environments/environment'
 
 @Injectable()
 export class BudgetService {
+  http = inject(HttpClient)
+  router = inject(Router)
+
   mykey = '74758fc93d4a03f7a088d0dc'
   rubConverter: number | null = 0.1722
 
   private readonly CACHE_KEY = 'exchange_rates'
   private readonly CACHE_LIFETIME = 24 * 60 * 60 * 1000
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-  ) {
+  constructor() {
     this.getExchangeRates().subscribe(response => {
       const rate = response.conversion_rates['RUB']
       if (response && response.conversion_rates) this.rubConverter = rate ? rate : 0.1722
@@ -47,7 +47,7 @@ export class BudgetService {
     )
   }
 
-  convertToRub(priceT: number | null) {
+  convertToRub(priceT: number | null): number {
     let price = 0
     if (this.rubConverter && priceT) price = +(priceT * this.rubConverter).toFixed(2)
     return price
@@ -76,7 +76,7 @@ export class BudgetService {
     return this.http.delete(url)
   }
 
-  errorProcessing(error: any) {
+  errorProcessing(error: any): void {
     console.log('error', error)
     if (error.status === 401) this.router.navigate(['/auth'])
   }

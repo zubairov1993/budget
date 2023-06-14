@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core'
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, inject } from '@angular/core'
 
 import { SharedService } from '../../../shared/services/shared.service'
 import { BudgetService } from '../../services/budget.service'
 
-import { IYearData } from '../../interfaces/budget.interface'
+import { YearDataI } from '../../interfaces/budget.interface'
 
 @Component({
   selector: 'app-years-list',
@@ -12,19 +12,19 @@ import { IYearData } from '../../interfaces/budget.interface'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class YearsListComponent implements OnInit {
-  years: IYearData[] = []
+  cdr = inject(ChangeDetectorRef)
+  sharedService = inject(SharedService)
+  budgetService = inject(BudgetService)
 
-  constructor(
-    public budgetService: BudgetService,
-    public sharedService: SharedService,
-    private cdr: ChangeDetectorRef,
-  ) { }
+  years: YearDataI[] = []
 
-  ngOnInit() {
+  constructor() { }
+
+  ngOnInit(): void {
     this.updateData()
     this.sharedService.dataItems$.subscribe((items) => {
       this.years = items
-      console.log('this.years', this.years)
+      // console.log('this.years', this.years)
       this.years.forEach((year) => {
         year.numberOfMonths = -2
         year.months.forEach((month) => month.numberOfDays = -2)
@@ -35,7 +35,7 @@ export class YearsListComponent implements OnInit {
     this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
   }
 
-  changeNumberOfMonths(event: any, year: IYearData) {
+  changeNumberOfMonths(event: any, year: YearDataI): void {
     event.stopPropagation()
     if (year.numberOfMonths === -year.months.length) year.numberOfMonths = -2
     else year.numberOfMonths = -year.months.length
@@ -46,7 +46,7 @@ export class YearsListComponent implements OnInit {
     return year === currentDate.getFullYear()
   }
 
-  updateData() {
+  updateData(): void {
     this.sharedService.getData()
   }
 }

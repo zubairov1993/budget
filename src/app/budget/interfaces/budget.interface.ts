@@ -1,28 +1,28 @@
-export interface IYearData {
+export interface YearDataI {
   id?: string
   year: number
   totalPriceYear: number | null
   numberOfMonths?: number
-  months: IMonthData[]
+  months: MonthDataI[]
 }
 
-export interface IMonthData {
+export interface MonthDataI {
   id?: string
   month: number
   totalPriceMonth: number | null
   numberOfDays?: number
-  days: IDayData[]
+  days: DayDataI[]
 }
 
-export interface IDayData {
+export interface DayDataI {
   id?: string
   day: number
   date: string
   totalPriceDay: number | null
-  items: IItemData[]
+  items: ItemDataI[]
 }
 
-export interface IItemData {
+export interface ItemDataI {
   id?: string
   name: string
   category: string

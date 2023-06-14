@@ -6,6 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { AppRoutingModule } from './app-routing.module'
 import { ServiceWorkerModule } from '@angular/service-worker'
 import { HTTP_INTERCEPTORS } from '@angular/common/http'
+import { StoreDevtoolsModule } from '@ngrx/store-devtools'
+import { StoreModule } from '@ngrx/store'
 
 import { SharedModule } from './shared/shared.module'
 
@@ -36,6 +38,8 @@ const INTERCEPTOR_PROVIDER: Provider = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     }),
+    StoreModule.forRoot({}, {}),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
 ],
   providers: [{ provide: TUI_SANITIZER, useClass: NgDompurifySanitizer }, INTERCEPTOR_PROVIDER, AuthGuard],
   bootstrap: [AppComponent]

@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 
 import { SharedModule } from '../shared/shared.module'
+import { StoreModule } from '@ngrx/store'
+import { reducers } from './store/redusers'
 
 
 @NgModule({
@@ -13,7 +15,8 @@ import { SharedModule } from '../shared/shared.module'
     SharedModule,
     RouterModule.forChild([
       { path: '', component: AuthComponent }
-    ])
+    ]),
+    StoreModule.forFeature('auth', reducers)
   ],
   exports: [],
   providers: []

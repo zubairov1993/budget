@@ -1,10 +1,10 @@
-export interface IUser {
+export interface UserI {
   email: string
   password: string
   returnSecureToken: boolean | null
 }
 
-export interface IFBResponse {
+export interface FBResponseI {
   displayName: string
   email: string
   expiresIn: string
@@ -13,4 +13,8 @@ export interface IFBResponse {
   localId: string
   refreshToken: string
   registered: boolean
+}
+
+export interface AuthStateI {
+  isSubmitting: boolean
 }
