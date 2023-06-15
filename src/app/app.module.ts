@@ -15,7 +15,8 @@ import { AuthGuard } from './shared/auth.guard'
 
 import { AuthInterceptor } from './shared/auth.interceptor'
 
-import { AppComponent } from './app.component'
+import { AppComponent } from './app.component';
+import { EffectsModule } from '@ngrx/effects'
 
 const INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -40,6 +41,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
     }),
     StoreModule.forRoot({}, {}),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    EffectsModule.forRoot([]),
 ],
   providers: [{ provide: TUI_SANITIZER, useClass: NgDompurifySanitizer }, INTERCEPTOR_PROVIDER, AuthGuard],
   bootstrap: [AppComponent]

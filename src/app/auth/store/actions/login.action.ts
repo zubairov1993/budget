@@ -1,9 +1,16 @@
 import { createAction, props } from "@ngrx/store"
 import { ActionTypes } from '../action-types'
 
-import { UserI } from '../../interfaces/auth.interface'
+import { UserI, FBResponseI } from '../../interfaces/auth.interface'
 
 export const loginAction = createAction(
   ActionTypes.LOGIN,
-  props<UserI>()
+  props<{ request: UserI }>()
 )
+
+export const loginSuccessAction = createAction(
+  ActionTypes.LOGIN_SUCCESS,
+  props<{ response: FBResponseI }>()
+)
+
+export const loginFailureAction = createAction(ActionTypes.LOGIN_FAILURE)

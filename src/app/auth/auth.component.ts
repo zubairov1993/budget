@@ -47,12 +47,12 @@ export class AuthComponent {
       returnSecureToken: true
     }
 
-    this.store.dispatch(loginAction(user))
+    this.store.dispatch(loginAction({ request: user }))
 
-    this.authService.login(user).subscribe(() => {
-      this.loginForm.reset()
-      this.router.navigate(['/'])
-    }, (error: any) => this.errorProcessing(error))
+    // this.authService.login(user).subscribe(() => {
+    //   this.loginForm.reset()
+    //   this.router.navigate(['/'])
+    // }, (error: any) => this.errorProcessing(error))
   }
 
   errorProcessing(error: any): void {

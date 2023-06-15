@@ -15,7 +15,7 @@ export class AuthService {
   constructor() {}
 
   login(user: UserI): Observable<FBResponseI> {
-    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseConfig.apiKey}`;
+    const url = `${environment.firebaseConfig.signInWithPasswordPath}${environment.firebaseConfig.apiKey}`;
     return this.http.post<FBResponseI>(url, user).pipe(
       tap(response => {
         if (response) {

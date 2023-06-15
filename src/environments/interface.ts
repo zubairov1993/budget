@@ -3,6 +3,7 @@ export interface EnvironmentI {
   locales: string[]
   defaultLocale: string
   firebaseConfig: {
+    signInWithPasswordPath: string
     apiKey: string
     authDomain: string
     databaseURL: string
