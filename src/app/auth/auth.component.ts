@@ -4,7 +4,6 @@ import { Router } from '@angular/router'
 import { select, Store } from '@ngrx/store'
 
 import { Observable } from 'rxjs'
-import { defaultIfEmpty } from 'rxjs/operators'
 
 import { AuthService } from './services/auth.service'
 
@@ -40,22 +39,11 @@ export class AuthComponent {
 
   onSubmit(): void {
     if (this.loginForm.invalid) return
-
     const user: UserI = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
       returnSecureToken: true
     }
-
     this.store.dispatch(loginAction({ request: user }))
-
-    // this.authService.login(user).subscribe(() => {
-    //   this.loginForm.reset()
-    //   this.router.navigate(['/'])
-    // }, (error: any) => this.errorProcessing(error))
-  }
-
-  errorProcessing(error: any): void {
-    console.log('error', error)
   }
 }

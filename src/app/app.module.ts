@@ -8,6 +8,7 @@ import { ServiceWorkerModule } from '@angular/service-worker'
 import { HTTP_INTERCEPTORS } from '@angular/common/http'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { StoreModule } from '@ngrx/store'
+import { EffectsModule } from '@ngrx/effects'
 
 import { SharedModule } from './shared/shared.module'
 
@@ -15,8 +16,7 @@ import { AuthGuard } from './shared/auth.guard'
 
 import { AuthInterceptor } from './shared/auth.interceptor'
 
-import { AppComponent } from './app.component';
-import { EffectsModule } from '@ngrx/effects'
+import { AppComponent } from './app.component'
 
 const INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,

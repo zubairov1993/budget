@@ -2,6 +2,7 @@ import { createAction, props } from "@ngrx/store"
 import { ActionTypes } from '../action-types'
 
 import { UserI, FBResponseI } from '../../interfaces/auth.interface'
+import { BackendErrorsI } from '../../../shared/interfaces/backend-errors.interface'
 
 export const loginAction = createAction(
   ActionTypes.LOGIN,
@@ -13,4 +14,7 @@ export const loginSuccessAction = createAction(
   props<{ response: FBResponseI }>()
 )
 
-export const loginFailureAction = createAction(ActionTypes.LOGIN_FAILURE)
+export const loginFailureAction = createAction(
+  ActionTypes.LOGIN_FAILURE,
+  props<{ errors: BackendErrorsI }>()
+)

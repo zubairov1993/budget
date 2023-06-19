@@ -6,8 +6,8 @@ import { RouterModule } from '@angular/router'
 import { SharedModule } from '../shared/shared.module'
 import { StoreModule } from '@ngrx/store'
 import { reducers } from './store/redusers'
-import { EffectsModule } from '@ngrx/effects';
-import { LoginEffect } from './store/effects/login.effect';
+import { EffectsModule } from '@ngrx/effects'
+import { LoginEffect } from './store/effects/login.effect'
 
 
 @NgModule({
