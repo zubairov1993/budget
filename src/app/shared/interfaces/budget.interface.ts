@@ -1,3 +1,13 @@
+export interface BudgetStateI {
+  isLoading: boolean
+  error: string | null
+  data: any
+}
+
+export interface BudgetResponseI {
+  [key: string]: YearDataI[]
+}
+
 export interface YearDataI {
   id?: string
   year: number

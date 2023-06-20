@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { filter, map, BehaviorSubject } from 'rxjs'
+import { filter, map, BehaviorSubject, Observable } from 'rxjs';
 
 import { environment } from "src/environments/environment"
 
-import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../../budget/interfaces/budget.interface'
+import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../interfaces/budget.interface'
 
 @Injectable({ providedIn: "root" })
 
@@ -27,6 +27,10 @@ export class SharedService {
   ]
 
   constructor() {}
+
+  getBudget(): Observable<any> {
+    return this.http.get<any>(`${environment.firebaseConfig.databaseURL}/years.json`)
+  }
 
   getData(): void {
     this.http.get(`${environment.firebaseConfig.databaseURL}/years.json`).pipe(

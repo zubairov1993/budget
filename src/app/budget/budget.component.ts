@@ -10,7 +10,7 @@ import { SharedService } from '../shared/services/shared.service'
 import { BudgetService } from './services/budget.service'
 import { AuthService } from '../auth/services/auth.service'
 
-import { YearDataI } from './interfaces/budget.interface'
+import { YearDataI } from '../shared/interfaces/budget.interface'
 
 
 @Component({

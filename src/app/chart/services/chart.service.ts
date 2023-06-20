@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core'
 
 import { SharedService } from '../../shared/services/shared.service'
 
-import { YearDataI } from '../../budget/interfaces/budget.interface'
+import { YearDataI } from '../../shared/interfaces/budget.interface'
 
 interface RangeDate {
   year: number

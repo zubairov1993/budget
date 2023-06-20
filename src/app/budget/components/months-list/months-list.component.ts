@@ -3,7 +3,7 @@ import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, i
 import { BudgetService } from '../../services/budget.service'
 import { SharedService } from '../../../shared/services/shared.service'
 
-import { MonthDataI } from '../../interfaces/budget.interface'
+import { MonthDataI } from '../../../shared/interfaces/budget.interface'
 
 
 @Component({

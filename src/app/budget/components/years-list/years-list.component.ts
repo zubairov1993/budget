@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, inject }
 import { SharedService } from '../../../shared/services/shared.service'
 import { BudgetService } from '../../services/budget.service'
 
-import { YearDataI } from '../../interfaces/budget.interface'
+import { YearDataI } from '../../../shared/interfaces/budget.interface'
 
 @Component({
   selector: 'app-years-list',

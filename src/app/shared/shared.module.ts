@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http'
+import { EffectsModule } from '@ngrx/effects'
+import { StoreModule } from '@ngrx/store'
 
 import { TuiButtonModule, TuiDialogModule, TuiTooltipModule, TuiCalendarModule, TuiHintModule } from '@taiga-ui/core'
 import {
@@ -19,6 +21,10 @@ import { TuiBarModule, TuiLegendItemModule, TuiRingChartModule } from '@taiga-ui
 import { TuiHoveredModule } from '@taiga-ui/cdk'
 
 import { HidePricePipe } from './pipes/hide-price.pipe'
+
+import { GetBudgetEffect } from './store/effects/get-budget.effect'
+
+import { reducers } from './store/reducers'
 
 @NgModule({
   declarations: [ HidePricePipe ],
@@ -45,6 +51,8 @@ import { HidePricePipe } from './pipes/hide-price.pipe'
 		TuiHoveredModule,
 		TuiCalendarModule,
 		TuiHintModule,
+    EffectsModule.forFeature([GetBudgetEffect]),
+    StoreModule.forFeature('budget', reducers),
   ],
   exports: [
     ReactiveFormsModule,

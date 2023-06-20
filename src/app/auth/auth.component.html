@@ -17,7 +17,8 @@
       (click)="onSubmit()"
       type="button"
       appearance="primary"
-      [disabled]="loginForm.invalid || (isSubmitting$ | async)">
+      [disabled]="loginForm.invalid || (isSubmitting$ | async)"
+      [class.opacity]="loginForm.invalid || (isSubmitting$ | async)">
       Login
     </button>
   </div>

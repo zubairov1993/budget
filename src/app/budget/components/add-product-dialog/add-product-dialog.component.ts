@@ -7,7 +7,7 @@ import { Router } from '@angular/router'
 import { BudgetService } from '../../services/budget.service'
 import { SharedService } from '../../../shared/services/shared.service'
 
-import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../../interfaces/budget.interface'
+import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../../../shared/interfaces/budget.interface'
 
 @Component({
   selector: 'app-add-product-dialog',

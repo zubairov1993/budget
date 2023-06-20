@@ -4,7 +4,7 @@ import { Router } from '@angular/router'
 import { BudgetService } from '../../services/budget.service'
 import { SharedService } from '../../../shared/services/shared.service'
 
-import { DayDataI } from '../../interfaces/budget.interface'
+import { DayDataI } from '../../../shared/interfaces/budget.interface'
 
 @Component({
   selector: 'app-days-list',

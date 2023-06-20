@@ -12,9 +12,9 @@ import { EffectsModule } from '@ngrx/effects'
 
 import { SharedModule } from './shared/shared.module'
 
-import { AuthGuard } from './shared/auth.guard'
+import { AuthGuard } from './shared/guards/auth.guard'
 
-import { AuthInterceptor } from './shared/auth.interceptor'
+import { AuthInterceptor } from './shared/interceptors/auth.interceptor'
 
 import { AppComponent } from './app.component'
 
