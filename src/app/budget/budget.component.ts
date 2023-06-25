@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy, Inject, Injector, ViewChild, inject } from '@angular/core'
+import { Component, ChangeDetectionStrategy, Inject, Injector, ViewChild, inject, OnInit } from '@angular/core';
 import { TuiDialogService } from '@taiga-ui/core'
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus'
 import { Router } from '@angular/router'
+import { select, Store } from '@ngrx/store';
 
 import { AddProductDialogComponent } from './components/add-product-dialog/add-product-dialog.component'
 import { YearsListComponent } from './components/years-list/years-list.component'

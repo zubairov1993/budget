@@ -5,6 +5,8 @@ import { Router } from '@angular/router'
 
 import { environment } from 'src/environments/environment'
 
+import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../../shared/interfaces/budget.interface'
+
 @Injectable()
 export class BudgetService {
   http = inject(HttpClient)
@@ -55,24 +57,24 @@ export class BudgetService {
 
   // firebase =================================================================
 
-  createYear(item: any): Observable<any> {
+  createYear(item: YearDataI): Observable<any> {
     return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years.json`, item)
   }
 
-  createMonths(yearID: string, item: any): Observable<any> {
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearID}/months.json`, item)
+  createMonth(yearName: string, item: MonthDataI): Observable<any> {
+    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearName}/months.json`, item)
   }
 
-  createDays(yearID: string, monthID: string, item: any): Observable<any> {
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearID}/months/${monthID}/days.json`, item)
+  createDay(yearName: string, monthName: string, item: DayDataI): Observable<any> {
+    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearName}/months/${monthName}/days.json`, item)
   }
 
-  createItems(yearID: string, monthID: string, dayID: string, item: any): Observable<any> {
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearID}/months/${monthID}/days/${dayID}/items.json`, item)
+  createItem(yearName: string, monthName: string, dayName: string, item: ItemDataI): Observable<any> {
+    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearName}/months/${monthName}/days/${dayName}/items.json`, item)
   }
 
-  deleteItem(yearID: string, monthID: string, dayID: string, itemId: string): Observable<any> {
-    const url = `${environment.firebaseConfig.databaseURL}/years/${yearID}/months/${monthID}/days/${dayID}/items/${itemId}.json`
+  deleteItem(yearName: string, monthName: string, dayName: string, itemId: string): Observable<any> {
+    const url = `${environment.firebaseConfig.databaseURL}/years/${yearName}/months/${monthName}/days/${dayName}/items/${itemId}.json`
     return this.http.delete(url)
   }
 

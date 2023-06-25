@@ -1,18 +1,14 @@
 export interface BudgetStateI {
   isLoading: boolean
   error: string | null
-  data: any
-}
-
-export interface BudgetResponseI {
-  [key: string]: YearDataI[]
+  data: YearDataI[] | null
 }
 
 export interface YearDataI {
   id?: string
   year: number
   totalPriceYear: number | null
-  numberOfMonths?: number
+  numberOfMonths?: number | null
   months: MonthDataI[]
 }
 
@@ -20,7 +16,7 @@ export interface MonthDataI {
   id?: string
   month: number
   totalPriceMonth: number | null
-  numberOfDays?: number
+  numberOfDays?: number | null
   days: DayDataI[]
 }
 

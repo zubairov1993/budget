@@ -12,7 +12,23 @@ import { AddProductDialogComponent } from './components/add-product-dialog/add-p
 import { MonthsListComponent } from './components/months-list/months-list.component'
 import { DaysListComponent } from './components/days-list/days-list.component';
 import { YearsListComponent } from './components/years-list/years-list.component'
+import { EffectsModule } from '@ngrx/effects';
+import { CreateYearEffect } from './components/add-product-dialog/store/effects/create-year.effect';
 
+import { ActionReducerMap, combineReducers, StoreModule } from '@ngrx/store';
+import { yearReducer } from './components/add-product-dialog/store/reducers/create-year.reducer'
+import { monthReducer } from './components/add-product-dialog/store/reducers/create-month.reducer';
+import { dayReducer } from './components/add-product-dialog/store/reducers/create-day.reducer';
+import { itemReducer } from './components/add-product-dialog/store/reducers/create-item.reducer';
+
+export const reducers: ActionReducerMap<any> = {
+  year: yearReducer,
+  month: monthReducer,
+  day: dayReducer,
+  item: itemReducer,
+};
+
+export const combinedReducers = combineReducers(reducers);
 
 @NgModule({
   declarations: [ BudgetComponent, AddProductDialogComponent, MonthsListComponent, DaysListComponent, YearsListComponent ],
@@ -23,6 +39,8 @@ import { YearsListComponent } from './components/years-list/years-list.component
     RouterModule.forChild([
       { path: '', component: BudgetComponent }
     ]),
+    EffectsModule.forFeature([CreateYearEffect]),
+    StoreModule.forFeature('feature', reducers),
   ],
   exports: [],
   providers: [BudgetService],

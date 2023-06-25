@@ -17,7 +17,7 @@ export class MonthsListComponent implements OnInit {
   sharedService = inject(SharedService)
   cdr = inject(ChangeDetectorRef)
 
-  @Input() yearId: string | null = null
+  @Input() yearName: string | null = null
   @Input() months: MonthDataI[] = []
   @Input() numberOfMonths: number = -2
 

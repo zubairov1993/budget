@@ -7,7 +7,9 @@ import { Router } from '@angular/router'
 import { BudgetService } from '../../services/budget.service'
 import { SharedService } from '../../../shared/services/shared.service'
 
-import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../../../shared/interfaces/budget.interface'
+import { YearDataI, MonthDataI, DayDataI, ItemDataI, BudgetStateI } from '../../../shared/interfaces/budget.interface';
+import { Store } from '@ngrx/store';
+import { createYearAction } from './store/actions/create-year.action';
 
 @Component({
   selector: 'app-add-product-dialog',
@@ -20,6 +22,7 @@ export class AddProductDialogComponent implements OnInit {
   budgetService = inject(BudgetService)
   sharedService = inject(SharedService)
   formBuilder = inject(FormBuilder)
+  private store = inject(Store<BudgetStateI>)
 
   years: YearDataI[] = []
   form: FormGroup = this.formBuilder.group({
@@ -56,6 +59,15 @@ export class AddProductDialogComponent implements OnInit {
     return this.sharedService.popularItems$.value.filter((item) => item.name === name)[0]
   }
 
+  getItem(): ItemDataI {
+    return {
+      name: this.form.value.name,
+      category: this.form.value.category,
+      priceT: this.form.value.priceT,
+      priceRu: this.form.value.priceRu
+    }
+  }
+
   submit(): void {
     const currentDate: Date = new Date()
     const year: number = currentDate.getFullYear()
@@ -70,6 +82,7 @@ export class AddProductDialogComponent implements OnInit {
     } else {
       date = new Date()
     }
+
     const isoDate = date.toISOString()
     const currentYear: YearDataI = this.years.find(item => item.year === year)!
     if (currentYear) {
@@ -89,56 +102,58 @@ export class AddProductDialogComponent implements OnInit {
     }
   }
 
-  createYear(year:number, month: number, day: number, isoDate: string): void {
-    const data = {
+  createYear(year: number, month: number, day: number, isoDate: string): void {
+    const yearObj = {
       year: year,
       totalPriceYear: null,
-      months: []
+      months: [],
     }
 
-    this.budgetService.createYear(data).subscribe(year => {
-      console.log('response createYear', year)
-      this.createMonth(year.name, month, day, isoDate)
-    }, (error: any) => this.errorProcessing(error))
+    const data = {
+      yearObj: yearObj,
+      month: month,
+      day: day,
+      isoDate: isoDate,
+      itemObj: this.getItem()
+    }
 
+    this.store.dispatch(createYearAction(data))
+
+    // this.budgetService.createYear(data).subscribe(year => {
+    //   console.log('response createYear', year)
+    //   this.createMonth(year.name, month, day, isoDate)
+    // }, (error: any) => this.errorProcessing(error))
   }
 
-  createMonth(yearId: string, month: number, day: number, isoDate: string): void {
+  createMonth(yearName: string, month: number, day: number, isoDate: string): void {
     const months = {
       month: month,
       totalPriceMonth: null,
       days: []
     }
 
-    this.budgetService.createMonths(yearId, months).subscribe(month => {
+    this.budgetService.createMonth(yearName, months).subscribe(month => {
       console.log('response createMonth', month)
-      this.createDay(yearId, month.name, day, isoDate)
+      this.createDay(yearName, month.name, day, isoDate)
     }, (error: any) => this.errorProcessing(error))
   }
 
-  createDay(yearId: string, monthId: string, day: number, isoDate: string): void {
-    const days = {
+  createDay(yearName: string, monthName: string, day: number, isoDate: string): void {
+    const dayObj = {
       day: day,
       date: isoDate,
       totalPriceDay: null,
       items: []
     }
 
-    this.budgetService.createDays(yearId, monthId, days).subscribe(day => {
+    this.budgetService.createDay(yearName, monthName, dayObj).subscribe(day => {
       console.log('response createDays', day)
-      this.createItem(yearId, monthId, day.name)
+      this.createItem(yearName, monthName, day.name)
     }, (error: any) => this.errorProcessing(error))
   }
 
-  createItem(yearId: string, monthId: string, dayId: string): void {
-    const item = {
-      name: this.form.value.name,
-      category: this.form.value.category,
-      priceT: this.form.value.priceT,
-      priceRu: this.form.value.priceRu
-    }
-
-    this.budgetService.createItems(yearId, monthId, dayId, item).subscribe(item => {
+  createItem(yearName: string, monthName: string, dayName: string): void {
+    this.budgetService.createItem(yearName, monthName, dayName, this.getItem()).subscribe(item => {
       console.log('response createItems', item)
       this.context.completeWith(this.form.value)
     }, (error: any) => this.errorProcessing(error))

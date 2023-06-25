@@ -20,8 +20,8 @@ export class DaysListComponent implements OnInit {
 
   open = false
 
-  @Input() yearId: string | null = null
-  @Input() monthId: string | null = null
+  @Input() yearName: string | null = null
+  @Input() monthName: string | null = null
   @Input() days: DayDataI[] = []
   @Input() numberOfDays: number = -2
 
@@ -51,8 +51,8 @@ export class DaysListComponent implements OnInit {
     return day === currentDate.getDate()
   }
 
-  deleteItem(yearID: string, monthID: string, dayID: string, itemId: string): void {
-    this.budgetService.deleteItem(yearID, monthID, dayID, itemId).subscribe(() => this.updateData(), (error: any) => this.errorProcessing(error))
+  deleteItem(yearName: string, monthName: string, dayName: string, itemId: string): void {
+    this.budgetService.deleteItem(yearName, monthName, dayName, itemId).subscribe(() => this.updateData(), (error: any) => this.errorProcessing(error))
   }
 
   errorProcessing(error: any): void {

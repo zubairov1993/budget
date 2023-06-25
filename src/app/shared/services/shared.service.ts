@@ -49,14 +49,14 @@ export class SharedService {
         let totalPriceYear = 0
 
         if (monthsData) {
-          const months: MonthDataI[] = Object.keys(monthsData).map((monthId) => {
-            const daysData = monthsData[monthId].days
+          const months: MonthDataI[] = Object.keys(monthsData).map((monthName) => {
+            const daysData = monthsData[monthName].days
             let totalPriceMonth = 0
             let days: DayDataI[] = []
 
             if (daysData) {
-              days = Object.keys(daysData).map((dayId) => {
-                const dayData = daysData[dayId]
+              days = Object.keys(daysData).map((dayName) => {
+                const dayData = daysData[dayName]
                 let totalPriceDay = 0
                 let items: ItemDataI[] = []
 
@@ -77,7 +77,7 @@ export class SharedService {
                 }
 
                 const day: DayDataI = {
-                  id: dayId,
+                  id: dayName,
                   day: dayData.day,
                   date: dayData.date,
                   totalPriceDay: totalPriceDay,
@@ -90,8 +90,8 @@ export class SharedService {
             }
 
             const month: MonthDataI = {
-              id: monthId,
-              month: monthsData[monthId].month,
+              id: monthName,
+              month: monthsData[monthName].month,
               totalPriceMonth: totalPriceMonth,
               days: days,
             }

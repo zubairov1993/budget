@@ -1,5 +1,6 @@
-<div class="years" *ngIf="years.length !== 0">
-  <div *ngFor="let year of years">
+<div *ngIf="budgets$ | async">
+
+  <div *ngFor="let year of budgets$ | async">
     <tui-accordion class="years__container">
       <tui-accordion-item [open]="isCurrentYear(year.year)">
         <div class="years__container_header">
@@ -21,12 +22,13 @@
         </div>
 
         <ng-template tuiAccordionItemContent>
-          <app-months-list [yearId]="year.id!" [months]="year.months" [numberOfMonths]="year.numberOfMonths!">
+          <app-months-list [yearName]="year.id!" [months]="year.months" [numberOfMonths]="year.numberOfMonths!">
           </app-months-list>
         </ng-template>
 
       </tui-accordion-item>
     </tui-accordion>
   </div>
-
 </div>
+
+<div *ngIf="isLoading$ | async">Loading.....</div>

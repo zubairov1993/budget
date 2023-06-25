@@ -1,0 +1,17 @@
+export enum ActionTypes {
+  CREATE_YEAR = '[CREATE_YEAR] Create Year',
+  CREATE_YEAR_SUCCESS = '[CREATE_YEAR_SUCCESS] Create Year Success',
+  CREATE_YEAR_FAILURE = '[CREATE_YEAR_FAILURE] Create Year Failure',
+
+  CREATE_MONTH = '[CREATE_MONTH] Create Month',
+  CREATE_MONTH_SUCCESS = '[CREATE_MONTH_SUCCESS] Create Month Success',
+  CREATE_MONTH_FAILURE = '[CREATE_MONTH_FAILURE] Create Month Failure',
+
+  CREATE_DAY = '[CREATE_DAY] Create Day',
+  CREATE_DAY_SUCCESS = '[CREATE_DAY_SUCCESS] Create Day Success',
+  CREATE_DAY_FAILURE = '[CREATE_DAY_FAILURE] Create Day Failure',
+
+  CREATE_ITEM = '[CREATE_ITEM] Create Item',
+  CREATE_ITEM_SUCCESS = '[CREATE_ITEM_SUCCESS] Create Item Success',
+  CREATE_ITEM_FAILURE = '[CREATE_ITEM_FAILURE] Create Item Failure',
+}
