@@ -9,6 +9,7 @@ import { SharedService } from '../../../../../shared/services/shared.service'
 import { BudgetService } from '../../../../services/budget.service'
 
 import { createDayAction, createDaySuccessAction, createDayFailureAction } from '../actions/create-day.action'
+import { createItemAction } from '../actions/create-item.action';
 
 @Injectable()
 export class CreateDayEffect {
@@ -28,5 +29,12 @@ export class CreateDayEffect {
         return of(createDayFailureAction())
       })
     ))
+  ))
+
+  createitemAfterDay$ = createEffect(() => this.actions$.pipe(
+    ofType(createDaySuccessAction),
+    map(({ yearName, monthName, dayName, itemObj }) => {
+      return createItemAction({ yearName, monthName, dayName, itemObj });
+    })
   ))
 }

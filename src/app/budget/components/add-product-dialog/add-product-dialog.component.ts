@@ -70,7 +70,7 @@ export class AddProductDialogComponent implements OnInit {
 
   submit(): void {
     const currentDate: Date = new Date()
-    const year: number = currentDate.getFullYear()
+    const year: number = currentDate.getFullYear() + 1
     const month: number = currentDate.getMonth() + 1
     let day: number = currentDate.getDate()
     const isYesterday = this.form.value.yesterday
@@ -117,9 +117,10 @@ export class AddProductDialogComponent implements OnInit {
       itemObj: this.getItem()
     }
 
+
     this.store.dispatch(createYearAction(data))
 
-    // this.budgetService.createYear(data).subscribe(year => {
+    // this.budgetService.createYear(yearObj).subscribe(year => {
     //   console.log('response createYear', year)
     //   this.createMonth(year.name, month, day, isoDate)
     // }, (error: any) => this.errorProcessing(error))

@@ -20,6 +20,9 @@ import { yearReducer } from './components/add-product-dialog/store/reducers/crea
 import { monthReducer } from './components/add-product-dialog/store/reducers/create-month.reducer';
 import { dayReducer } from './components/add-product-dialog/store/reducers/create-day.reducer';
 import { itemReducer } from './components/add-product-dialog/store/reducers/create-item.reducer';
+import { CreateMonthEffect } from './components/add-product-dialog/store/effects/create-month.effect';
+import { CreateDayEffect } from './components/add-product-dialog/store/effects/create-day.effect';
+import { CreateItemEffect } from './components/add-product-dialog/store/effects/create-item.effect';
 
 export const reducers: ActionReducerMap<any> = {
   year: yearReducer,
@@ -39,7 +42,7 @@ export const combinedReducers = combineReducers(reducers);
     RouterModule.forChild([
       { path: '', component: BudgetComponent }
     ]),
-    EffectsModule.forFeature([CreateYearEffect]),
+    EffectsModule.forFeature([CreateYearEffect, CreateMonthEffect, CreateDayEffect, CreateItemEffect]),
     StoreModule.forFeature('feature', reducers),
   ],
   exports: [],

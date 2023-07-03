@@ -58,18 +58,32 @@ export class BudgetService {
   // firebase =================================================================
 
   createYear(item: YearDataI): Observable<any> {
+    console.log('createYear');
+    console.log('item', item);
     return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years.json`, item)
   }
 
   createMonth(yearName: string, item: MonthDataI): Observable<any> {
+    console.log('createMonth');
+    console.log('yearName', yearName);
+    console.log('item', item);
     return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearName}/months.json`, item)
   }
 
   createDay(yearName: string, monthName: string, item: DayDataI): Observable<any> {
+    console.log('createDay');
+    console.log('yearName', yearName);
+    console.log('monthName', monthName);
+    console.log('item', item);
     return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearName}/months/${monthName}/days.json`, item)
   }
 
   createItem(yearName: string, monthName: string, dayName: string, item: ItemDataI): Observable<any> {
+    console.log('createItem');
+    console.log('yearName', yearName);
+    console.log('monthName', monthName);
+    console.log('dayName', dayName);
+    console.log('item', item);
     return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearName}/months/${monthName}/days/${dayName}/items.json`, item)
   }
 
