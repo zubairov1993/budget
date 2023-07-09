@@ -23,6 +23,11 @@ import { TuiHoveredModule } from '@taiga-ui/cdk'
 import { HidePricePipe } from './pipes/hide-price.pipe'
 
 import { GetBudgetEffect } from './store/effects/get-budget.effect'
+import { CreateItemEffect } from './store/effects/create-item.effect'
+import { CreateDayEffect } from './store/effects/create-day.effect'
+import { CreateMonthEffect } from './store/effects/create-month.effect'
+import { CreateYearEffect } from './store/effects/create-year.effect'
+import { DeleteItemEffect } from './store/effects/delete-item.effect'
 
 import { reducers } from './store/reducers'
 
@@ -51,7 +56,7 @@ import { reducers } from './store/reducers'
 		TuiHoveredModule,
 		TuiCalendarModule,
 		TuiHintModule,
-    EffectsModule.forFeature([GetBudgetEffect]),
+    EffectsModule.forFeature([GetBudgetEffect, CreateYearEffect, CreateMonthEffect, CreateDayEffect, CreateItemEffect, DeleteItemEffect]),
     StoreModule.forFeature('budget', reducers),
   ],
   exports: [

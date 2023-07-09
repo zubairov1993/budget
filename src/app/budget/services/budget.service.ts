@@ -5,12 +5,15 @@ import { Router } from '@angular/router'
 
 import { environment } from 'src/environments/environment'
 
+import { AuthService } from '../../auth/services/auth.service'
+
 import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../../shared/interfaces/budget.interface'
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class BudgetService {
   http = inject(HttpClient)
   router = inject(Router)
+  authService = inject(AuthService)
 
   mykey = '74758fc93d4a03f7a088d0dc'
   rubConverter: number | null = 0.1722
@@ -58,37 +61,28 @@ export class BudgetService {
   // firebase =================================================================
 
   createYear(item: YearDataI): Observable<any> {
-    console.log('createYear');
-    console.log('item', item);
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years.json`, item)
+    const uid = this.authService.localId
+    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${uid}.json`, item)
   }
 
   createMonth(yearName: string, item: MonthDataI): Observable<any> {
-    console.log('createMonth');
-    console.log('yearName', yearName);
-    console.log('item', item);
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearName}/months.json`, item)
+    const uid = this.authService.localId
+    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months.json`, item)
   }
 
   createDay(yearName: string, monthName: string, item: DayDataI): Observable<any> {
-    console.log('createDay');
-    console.log('yearName', yearName);
-    console.log('monthName', monthName);
-    console.log('item', item);
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearName}/months/${monthName}/days.json`, item)
+    const uid = this.authService.localId
+    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months/${monthName}/days.json`, item)
   }
 
   createItem(yearName: string, monthName: string, dayName: string, item: ItemDataI): Observable<any> {
-    console.log('createItem');
-    console.log('yearName', yearName);
-    console.log('monthName', monthName);
-    console.log('dayName', dayName);
-    console.log('item', item);
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${yearName}/months/${monthName}/days/${dayName}/items.json`, item)
+    const uid = this.authService.localId
+    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months/${monthName}/days/${dayName}/items.json`, item)
   }
 
   deleteItem(yearName: string, monthName: string, dayName: string, itemId: string): Observable<any> {
-    const url = `${environment.firebaseConfig.databaseURL}/years/${yearName}/months/${monthName}/days/${dayName}/items/${itemId}.json`
+    const uid = this.authService.localId
+    const url = `${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months/${monthName}/days/${dayName}/items/${itemId}.json`
     return this.http.delete(url)
   }
 

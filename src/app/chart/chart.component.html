@@ -36,8 +36,8 @@
 <div class="charts">
   <div class="charts__chart">
 
-    <tui-ring-chart [size]="'xl'" [value]="totalsKZ$.value" [(activeItemIndex)]="activeIndexKZ">
-      <div>Общее {{ sumArrayValues(totalsKZ$.value) | isShowPrice }} &#8376;</div>
+    <tui-ring-chart [size]="'xl'" [value]="chartService.totalsKZ$.value" [(activeItemIndex)]="activeIndexKZ">
+      <div>Общее {{ sumArrayValues(chartService.totalsKZ$.value) | isShowPrice }} &#8376;</div>
     </tui-ring-chart>
 
     <div class="charts__chart_legend">
@@ -48,7 +48,7 @@
         [text]="label"
         [active]="isItemActiveKZ(index)"
         (tuiHoveredChange)="onHoverKZ(index, $event)">
-        <div>{{ totalsKZ$.value[index] | isShowPrice }} &#8376;</div>
+        <div>{{ chartService.totalsKZ$.value[index] | isShowPrice }} &#8376;</div>
       </tui-legend-item>
     </div>
 
@@ -56,8 +56,8 @@
 
   <div class="charts__chart">
 
-    <tui-ring-chart [size]="'xl'" [value]="totalsRU$.value" [(activeItemIndex)]="activeIndexRU">
-      <div>Общее {{ sumArrayValues(totalsRU$.value) | isShowPrice }} &#8381;</div>
+    <tui-ring-chart [size]="'xl'" [value]="chartService.totalsRU$.value" [(activeItemIndex)]="activeIndexRU">
+      <div>Общее {{ sumArrayValues(chartService.totalsRU$.value) | isShowPrice }} &#8381;</div>
     </tui-ring-chart>
 
     <div class="charts__chart_legend">
@@ -68,7 +68,7 @@
         [text]="label"
         [active]="isItemActiveRU(index)"
         (tuiHoveredChange)="onHoverRU(index, $event)">
-        <div>{{ totalsRU$.value[index] | isShowPrice }} &#8381;</div>
+        <div>{{ chartService.totalsRU$.value[index] | isShowPrice }} &#8381;</div>
       </tui-legend-item>
     </div>
 

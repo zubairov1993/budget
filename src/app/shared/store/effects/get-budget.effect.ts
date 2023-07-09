@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core'
 import { Actions, createEffect, ofType } from "@ngrx/effects"
 import { switchMap, map, of, filter } from 'rxjs'
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators'
 import { HttpErrorResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
 
@@ -24,10 +24,7 @@ export class GetBudgetEffect {
       map((response: any) => {
         return getBudgetSuccessAction({ response: this.parseData(response) })
       }),
-      catchError((errorResponse: HttpErrorResponse) => {
-        return of(getBudgetFailureAction())
-        // return of(loginFailureAction({ errors: errorResponse.error.error.errors }))
-      })
+      catchError((errorResponse: HttpErrorResponse) => of(getBudgetFailureAction()))
     ))
   ))
 

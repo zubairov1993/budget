@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy, Inject, Injector, ViewChild, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Injector, ViewChild, inject, OnDestroy } from '@angular/core'
 import { TuiDialogService } from '@taiga-ui/core'
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus'
 import { Router } from '@angular/router'
-import { select, Store } from '@ngrx/store';
+import { Subscription } from 'rxjs'
 
 import { AddProductDialogComponent } from './components/add-product-dialog/add-product-dialog.component'
 import { YearsListComponent } from './components/years-list/years-list.component'
@@ -20,11 +20,14 @@ import { YearDataI } from '../shared/interfaces/budget.interface'
   styleUrls: ['./budget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BudgetComponent {
+export class BudgetComponent implements OnDestroy {
   sharedService = inject(SharedService)
   budgetService = inject(BudgetService)
   authService = inject(AuthService)
   router = inject(Router)
+  dialogs = inject(TuiDialogService)
+  injector = inject(Injector)
+  allSubscription: Subscription[] = []
 
   @ViewChild('YearsListComponent') yearsListComponent!: YearsListComponent
 
@@ -40,19 +43,21 @@ export class BudgetComponent {
     },
   )
 
-  constructor(
-    @Inject(TuiDialogService) private readonly dialogs: TuiDialogService,
-    @Inject(Injector) private readonly injector: Injector,
-  ) {}
+  constructor() {}
 
   showDialog(): void {
     if (this.authService.isAuthenticated()) {
-      this.dialog.subscribe({
-        next: () => this.yearsListComponent.updateData(),
-      })
+      const dialog = this.dialog.subscribe()
+      this.allSubscription.push(dialog)
     } else {
       this.authService.logout()
       this.router.navigate(['/auth'], { queryParams: { authFailed: true } })
     }
+  }
+
+  ngOnDestroy(): void {
+    this.allSubscription.forEach(sub => {
+      if (sub) sub.unsubscribe()
+    })
   }
 }

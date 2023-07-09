@@ -1,6 +1,8 @@
 import { createAction, props } from '@ngrx/store'
-import { ActionTypes } from '../action-types';
-import { YearDataI } from '../../interfaces/budget.interface';
+
+import { ActionTypes } from '../action-types'
+
+import { YearDataI } from '../../interfaces/budget.interface'
 
 export const getBudgetAction = createAction(ActionTypes.GET_BUDGET)
 

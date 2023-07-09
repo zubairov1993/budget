@@ -5,11 +5,11 @@ import { catchError } from 'rxjs/operators'
 import { HttpErrorResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
 
-import { SharedService } from '../../../../../shared/services/shared.service'
-import { BudgetService } from '../../../../services/budget.service'
+import { SharedService } from '../../services/shared.service'
+import { BudgetService } from '../../../budget/services/budget.service'
 
 import { createDayAction, createDaySuccessAction, createDayFailureAction } from '../actions/create-day.action'
-import { createItemAction } from '../actions/create-item.action';
+import { createItemAction } from '../actions/create-item.action'
 
 @Injectable()
 export class CreateDayEffect {
@@ -20,21 +20,19 @@ export class CreateDayEffect {
 
   createDay$ = createEffect(() => this.actions$.pipe(
     ofType(createDayAction),
-    switchMap(({ yearName, monthName, dayObj, itemObj }) => this.budgetService.createDay(yearName, monthName, dayObj).pipe(
+    switchMap(({ yearName, year, monthName, month, dayObj, isoDate, itemObj }) => this.budgetService.createDay(yearName, monthName, dayObj).pipe(
       filter((response: any) => response !== null),
       map((response: { name: string }) => {
-        return createDaySuccessAction({ yearName, monthName, dayName: response.name, itemObj })
+        return createDaySuccessAction({ yearName, year, monthName, month, dayName: response.name, day: dayObj.day, isoDate, itemObj })
       }),
-      catchError((errorResponse: HttpErrorResponse) => {
-        return of(createDayFailureAction())
-      })
+      catchError((errorResponse: HttpErrorResponse) => of(createDayFailureAction()))
     ))
   ))
 
   createitemAfterDay$ = createEffect(() => this.actions$.pipe(
     ofType(createDaySuccessAction),
-    map(({ yearName, monthName, dayName, itemObj }) => {
-      return createItemAction({ yearName, monthName, dayName, itemObj });
+    map(({ yearName, year, monthName, month, dayName, day, itemObj }) => {
+      return createItemAction({ yearName, year, monthName, month, dayName, day, itemObj })
     })
   ))
 }

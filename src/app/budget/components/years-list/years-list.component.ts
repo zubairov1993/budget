@@ -1,13 +1,15 @@
 import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, inject } from '@angular/core'
+import { select, Store } from '@ngrx/store'
+import { Observable } from 'rxjs'
 
 import { SharedService } from '../../../shared/services/shared.service'
 import { BudgetService } from '../../services/budget.service'
 
-import { YearDataI, BudgetStateI } from '../../../shared/interfaces/budget.interface';
-import { select, Store } from '@ngrx/store';
-import { getBudgetAction } from '../../../shared/store/actions/get-budget.action';
-import { isLoadingSelector, errorSelector, budgetSelector } from '../../../shared/store/selectors';
-import { Observable } from 'rxjs';
+import { getBudgetAction } from '../../../shared/store/actions/get-budget.action'
+
+import { isLoadingSelector, errorSelector, budgetSelector } from '../../../shared/store/selectors'
+
+import { YearDataI, BudgetStateI } from '../../../shared/interfaces/budget.interface'
 
 @Component({
   selector: 'app-years-list',
@@ -25,30 +27,9 @@ export class YearsListComponent implements OnInit {
   error$!: Observable<string | null>
   budgets$!: Observable<YearDataI[] | null>
 
-  constructor() { }
-
   ngOnInit(): void {
-    // this.updateData()
-    // this.sharedService.dataItems$.subscribe((items) => {
-    //   // console.log('items', items);
-    //   this.years = items
-    //   this.years.forEach((year) => {
-    //     // year.numberOfMonths = -2
-    //     // year.months.forEach((month) => month.numberOfDays = -2)
-    //   })
-    //   // console.log('this.years', this.years)
-    //   this.cdr.detectChanges()
-    // })
-
-    // this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
-
-
-    this.initializeValues()
-    this.fetchData()
-  }
-
-  fetchData(): void {
     this.store.dispatch(getBudgetAction())
+    this.initializeValues()
   }
 
   initializeValues(): void {
@@ -66,9 +47,5 @@ export class YearsListComponent implements OnInit {
   isCurrentYear(year: number): boolean {
     const currentDate: Date = new Date()
     return year === currentDate.getFullYear()
-  }
-
-  updateData(): void {
-    this.sharedService.getData()
   }
 }

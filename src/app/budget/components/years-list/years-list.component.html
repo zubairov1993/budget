@@ -22,8 +22,9 @@
         </div>
 
         <ng-template tuiAccordionItemContent>
-          <app-months-list [yearName]="year.id!" [months]="year.months" [numberOfMonths]="year.numberOfMonths!">
-          </app-months-list>
+          <app-months-list [yearProps]="year"></app-months-list>
+          <!-- <app-months-list [yearName]="year.id!" [months]="year.months" [numberOfMonths]="year.numberOfMonths!">
+          </app-months-list> -->
         </ng-template>
 
       </tui-accordion-item>

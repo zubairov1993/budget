@@ -1,8 +1,10 @@
 import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { filter, map, BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs'
 
 import { environment } from "src/environments/environment"
+
+import { AuthService } from '../../auth/services/auth.service'
 
 import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../interfaces/budget.interface'
 
@@ -10,6 +12,7 @@ import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../interfaces/budget
 
 export class SharedService {
   http = inject(HttpClient)
+  authService = inject(AuthService)
 
   showPrice$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
   dataItems$: BehaviorSubject<YearDataI[]> = new BehaviorSubject<YearDataI[]>([])
@@ -29,14 +32,8 @@ export class SharedService {
   constructor() {}
 
   getBudget(): Observable<any> {
-    return this.http.get<any>(`${environment.firebaseConfig.databaseURL}/years.json`)
-  }
-
-  getData(): void {
-    this.http.get(`${environment.firebaseConfig.databaseURL}/years.json`).pipe(
-      filter((response: any) => response !== null),
-      map((response: any) => this.dataItems$.next(this.parseData(response)))
-    ).subscribe()
+    const uid = this.authService.localId
+    return this.http.get<any>(`${environment.firebaseConfig.databaseURL}/years/${uid}.json`)
   }
 
   parseData(data: {[key: string]: any}): YearDataI[] {

@@ -1,22 +1,27 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit, inject } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Inject, OnInit, inject, OnDestroy } from '@angular/core'
 import { TuiDialogContext } from '@taiga-ui/core'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus'
 import { Router } from '@angular/router'
 import { select, Store } from '@ngrx/store'
-import { Observable } from 'rxjs'
+import { Observable, Subscription } from 'rxjs'
 
 import { BudgetService } from '../../services/budget.service'
 import { SharedService } from '../../../shared/services/shared.service'
 
-import { createYearAction } from './store/actions/create-year.action'
-import { createMonthAction } from './store/actions/create-month.action'
-import { createDayAction } from './store/actions/create-day.action'
-import { createItemAction } from './store/actions/create-item.action'
+import { createYearAction } from '../../../shared/store/actions/create-year.action'
+import { createMonthAction } from '../../../shared/store/actions/create-month.action'
+import { createDayAction } from '../../../shared/store/actions/create-day.action'
+import { createItemAction } from '../../../shared/store/actions/create-item.action'
 
 import { budgetSelector } from 'src/app/shared/store/selectors'
+import { yearSelector } from '../../../shared/store/selectors'
 
 import { YearDataI, MonthDataI, DayDataI, ItemDataI, BudgetStateI } from '../../../shared/interfaces/budget.interface'
+import { CreateYearActionI } from '../../../shared/interfaces/year-action.interface'
+import { CreateMonthActionI } from '../../../shared/interfaces/month-action.interface'
+import { CreateDayActionI } from '../../../shared/interfaces/day-action.interface'
+import { CreateItemActionI } from '../../../shared/interfaces/item-action.interface'
 
 @Component({
   selector: 'app-add-product-dialog',
@@ -24,7 +29,7 @@ import { YearDataI, MonthDataI, DayDataI, ItemDataI, BudgetStateI } from '../../
   styleUrls: ['./add-product-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddProductDialogComponent implements OnInit {
+export class AddProductDialogComponent implements OnInit, OnDestroy {
   router = inject(Router)
   budgetService = inject(BudgetService)
   sharedService = inject(SharedService)
@@ -33,6 +38,7 @@ export class AddProductDialogComponent implements OnInit {
 
   budgets$!: Observable<YearDataI[] | null>
   currentYear: YearDataI| null | undefined = null
+  allSubscription: Subscription[] = []
 
   years: YearDataI[] = []
   form: FormGroup = this.formBuilder.group({
@@ -46,23 +52,22 @@ export class AddProductDialogComponent implements OnInit {
   constructor(@Inject(POLYMORPHEUS_CONTEXT) private readonly context: TuiDialogContext<number, number>) {}
 
   ngOnInit(): void {
-    this.sharedService.dataItems$.subscribe((items) => this.years = items)
     const currentDate: Date = new Date()
     const year: number = currentDate.getFullYear()
     this.budgets$ = this.store.pipe(select(budgetSelector))
 
-    this.budgets$.subscribe(budgets => {
-      if (budgets && budgets !== undefined) this.currentYear = budgets.find(item => item.year === year)
-    });
+    const selectedYearSubscribe = this.store.pipe(select(yearSelector(year))).subscribe(selectedYear => this.currentYear = selectedYear)
 
-    this.form.controls['name'].valueChanges.subscribe(data => {
+    const nameSubscribe = this.form.controls['name'].valueChanges.subscribe(data => {
       if (this.getCategory(data)) {
         this.form.controls['category'].setValue(this.getCategory(data).category)
         this.form.controls['priceT'].setValue(this.getCategory(data).priceT)
         this.form.controls['priceRu'].setValue(this.getCategory(data).priceRu)
       }
     })
-    this.form.controls['priceT'].valueChanges.subscribe(data => this.form.controls['priceRu'].setValue(this.budgetService.convertToRub(data)))
+    const priceTSubscribe = this.form.controls['priceT'].valueChanges.subscribe(data => this.form.controls['priceRu'].setValue(this.budgetService.convertToRub(data)))
+
+    this.allSubscription.push(selectedYearSubscribe, nameSubscribe, priceTSubscribe)
   }
 
   getNamesPopular(): string[] {
@@ -99,12 +104,12 @@ export class AddProductDialogComponent implements OnInit {
       if (currentMonth) {
         const selectedDay: DayDataI = currentMonth.days.find(item => item.day === day)!
         if (selectedDay) {
-          this.createItem(this.currentYear?.id!, currentMonth?.id!, selectedDay?.id!)
+          this.createItem(this.currentYear?.id!, this.currentYear?.year, currentMonth?.id!, currentMonth?.month, selectedDay?.id!, selectedDay.day)
         } else {
-          this.createDay(this.currentYear?.id!, currentMonth?.id!, day, isoDate)
+          this.createDay(this.currentYear?.id!, this.currentYear?.year, currentMonth?.id!, currentMonth.month, day, isoDate)
         }
       } else {
-        this.createMonth(this.currentYear?.id!, month, day, isoDate)
+        this.createMonth(this.currentYear?.id!, year, month, day, isoDate)
       }
     } else {
       this.createYear(year, month, day, isoDate)
@@ -118,7 +123,7 @@ export class AddProductDialogComponent implements OnInit {
       months: [],
     }
 
-    const data = {
+    const data: CreateYearActionI = {
       yearObj: yearObj,
       month: month,
       day: day,
@@ -127,37 +132,29 @@ export class AddProductDialogComponent implements OnInit {
     }
 
     this.store.dispatch(createYearAction(data))
-
-    // this.budgetService.createYear(yearObj).subscribe(year => {
-    //   console.log('response createYear', year)
-    //   this.createMonth(year.name, month, day, isoDate)
-    // }, (error: any) => this.errorProcessing(error))
   }
 
-  createMonth(yearName: string, month: number, day: number, isoDate: string): void {
+  createMonth(yearName: string, year: number, month: number, day: number, isoDate: string): void {
     const months = {
       month: month,
       totalPriceMonth: null,
       days: []
     }
 
-    const data = {
+    const data: CreateMonthActionI = {
       yearName: yearName,
+      year: year,
       monthsObj: months,
+      month: month,
       day: day,
       isoDate: isoDate,
       itemObj: this.getItem()
     }
 
     this.store.dispatch(createMonthAction(data))
-
-    // this.budgetService.createMonth(yearName, months).subscribe(month => {
-    //   console.log('response createMonth', month)
-    //   this.createDay(yearName, month.name, day, isoDate)
-    // }, (error: any) => this.errorProcessing(error))
   }
 
-  createDay(yearName: string, monthName: string, day: number, isoDate: string): void {
+  createDay(yearName: string, year: number, monthName: string, month: number, day: number, isoDate: string): void {
     const dayObj = {
       day: day,
       date: isoDate,
@@ -165,36 +162,30 @@ export class AddProductDialogComponent implements OnInit {
       items: []
     }
 
-    const data = {
+    const data: CreateDayActionI = {
       yearName: yearName,
+      year,
       monthName: monthName,
+      month,
       dayObj: dayObj,
       isoDate: isoDate,
       itemObj: this.getItem()
     }
     this.store.dispatch(createDayAction(data))
-
-    // this.budgetService.createDay(yearName, monthName, dayObj).subscribe(day => {
-    //   console.log('response createDays', day)
-    //   this.createItem(yearName, monthName, day.name)
-    // }, (error: any) => this.errorProcessing(error))
   }
 
-  createItem(yearName: string, monthName: string, dayName: string): void {
-
-    const data = {
+  createItem(yearName: string, year: number, monthName: string, month: number, dayName: string, day: number): void {
+    const data: CreateItemActionI = {
       itemObj: this.getItem(),
       yearName: yearName,
+      year,
       monthName: monthName,
+      month,
       dayName: dayName,
+      day
     }
     this.store.dispatch(createItemAction(data))
-
-
-    // this.budgetService.createItem(yearName, monthName, dayName, this.getItem()).subscribe(item => {
-    //   console.log('response createItems', item)
-    //   this.context.completeWith(this.form.value)
-    // }, (error: any) => this.errorProcessing(error))
+    this.context.completeWith(this.form.value)
   }
 
   errorProcessing(error: any): void {
@@ -204,6 +195,12 @@ export class AddProductDialogComponent implements OnInit {
 
   clear(): void {
     this.form.reset()
+  }
+
+  ngOnDestroy(): void {
+    this.allSubscription.forEach(sub => {
+      if (sub) sub.unsubscribe()
+    })
   }
 }
 

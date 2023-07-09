@@ -1,15 +1,17 @@
 import { createAction, props } from '@ngrx/store'
-import { ActionTypes } from '../action-types';
-import { ItemDataI } from '../../../../../shared/interfaces/budget.interface';
+
+import { ActionTypes } from '../action-types'
+
+import { CreateItemActionI, CreateItemSuccessAction } from '../../interfaces/item-action.interface'
 
 export const createItemAction = createAction(
   ActionTypes.CREATE_ITEM,
-  props<{ itemObj: ItemDataI, yearName: string, monthName: string, dayName: string }>()
+  props<CreateItemActionI>()
 )
 
 export const createItemSuccessAction = createAction(
   ActionTypes.CREATE_ITEM_SUCCESS,
-  props<{ response: any }>()
+  props<CreateItemSuccessAction>()
 )
 
 export const createItemFailureAction = createAction(ActionTypes.CREATE_ITEM_FAILURE)

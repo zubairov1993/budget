@@ -15,18 +15,23 @@ export class AuthService {
   constructor() {}
 
   login(user: UserI): Observable<FBResponseI> {
-    const url = `${environment.firebaseConfig.signInWithPasswordPath}${environment.firebaseConfig.apiKey}`;
+    const url = `${environment.firebaseConfig.signInWithPasswordPath}${environment.firebaseConfig.apiKey}`
     return this.http.post<FBResponseI>(url, user).pipe(
       tap(response => {
         if (response) {
-          const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
-          localStorage.setItem('token', response.idToken);
-          localStorage.setItem('token-exp', expDate.toString());
+          const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000)
+          localStorage.setItem('uidBudget', response.localId)
+          localStorage.setItem('tokenBudget', response.idToken)
+          localStorage.setItem('tokenBudget-exp', expDate.toString())
         } else {
-          localStorage.clear();
+          localStorage.clear()
         }
       })
     )
+  }
+
+  get localId() {
+    return localStorage.getItem('uidBudget') ? localStorage.getItem('uidBudget') : null
   }
 
   logout(): void {
@@ -34,18 +39,17 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    const storedExpDate = localStorage.getItem('token-exp')
+    const storedExpDate = localStorage.getItem('tokenBudget-exp')
     const expDate = storedExpDate ? new Date(storedExpDate) : null
-
     if (expDate && (new Date() > expDate)) {
       this.logout()
       return false
     }
-    return !!localStorage.getItem('token')
+    return !!localStorage.getItem('tokenBudget')
   }
 
   get token(): string | null {
-    return this.isAuthenticated() ? localStorage.getItem('token') : null
+    return this.isAuthenticated() ? localStorage.getItem('tokenBudget') : null
   }
 }
 
