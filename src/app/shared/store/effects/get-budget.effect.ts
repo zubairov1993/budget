@@ -3,7 +3,6 @@ import { Actions, createEffect, ofType } from "@ngrx/effects"
 import { switchMap, map, of, filter } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Router } from '@angular/router'
 
 import { getBudgetAction, getBudgetSuccessAction, getBudgetFailureAction } from '../actions/get-budget.action'
 
@@ -15,12 +14,10 @@ import { MonthDataI, YearDataI, DayDataI, ItemDataI } from '../../interfaces/bud
 export class GetBudgetEffect {
   private actions$ = inject(Actions)
   sharedService = inject(SharedService)
-  router = inject(Router)
 
   getBudget$ = createEffect(() => this.actions$.pipe(
     ofType(getBudgetAction),
     switchMap(() => this.sharedService.getBudget().pipe(
-      filter((response: any) => response !== null),
       map((response: any) => {
         return getBudgetSuccessAction({ response: this.parseData(response) })
       }),
@@ -83,7 +80,6 @@ export class GetBudgetEffect {
               month: monthsData[monthName].month,
               totalPriceMonth: totalPriceMonth,
               days: days,
-              numberOfDays: -2,
             }
 
             totalPriceYear += totalPriceMonth
@@ -96,7 +92,6 @@ export class GetBudgetEffect {
             year: year,
             totalPriceYear: totalPriceYear,
             months: months,
-            numberOfMonths: -2,
           }
           result.push(resultData)
         }

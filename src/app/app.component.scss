@@ -1,9 +1,33 @@
-.header {
-  position: absolute;
-  top: 0;
-  right: 0;
+.app_budget {
+  padding: 0 10px;
 
-  button {
-    margin-right: 10px;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+
+    &_right {
+      display: flex;
+
+      &-field {
+        width: 200px;
+        margin-right: 10px;
+      }
+    }
+
+    button {
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
+}
+
+.action {
+  position: fixed;
+  bottom: 0;
+  right: 0;
 }

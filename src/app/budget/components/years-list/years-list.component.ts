@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, inject } from '@angular/core'
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, inject, OnDestroy } from '@angular/core'
 import { select, Store } from '@ngrx/store'
-import { Observable } from 'rxjs'
+import { Observable, Subscription } from 'rxjs'
 
 import { SharedService } from '../../../shared/services/shared.service'
 import { BudgetService } from '../../services/budget.service'
@@ -17,7 +17,7 @@ import { YearDataI, BudgetStateI } from '../../../shared/interfaces/budget.inter
   styleUrls: ['./years-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class YearsListComponent implements OnInit {
+export class YearsListComponent implements OnInit, OnDestroy {
   cdr = inject(ChangeDetectorRef)
   sharedService = inject(SharedService)
   budgetService = inject(BudgetService)
@@ -27,9 +27,13 @@ export class YearsListComponent implements OnInit {
   error$!: Observable<string | null>
   budgets$!: Observable<YearDataI[] | null>
 
+  allSubscription: Subscription[] = []
+
   ngOnInit(): void {
     this.store.dispatch(getBudgetAction())
     this.initializeValues()
+    const showPrice = this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
+    this.allSubscription.push(showPrice)
   }
 
   initializeValues(): void {
@@ -38,14 +42,14 @@ export class YearsListComponent implements OnInit {
     this.budgets$ = this.store.pipe(select(budgetSelector))
   }
 
-  changeNumberOfMonths(event: any, year: YearDataI): void {
-    event.stopPropagation()
-    if (year.numberOfMonths === -year.months.length) year.numberOfMonths = -2
-    else year.numberOfMonths = -year.months.length
-  }
-
   isCurrentYear(year: number): boolean {
     const currentDate: Date = new Date()
     return year === currentDate.getFullYear()
+  }
+
+  ngOnDestroy(): void {
+    this.allSubscription.forEach(sub => {
+      if (sub) sub.unsubscribe()
+    })
   }
 }

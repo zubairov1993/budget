@@ -13,9 +13,8 @@ import { YearDataI, MonthDataI, DayDataI, ItemDataI } from '../interfaces/budget
 export class SharedService {
   http = inject(HttpClient)
   authService = inject(AuthService)
-
+  currency$: BehaviorSubject<string> = new BehaviorSubject<string>('Тенге')
   showPrice$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
-  dataItems$: BehaviorSubject<YearDataI[]> = new BehaviorSubject<YearDataI[]>([])
   popularItems$: BehaviorSubject<ItemDataI[]> = new BehaviorSubject<ItemDataI[]>([])
   catogories = [
     'Еда',
@@ -28,8 +27,6 @@ export class SharedService {
     'Учеба',
     'Прочее',
   ]
-
-  constructor() {}
 
   getBudget(): Observable<any> {
     const uid = this.authService.localId

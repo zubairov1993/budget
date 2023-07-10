@@ -24,25 +24,19 @@ export class DaysListComponent implements OnInit, OnDestroy {
   router = inject(Router)
   private store = inject(Store<BudgetStateI>)
 
-  open = false
   @Input() monthProps: MonthDataI | null = null
-
   @Input() yearName: string | null | undefined = null
   @Input() year: number | null | undefined = null
-  month: number | null = null
+
+  open = false
   days: DayDataI[] = []
-  numberOfDays: number = -2
 
   allSubscription: Subscription[] = []
 
   readonly columns = [ 'name', 'category', 'priceT', 'priceRu', 'other' ]
 
-  constructor() {}
-
   ngOnInit(): void {
     this.days = this.monthProps?.days ? this.monthProps?.days : []
-    this.month = this.monthProps?.month ? this.monthProps?.month : null
-    this.numberOfDays = this.monthProps?.numberOfDays ? this.monthProps?.numberOfDays : -2
 
     const showPrice = this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
     this.allSubscription.push(showPrice)
@@ -67,7 +61,6 @@ export class DaysListComponent implements OnInit, OnDestroy {
   }
 
   deleteItem(dayName: string, day: number, itemId: string): void {
-
     const data: DeleteItemActionI = {
       yearName: this.yearName!,
       year: this.year!,
@@ -84,14 +77,6 @@ export class DaysListComponent implements OnInit, OnDestroy {
   errorProcessing(error: any): void {
     console.log('error', error)
     if (error.status === 401) this.router.navigate(['/auth'])
-  }
-
-  showDialog(): void {
-    this.open = true
-  }
-
-  close(): void {
-    this.open = false
   }
 
   ngOnDestroy(): void {

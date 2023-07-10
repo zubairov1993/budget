@@ -1,11 +1,8 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { Router } from '@angular/router'
 import { select, Store } from '@ngrx/store'
 
 import { Observable } from 'rxjs'
-
-import { AuthService } from './services/auth.service'
 
 import { loginAction } from './store/actions/login.action'
 
@@ -21,8 +18,6 @@ import { AppStateI } from '../shared/interfaces/app-state.interface'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthComponent {
-  router = inject(Router)
-  authService = inject(AuthService)
   formBuilder = inject(FormBuilder)
   private store = inject(Store<AppStateI>)
 

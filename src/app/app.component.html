@@ -1,19 +1,45 @@
 <tui-root>
-  <div class="header">
-    <button *ngIf="authService.isAuthenticated()" [routerLink]="['/auth']" tuiButton type="button" size="m">
-      Выйти
-    </button>
-    <button [routerLink]="['/list']" routerLinkActive="router-link-active"  tuiButton type="button" size="m">
-      Список
-    </button>
-    <button [routerLink]="['/chart']" tuiButton type="button" size="m">
-      Диаграма
-    </button>
-    <button tuiButton type="button" size="m" (click)="toggleShowPrice()">
-      <span *ngIf="!sharedService.showPrice$.value">Показать цену</span>
-      <span *ngIf="sharedService.showPrice$.value">Скрыть цену</span>
-    </button>
+  <div class="app_budget">
+    <div class="app_budget__header" *ngIf="router.url !== '/auth'">
+      <div>
+
+        <button tuiButton type="button" size="m" (click)="showDialog()" *ngIf="router.url === '/list'">
+          Добавить
+        </button>
+
+        <!-- <button
+            tuiIconButton
+            class="action"
+            icon="tuiIconPlusLarge"
+        ></button> -->
+
+      </div>
+
+      <div class="app_budget__header_right">
+
+        <div>
+          <tui-select class="app_budget__header_right-field" tuiTextfieldSize="m" [formControl]="currency" >
+            Валюта
+            <tui-data-list-wrapper *tuiDataList [items]="currencies"></tui-data-list-wrapper>
+          </tui-select>
+        </div>
+
+        <button *ngIf="router.url !== '/list'" [routerLink]="['/list']" routerLinkActive="router-link-active" tuiButton type="button" size="m">
+          Список
+        </button>
+        <button *ngIf="router.url !== '/chart'" [routerLink]="['/chart']" tuiButton type="button" size="m">
+          Диаграма
+        </button>
+        <button tuiButton type="button" size="m" (click)="toggleShowPrice()">
+          <span *ngIf="!sharedService.showPrice$.value">Показать цену</span>
+          <span *ngIf="sharedService.showPrice$.value">Скрыть цену</span>
+        </button>
+        <button *ngIf="authService.isAuthenticated()" [routerLink]="['/auth']" tuiButton type="button" size="m">
+          Выйти
+        </button>
+      </div>
+    </div>
+    <router-outlet></router-outlet>
   </div>
-  <router-outlet></router-outlet>
 
 </tui-root>

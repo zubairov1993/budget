@@ -27,9 +27,7 @@
 .calendars {
   display: flex;
   justify-content: space-around;
-  padding-top: 50px;
 }
-
 
 .charts {
   display: flex;
@@ -41,7 +39,8 @@
 
     &_legend {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      width: 300px;
       margin: 0 0 0 2rem;
 
       &-item {
@@ -50,3 +49,8 @@
     }
   }
 }
+
+.hide {
+  display: none;
+}
+

@@ -22,13 +22,35 @@
   </div>
 
   <div class="add_product__fields">
-    <tui-input-number class="add_product__fields_item" decimal="never" formControlName="priceT">
+    <tui-input-number
+      class="add_product__fields_item"
+      [class.hide]="sharedService.currency$.value === 'Рубль'"
+      decimal="never"
+      (input)="convertToRub()"
+      formControlName="priceT">
       Цена в Тенге &#8376;
     </tui-input-number>
 
-    <tui-input-number class="add_product__fields_item" decimal="never" formControlName="priceRu">
+    <div class="add_product__fields_hint"
+      *ngIf="form.controls['priceRu'].value"
+      [class.hide]="sharedService.currency$.value === 'Рубль'">
+      Цена в Рублях {{ form.controls['priceRu'].value }} &#8381;
+    </div>
+
+    <tui-input-number
+      class="add_product__fields_item"
+      [class.hide]="sharedService.currency$.value === 'Тенге'"
+      decimal="never"
+      (input)="convertToTenge()"
+      formControlName="priceRu">
       Цена в Рублях &#8381;
     </tui-input-number>
+
+    <div class="add_product__fields_hint"
+      *ngIf="form.controls['priceT'].value"
+      [class.hide]="sharedService.currency$.value === 'Тенге'">
+      Цена в Тенге {{ form.controls['priceT'].value }} &#8376;
+    </div>
   </div>
 
   <div class="add_product__btns">

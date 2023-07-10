@@ -12,15 +12,19 @@
 
   &__fields {
     display: flex;
+    align-items: baseline;
     margin-bottom: 10px;
 
     &_item {
       width: 100%;
-
-      &:first-child {
-        margin-right: 10px;
-      }
     }
+
+    &_hint {
+      display: flex;
+      width: 330px;
+      margin-left: 10px;
+    }
+
   }
 
   &__btns {
@@ -36,5 +40,9 @@
 
 ::ng-deep [tuioption]:focus {
   background-color: red !important;
+}
+
+.hide {
+  display: none;
 }
 

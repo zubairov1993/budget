@@ -19,23 +19,15 @@ export class MonthsListComponent implements OnInit, OnDestroy {
 
   @Input() yearProps: YearDataI | null = null
   months: MonthDataI[] = []
-  numberOfMonths: number = -2
   allSubscription: Subscription[] = []
 
   constructor() {}
 
   ngOnInit(): void {
     this.months = this.yearProps?.months ? this.yearProps?.months : []
-    this.numberOfMonths = this.yearProps?.numberOfMonths ? this.yearProps?.numberOfMonths : -2
 
     const showPrice = this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
     this.allSubscription.push(showPrice)
-  }
-
-  changeNumberOfDays(event: any, month: MonthDataI): void {
-    event.stopPropagation()
-    if (month.numberOfDays === -month.days.length) month.numberOfDays = -2
-    else month.numberOfDays = -month.days.length
   }
 
   isCurrentMonth(month: number): boolean {

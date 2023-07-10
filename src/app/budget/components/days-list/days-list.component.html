@@ -1,4 +1,4 @@
-<div class="days" *ngFor="let day of days | slice:numberOfDays">
+<div class="days" *ngFor="let day of days">
   <tui-accordion class="days__container">
     <tui-accordion-item [open]="isCurrentDay(day.day)">
       <div class="days__container_header">
@@ -50,27 +50,14 @@
                 {{ item.priceRu | isShowPrice }} &#8381;
               </td>
               <td *tuiCell="'other'" tuiTd>
+                <button type="button" (click)="open = true">Удалить</button>
 
-                <!-- <button
-                  tuiIconButton
-                  type="button"
-                  icon="tuiIconEdit2Large"
-                  (click)="showDialog()"
-                ></button> -->
-
-                <button
-                  tuiIconButton
-                  type="button"
-                  icon="tuiIconTrash2Large"
-                  (click)="showDialog()"
-                ></button>
-
-                <ng-template #template [(tuiDialog)]="open"   size="l">
+                <ng-template #template [(tuiDialog)]="open" size="l">
                   <div class="dialog">
                     <p>Вы действительно хотите удалить ?</p>
 
                     <div class="dialog__btns">
-                      <button tuiButton type="button" appearance="outline" size="m" (click)="close()">
+                      <button tuiButton type="button" appearance="outline" size="m" (click)="open = false">
                         Нет
                       </button>
                       <button tuiButton type="button" appearance="accent" size="m" (click)="deleteItem(day.id!, day.day!, item.id!)">

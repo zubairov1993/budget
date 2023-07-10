@@ -11,8 +11,6 @@ export class AuthInterceptor implements HttpInterceptor {
   router = inject(Router)
   authService = inject(AuthService)
 
-  constructor() {}
-
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if(this.authService.isAuthenticated()) {
       req = req.clone({

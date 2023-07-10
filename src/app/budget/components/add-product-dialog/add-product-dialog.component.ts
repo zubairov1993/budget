@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus'
 import { Router } from '@angular/router'
 import { select, Store } from '@ngrx/store'
-import { Observable, Subscription } from 'rxjs'
+import { Observable, Subscription, take } from 'rxjs'
 
 import { BudgetService } from '../../services/budget.service'
 import { SharedService } from '../../../shared/services/shared.service'
@@ -12,7 +12,7 @@ import { SharedService } from '../../../shared/services/shared.service'
 import { createYearAction } from '../../../shared/store/actions/create-year.action'
 import { createMonthAction } from '../../../shared/store/actions/create-month.action'
 import { createDayAction } from '../../../shared/store/actions/create-day.action'
-import { createItemAction } from '../../../shared/store/actions/create-item.action'
+import { createItemAction, createItemSuccessAction } from '../../../shared/store/actions/create-item.action';
 
 import { budgetSelector } from 'src/app/shared/store/selectors'
 import { yearSelector } from '../../../shared/store/selectors'
@@ -22,6 +22,7 @@ import { CreateYearActionI } from '../../../shared/interfaces/year-action.interf
 import { CreateMonthActionI } from '../../../shared/interfaces/month-action.interface'
 import { CreateDayActionI } from '../../../shared/interfaces/day-action.interface'
 import { CreateItemActionI } from '../../../shared/interfaces/item-action.interface'
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
   selector: 'app-add-product-dialog',
@@ -35,12 +36,12 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
   sharedService = inject(SharedService)
   formBuilder = inject(FormBuilder)
   private store = inject(Store<BudgetStateI>)
+  private actions$ = inject(Actions)
 
   budgets$!: Observable<YearDataI[] | null>
   currentYear: YearDataI| null | undefined = null
   allSubscription: Subscription[] = []
 
-  years: YearDataI[] = []
   form: FormGroup = this.formBuilder.group({
     name: [null, [ Validators.required ]],
     category: [null, [ Validators.required ]],
@@ -65,9 +66,17 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
         this.form.controls['priceRu'].setValue(this.getCategory(data).priceRu)
       }
     })
-    const priceTSubscribe = this.form.controls['priceT'].valueChanges.subscribe(data => this.form.controls['priceRu'].setValue(this.budgetService.convertToRub(data)))
 
-    this.allSubscription.push(selectedYearSubscribe, nameSubscribe, priceTSubscribe)
+    const actions = this.actions$.pipe(ofType(createItemSuccessAction), take(1)).subscribe(() => this.context.completeWith(this.form.value))
+    this.allSubscription.push(selectedYearSubscribe, nameSubscribe, actions)
+  }
+
+  convertToRub() {
+    this.form.controls['priceRu'].setValue(this.budgetService.convertToRub(this.form.controls['priceT'].value))
+  }
+
+  convertToTenge() {
+    this.form.controls['priceT'].setValue(this.budgetService.convertToTenge(this.form.controls['priceRu'].value))
   }
 
   getNamesPopular(): string[] {
@@ -185,7 +194,6 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
       day
     }
     this.store.dispatch(createItemAction(data))
-    this.context.completeWith(this.form.value)
   }
 
   errorProcessing(error: any): void {

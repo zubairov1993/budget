@@ -17,9 +17,8 @@ export class ChartComponent implements OnInit, OnDestroy {
   cdr = inject(ChangeDetectorRef)
 
   date: TuiDayRange | null = null
-  firstMonth = TuiMonth.currentLocal()
-  middleMonth = TuiMonth.currentLocal().append({ month: 1 })
-  lastMonth = TuiMonth.currentLocal().append({ month: 2 })
+  firstMonth = TuiMonth.currentLocal().append({ month: -1 })
+  middleMonth = TuiMonth.currentLocal()
   hoveredItem: TuiDay | null = null
 
   activeIndexKZ = NaN
@@ -29,7 +28,8 @@ export class ChartComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.forEntirePeriod()
     const showPrice = this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
-    this.allSubscription.push(showPrice)
+    const currency = this.sharedService.currency$.subscribe(() => this.cdr.detectChanges())
+    this.allSubscription.push(showPrice, currency)
   }
 
   forEntirePeriod(): void {
@@ -56,19 +56,11 @@ export class ChartComponent implements OnInit, OnDestroy {
   onMonthChangeFirst(month: TuiMonth): void {
     this.firstMonth = month
     this.middleMonth = month.append({ month: 1 })
-    this.lastMonth = month.append({ month: 2 })
   }
 
   onMonthChangeMiddle(month: TuiMonth): void {
     this.firstMonth = month.append({ month: -1 })
     this.middleMonth = month
-    this.lastMonth = month.append({ month: 1 })
-  }
-
-  onMonthChangeLast(month: TuiMonth): void {
-    this.firstMonth = month.append({ month: -2 })
-    this.middleMonth = month.append({ month: -1 })
-    this.lastMonth = month
   }
 
   // =================================================================================================

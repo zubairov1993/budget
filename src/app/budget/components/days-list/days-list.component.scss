@@ -2,12 +2,14 @@
   width: 100%;
 
   th:last-child {
-    width: 150px;
+    width: 80px;
   }
 
   td:last-child {
-
-    button:first-child {
+    button {
+      background: transparent;
+      border: none;
+      color: red;
       margin-right: 10px;
     }
   }

@@ -1,6 +1,6 @@
-<button tuiButton type="button" size="m" (click)="forEntirePeriod()">
+<!-- <button tuiButton type="button" size="m" (click)="forEntirePeriod()">
   За весь период
-</button>
+</button> -->
 
 <div class="calendars">
   <tui-calendar
@@ -17,24 +17,14 @@
       [showAdjacent]="false"
       [month]="middleMonth"
       [minViewedMonth]="middleMonth"
-      [maxViewedMonth]="middleMonth"
       [(hoveredItem)]="hoveredItem"
       (monthChange)="onMonthChangeMiddle($event)"
-      (dayClick)="onDayClick($event)"
-  ></tui-calendar>
-  <tui-calendar
-      [value]="date"
-      [showAdjacent]="false"
-      [minViewedMonth]="lastMonth"
-      [month]="lastMonth"
-      [(hoveredItem)]="hoveredItem"
-      (monthChange)="onMonthChangeLast($event)"
       (dayClick)="onDayClick($event)"
   ></tui-calendar>
 </div>
 
 <div class="charts">
-  <div class="charts__chart">
+  <div class="charts__chart" [class.hide]="sharedService.currency$.value === 'Рубль'">
 
     <tui-ring-chart [size]="'xl'" [value]="chartService.totalsKZ$.value" [(activeItemIndex)]="activeIndexKZ">
       <div>Общее {{ sumArrayValues(chartService.totalsKZ$.value) | isShowPrice }} &#8376;</div>
@@ -54,7 +44,7 @@
 
   </div>
 
-  <div class="charts__chart">
+  <div class="charts__chart" [class.hide]="sharedService.currency$.value === 'Тенге'">
 
     <tui-ring-chart [size]="'xl'" [value]="chartService.totalsRU$.value" [(activeItemIndex)]="activeIndexRU">
       <div>Общее {{ sumArrayValues(chartService.totalsRU$.value) | isShowPrice }} &#8381;</div>

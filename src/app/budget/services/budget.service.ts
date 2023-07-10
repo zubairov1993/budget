@@ -58,6 +58,12 @@ export class BudgetService {
     return price
   }
 
+  convertToTenge(priceR: number | null): number {
+    let price = 0
+    if (this.rubConverter && priceR) price = +(priceR / this.rubConverter).toFixed(2)
+    return price
+  }
+
   // firebase =================================================================
 
   createYear(item: YearDataI): Observable<any> {

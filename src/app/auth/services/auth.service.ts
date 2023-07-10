@@ -1,18 +1,18 @@
 import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { Observable } from 'rxjs'
+import { Observable, BehaviorSubject } from 'rxjs'
 import { tap } from 'rxjs/operators'
 
-import { UserI, FBResponseI } from '../interfaces/auth.interface'
 import { environment } from "src/environments/environment"
+
+import { UserI, FBResponseI } from '../interfaces/auth.interface'
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthService {
   http = inject(HttpClient)
-
-  constructor() {}
+  setCurrency$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null)
 
   login(user: UserI): Observable<FBResponseI> {
     const url = `${environment.firebaseConfig.signInWithPasswordPath}${environment.firebaseConfig.apiKey}`
@@ -20,6 +20,7 @@ export class AuthService {
       tap(response => {
         if (response) {
           const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000)
+          this.setCurrency$.next(response.localId)
           localStorage.setItem('uidBudget', response.localId)
           localStorage.setItem('tokenBudget', response.idToken)
           localStorage.setItem('tokenBudget-exp', expDate.toString())

@@ -3,9 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects"
 import { switchMap, map, of, filter } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Router } from '@angular/router'
 
-import { SharedService } from '../../services/shared.service'
 import { BudgetService } from '../../../budget/services/budget.service'
 
 import { createDayAction, createDaySuccessAction, createDayFailureAction } from '../actions/create-day.action'
@@ -14,9 +12,7 @@ import { createItemAction } from '../actions/create-item.action'
 @Injectable()
 export class CreateDayEffect {
   private actions$ = inject(Actions)
-  sharedService = inject(SharedService)
   budgetService = inject(BudgetService)
-  router = inject(Router)
 
   createDay$ = createEffect(() => this.actions$.pipe(
     ofType(createDayAction),
