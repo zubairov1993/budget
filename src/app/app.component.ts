@@ -37,7 +37,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const currency = this.currency.valueChanges.subscribe(currency => this.sharedService.currency$.next(currency))
-    const setCurrency = this.authService.setCurrency$.subscribe(uid => this.currency.setValue(uid === 'bICFOR7bxlfIJgoaEbffPMwwXHi2' ? 'Тенге' : 'Рубль'))
+    const setCurrency = this.authService.setCurrency$.subscribe(() => {
+      this.currency.setValue(this.authService.localId === 'bICFOR7bxlfIJgoaEbffPMwwXHi2' ? 'Тенге' : 'Рубль')
+    })
     this.allSubscription.push(currency, setCurrency)
   }
 

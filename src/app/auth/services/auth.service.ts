@@ -12,7 +12,7 @@ import { UserI, FBResponseI } from '../interfaces/auth.interface'
 })
 export class AuthService {
   http = inject(HttpClient)
-  setCurrency$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null)
+  setCurrency$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
   login(user: UserI): Observable<FBResponseI> {
     const url = `${environment.firebaseConfig.signInWithPasswordPath}${environment.firebaseConfig.apiKey}`
@@ -20,10 +20,11 @@ export class AuthService {
       tap(response => {
         if (response) {
           const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000)
-          this.setCurrency$.next(response.localId)
           localStorage.setItem('uidBudget', response.localId)
           localStorage.setItem('tokenBudget', response.idToken)
           localStorage.setItem('tokenBudget-exp', expDate.toString())
+
+          this.setCurrency$.next(true)
         } else {
           localStorage.clear()
         }
