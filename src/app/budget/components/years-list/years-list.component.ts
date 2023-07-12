@@ -26,7 +26,8 @@ export class YearsListComponent implements OnInit, OnDestroy {
   isLoading$!: Observable<boolean>
   error$!: Observable<string | null>
   budgets$!: Observable<YearDataI[] | null>
-
+  currentYear: number = new Date().getFullYear()
+  numberOfMonths: number = -1
   allSubscription: Subscription[] = []
 
   ngOnInit(): void {
@@ -45,6 +46,12 @@ export class YearsListComponent implements OnInit, OnDestroy {
   isCurrentYear(year: number): boolean {
     const currentDate: Date = new Date()
     return year === currentDate.getFullYear()
+  }
+
+  changeNumberOfMonths(event: any, year: YearDataI): void {
+    event.stopPropagation()
+    if (this.numberOfMonths === -year.months.length) this.numberOfMonths = -1
+    else this.numberOfMonths = -year.months.length
   }
 
   ngOnDestroy(): void {

@@ -27,6 +27,7 @@ export class DaysListComponent implements OnInit, OnDestroy {
   @Input() monthProps: MonthDataI | null = null
   @Input() yearName: string | null | undefined = null
   @Input() year: number | null | undefined = null
+  @Input() numberOfDays: number = -2
 
   open = false
   days: DayDataI[] = []
@@ -58,6 +59,15 @@ export class DaysListComponent implements OnInit, OnDestroy {
   isCurrentDay(day: number): boolean {
     const currentDate: Date = new Date()
     return day === currentDate.getDate()
+  }
+
+  openDialogDelete() {
+    this.open = true
+    console.log('this.open: ', this.open);
+  }
+
+  closeDialogDelete() {
+    this.open = false
   }
 
   deleteItem(dayName: string, day: number, itemId: string): void {

@@ -1,4 +1,4 @@
-<div class="days" *ngFor="let day of days">
+<div class="days" *ngFor="let day of days | slice:numberOfDays">
   <tui-accordion class="days__container">
     <tui-accordion-item [open]="isCurrentDay(day.day)">
       <div class="days__container_header">
@@ -18,7 +18,7 @@
         <table class="table" tuiTable [columns]="columns">
           <thead>
             <tr tuiThGroup>
-              <th *tuiHead="'name'" tuiTh [resizable]="true" [sorter]="null">
+              <th *tuiHead="'name'" tuiTh [resizable]="true" [sticky]="true" [sorter]="null">
                 Наименование
               </th>
               <th *tuiHead="'category'" tuiTh [sticky]="true" [sorter]="null">
@@ -27,10 +27,10 @@
               <th *tuiHead="'priceT'" tuiTh [sticky]="true" [sorter]="null">
                 Цена в Тенге
               </th>
-              <th *tuiHead="'priceRu'" tuiTh [sorter]="null">
+              <th *tuiHead="'priceRu'" tuiTh [sticky]="true" [sorter]="null">
                 Цена в Рублях
               </th>
-              <th *tuiHead="'other'" tuiTh [sorter]="null">
+              <th *tuiHead="'other'" tuiTh [sticky]="true" [sorter]="null">
               </th>
             </tr>
           </thead>
@@ -50,14 +50,14 @@
                 {{ item.priceRu | isShowPrice }} &#8381;
               </td>
               <td *tuiCell="'other'" tuiTd>
-                <button type="button" (click)="open = true">Удалить</button>
+                <!-- <button type="button" (click)="openDialogDelete()">Удалить</button> -->
 
                 <ng-template #template [(tuiDialog)]="open" size="l">
                   <div class="dialog">
                     <p>Вы действительно хотите удалить ?</p>
 
                     <div class="dialog__btns">
-                      <button tuiButton type="button" appearance="outline" size="m" (click)="open = false">
+                      <button tuiButton type="button" appearance="outline" size="m" (click)="closeDialogDelete()">
                         Нет
                       </button>
                       <button tuiButton type="button" appearance="accent" size="m" (click)="deleteItem(day.id!, day.day!, item.id!)">

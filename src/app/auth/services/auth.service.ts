@@ -54,4 +54,3 @@ export class AuthService {
     return this.isAuthenticated() ? localStorage.getItem('tokenBudget') : null
   }
 }
-

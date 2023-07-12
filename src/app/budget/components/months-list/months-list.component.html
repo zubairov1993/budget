@@ -1,10 +1,16 @@
-<div class="months" *ngFor="let month of months">
+<div class="months" *ngFor="let month of months | slice:numberOfMonths">
   <tui-accordion class="months__container">
     <tui-accordion-item [open]="isCurrentMonth(month.month)">
       <div class="months__container_header">
         <div>{{ getMonthNameByIndex(month.month - 1) }} месяц</div>
 
         <div class="months__container_header-right">
+
+          <button tuiButton type="button" size="s" *ngIf="month.days.length > 2 && month.month === currentMonth">
+            <span *ngIf="numberOfDays === -month.days.length" (click)="changeNumberOfDays($event, month)">Показать последние 2 дня</span>
+            <span *ngIf="numberOfDays === -2" (click)="changeNumberOfDays($event, month)">Показать все дни</span>
+          </button>
+
           <div>
             <b>потрачено за месяц:</b>
             тенге - {{ month.totalPriceMonth | isShowPrice }} &#8376;,
@@ -16,7 +22,8 @@
         <app-days-list
           [yearName]="yearProps?.id"
           [year]="yearProps?.year"
-          [monthProps]="month">
+          [monthProps]="month"
+          [numberOfDays]="numberOfDays">
         </app-days-list>
       </ng-template>
 

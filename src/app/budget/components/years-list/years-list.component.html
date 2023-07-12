@@ -7,6 +7,10 @@
           <div>{{ year.year }} год</div>
 
           <div class="years__container_header-right">
+            <button tuiButton type="button" size="s" *ngIf="year.months.length > 2 && year.year === currentYear">
+              <span *ngIf="numberOfMonths === -year.months.length" (click)="changeNumberOfMonths($event, year)">Показать последний месяц</span>
+              <span *ngIf="numberOfMonths === -1" (click)="changeNumberOfMonths($event, year)">Показать все месяцы</span>
+            </button>
 
             <div>
               <b>потрачено за год:</b>
@@ -17,7 +21,7 @@
         </div>
 
         <ng-template tuiAccordionItemContent>
-          <app-months-list [yearProps]="year"></app-months-list>
+          <app-months-list [yearProps]="year" [numberOfMonths]="numberOfMonths"></app-months-list>
         </ng-template>
 
       </tui-accordion-item>
