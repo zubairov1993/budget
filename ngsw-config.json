@@ -38,17 +38,6 @@
         "maxSize": 5,
         "maxAge": "3600"
       }
-    },
-    {
-      "name": "budget2",
-      "urls": [
-        "https://budget2-28fea-default-rtdb.firebaseio.com/**",
-        "https://v6.exchangerate-api.com/v6/"
-      ],
-      "cacheConfig": {
-        "maxSize": 5,
-        "maxAge": "3600"
-      }
     }
   ]
 }
