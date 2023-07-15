@@ -89,6 +89,7 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
 
   getItem(): ItemDataI {
     return {
+      id: null as any,
       name: this.form.value.name,
       category: this.form.value.category,
       priceT: this.form.value.priceT,
@@ -127,6 +128,7 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
 
   createYear(year: number, month: number, day: number, isoDate: string): void {
     const yearObj = {
+      id: null as any,
       year: year,
       totalPriceYear: null,
       months: [],
@@ -145,6 +147,7 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
 
   createMonth(yearName: string, year: number, month: number, day: number, isoDate: string): void {
     const months = {
+      id: null as any,
       month: month,
       totalPriceMonth: null,
       days: []
@@ -165,6 +168,7 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
 
   createDay(yearName: string, year: number, monthName: string, month: number, day: number, isoDate: string): void {
     const dayObj = {
+      id: null as any,
       day: day,
       date: isoDate,
       totalPriceDay: null,

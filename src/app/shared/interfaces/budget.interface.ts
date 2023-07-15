@@ -5,21 +5,21 @@ export interface BudgetStateI {
 }
 
 export interface YearDataI {
-  id?: string
+  id: string
   year: number
   totalPriceYear: number | null
   months: MonthDataI[]
 }
 
 export interface MonthDataI {
-  id?: string
+  id: string
   month: number
   totalPriceMonth: number | null
   days: DayDataI[]
 }
 
 export interface DayDataI {
-  id?: string
+  id: string
   day: number
   date: string
   totalPriceDay: number | null
@@ -27,7 +27,7 @@ export interface DayDataI {
 }
 
 export interface ItemDataI {
-  id?: string
+  id: string
   name: string
   category: string
   priceT: number

@@ -68,28 +68,32 @@ export class BudgetService {
 
   createYear(item: YearDataI): Observable<any> {
     const uid = this.authService.localId
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${uid}.json`, item)
+    const route = `${environment.firebaseConfig.databaseURL}/years/${uid}.json`
+    return this.http.post<any>(route, item)
   }
 
   createMonth(yearName: string, item: MonthDataI): Observable<any> {
     const uid = this.authService.localId
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months.json`, item)
+    const route = `${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months.json`
+    return this.http.post<any>(route, item)
   }
 
   createDay(yearName: string, monthName: string, item: DayDataI): Observable<any> {
     const uid = this.authService.localId
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months/${monthName}/days.json`, item)
+    const route = `${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months/${monthName}/days.json`
+    return this.http.post<any>(route, item)
   }
 
   createItem(yearName: string, monthName: string, dayName: string, item: ItemDataI): Observable<any> {
     const uid = this.authService.localId
-    return this.http.post<any>(`${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months/${monthName}/days/${dayName}/items.json`, item)
+    const route = `${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months/${monthName}/days/${dayName}/items.json`
+    return this.http.post<any>(route, item)
   }
 
   deleteItem(yearName: string, monthName: string, dayName: string, itemId: string): Observable<any> {
     const uid = this.authService.localId
-    const url = `${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months/${monthName}/days/${dayName}/items/${itemId}.json`
-    return this.http.delete(url)
+    const route = `${environment.firebaseConfig.databaseURL}/years/${uid}/${yearName}/months/${monthName}/days/${dayName}/items/${itemId}.json`
+    return this.http.delete(route)
   }
 
   errorProcessing(error: any): void {

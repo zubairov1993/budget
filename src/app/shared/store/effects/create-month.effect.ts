@@ -34,6 +34,7 @@ export class CreateMonthEffect {
     ofType(createMonthSuccessAction),
     map(({ yearName, year, monthName, month, day, isoDate, itemObj }) => {
       const dayObj = {
+        id: null as any,
         day: day,
         date: isoDate,
         totalPriceDay: null,

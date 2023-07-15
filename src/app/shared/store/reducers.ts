@@ -30,7 +30,8 @@ const budgetReducer = createReducer(
   on(createYearSuccessAction, (state, action): BudgetStateI => {
     let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
     if (newState.data === null) newState.data = []
-    newState.data.push({ year: action.year, totalPriceYear: null, months: [] })
+    const data = { year: action.year, id: action.yearName, totalPriceYear: null, months: [] }
+    newState.data.push(data)
     return {
       ...newState,
       isLoading: false
@@ -40,7 +41,8 @@ const budgetReducer = createReducer(
     let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
     if (newState.data === null) newState.data = []
     const yearIndex = newState.data.findIndex(year => year.year === action.year)
-    newState.data[yearIndex].months.push({ month: action.month, totalPriceMonth: null, days: [] })
+    const data = { month: action.month, id: action.monthName, totalPriceMonth: null, days: [] }
+    newState.data[yearIndex].months.push(data)
     return {
       ...newState,
       isLoading: false
@@ -51,7 +53,14 @@ const budgetReducer = createReducer(
     if (newState.data === null) newState.data = []
     const yearIndex = newState.data.findIndex(year => year.year === action.year)
     const monthIndex = newState.data[yearIndex].months.findIndex(month => month.month === action.month)
-    newState.data[yearIndex].months[monthIndex].days.push({ day: action.day, totalPriceDay: null, date: action.isoDate, items: [] })
+    const data = {
+      day: action.day,
+      id: action.dayName,
+      totalPriceDay: null,
+      date: action.isoDate,
+      items: []
+    }
+    newState.data[yearIndex].months[monthIndex].days.push(data)
     return {
       ...newState,
       isLoading: false

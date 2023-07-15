@@ -28,6 +28,7 @@ export class CreateYearEffect {
     ofType(createYearSuccessAction),
     map(({ yearName, year, month, day, isoDate, itemObj }) => {
       const monthsObj = {
+        id: null as any,
         month: month,
         totalPriceMonth: null,
         days: []

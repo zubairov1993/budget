@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { Actions, createEffect, ofType } from "@ngrx/effects"
-import { switchMap, map, of, filter } from 'rxjs'
+import { switchMap, map, of } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 import { HttpErrorResponse } from '@angular/common/http'
 
@@ -17,7 +17,6 @@ export class CreateDayEffect {
   createDay$ = createEffect(() => this.actions$.pipe(
     ofType(createDayAction),
     switchMap(({ yearName, year, monthName, month, dayObj, isoDate, itemObj }) => this.budgetService.createDay(yearName, monthName, dayObj).pipe(
-      filter((response: any) => response !== null),
       map((response: { name: string }) => {
         return createDaySuccessAction({ yearName, year, monthName, month, dayName: response.name, day: dayObj.day, isoDate, itemObj })
       }),
