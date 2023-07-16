@@ -16,6 +16,12 @@
               <b>потрачено за год:</b>
               тенге - {{ year.totalPriceYear | isShowPrice }} &#8376;,
               рублей - {{ budgetService.convertToRub(year.totalPriceYear) | isShowPrice }} &#8381;
+              <!-- <span *ngIf="sharedService.currency$.value === 'Тенге'">
+                тенге - {{ year.totalPriceYear | isShowPrice }} &#8376;
+              </span>
+              <span *ngIf="sharedService.currency$.value === 'Рубль'">
+                рублей - {{ budgetService.convertToRub(year.totalPriceYear) | isShowPrice }} &#8381;
+              </span> -->
             </div>
           </div>
         </div>

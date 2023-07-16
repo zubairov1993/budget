@@ -34,7 +34,8 @@ export class YearsListComponent implements OnInit, OnDestroy {
     this.store.dispatch(getBudgetAction())
     this.initializeValues()
     const showPrice = this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
-    this.allSubscription.push(showPrice)
+    const currency = this.sharedService.currency$.subscribe(() => this.cdr.detectChanges())
+    this.allSubscription.push(showPrice, currency)
   }
 
   initializeValues(): void {

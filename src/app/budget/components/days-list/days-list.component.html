@@ -11,6 +11,13 @@
 
           тенге - {{ day.totalPriceDay | isShowPrice }} &#8376;,
           рублей - {{ budgetService.convertToRub(day.totalPriceDay) | isShowPrice }} &#8381;
+
+          <!-- <span *ngIf="sharedService.currency$.value === 'Тенге'">
+            тенге - {{ day.totalPriceDay | isShowPrice }} &#8376;
+          </span>
+          <span *ngIf="sharedService.currency$.value === 'Рубль'">
+            рублей - {{ budgetService.convertToRub(day.totalPriceDay) | isShowPrice }} &#8381;
+          </span> -->
         </div>
       </div>
 

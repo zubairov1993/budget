@@ -13,12 +13,12 @@
       </tui-input>
     </p>
 
+    <!-- [disabled]="loginForm.invalid || (isSubmitting$ | async)"
+    [class.opacity]="loginForm.invalid || (isSubmitting$ | async)" -->
     <button class="auth__wrapper_btn"
       (click)="onSubmit()"
       type="button"
-      appearance="primary"
-      [disabled]="loginForm.invalid || (isSubmitting$ | async)"
-      [class.opacity]="loginForm.invalid || (isSubmitting$ | async)">
+      appearance="primary">
       Login
     </button>
   </div>

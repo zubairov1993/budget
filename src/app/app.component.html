@@ -7,18 +7,15 @@
           Добавить
         </button>
 
-        <!-- <button
-            tuiIconButton
-            class="action"
-            icon="tuiIconPlusLarge"
-        ></button> -->
-
       </div>
 
       <div class="app_budget__header_right">
 
         <div>
-          <tui-select class="app_budget__header_right-field" tuiTextfieldSize="m" [formControl]="currency" >
+          <tui-select class="app_budget__header_right-field"
+            tuiTextfieldSize="m"
+            [formControl]="currency"
+            (ngModelChange)="onCurrencyChange($event)">
             Валюта
             <tui-data-list-wrapper *tuiDataList [items]="currencies"></tui-data-list-wrapper>
           </tui-select>

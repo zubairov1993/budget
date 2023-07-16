@@ -40,7 +40,8 @@ export class DaysListComponent implements OnInit, OnDestroy {
     this.days = this.monthProps?.days ? this.monthProps?.days : []
 
     const showPrice = this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
-    this.allSubscription.push(showPrice)
+    const currency = this.sharedService.currency$.subscribe(() => this.cdr.detectChanges())
+    this.allSubscription.push(showPrice, currency)
   }
 
   getDayInfo(dateString: string): { dayName: string, dayNumber: number } {

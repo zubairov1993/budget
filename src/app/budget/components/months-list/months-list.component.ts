@@ -29,7 +29,8 @@ export class MonthsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.months = this.yearProps?.months ? this.yearProps?.months : []
     const showPrice = this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
-    this.allSubscription.push(showPrice)
+    const currency = this.sharedService.currency$.subscribe(() => this.cdr.detectChanges())
+    this.allSubscription.push(showPrice, currency)
   }
 
   isCurrentMonth(month: number): boolean {

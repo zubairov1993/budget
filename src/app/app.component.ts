@@ -36,11 +36,15 @@ export class AppComponent implements OnInit, OnDestroy {
   )
 
   ngOnInit(): void {
-    const currency = this.currency.valueChanges.subscribe(currency => this.sharedService.currency$.next(currency))
-    const setCurrency = this.authService.setCurrency$.subscribe(() => {
-      this.currency.setValue(this.authService.localId === 'bICFOR7bxlfIJgoaEbffPMwwXHi2' ? 'Тенге' : 'Рубль')
-    })
-    this.allSubscription.push(currency, setCurrency)
+    this.currency.setValue(localStorage.getItem('currencyBudget') ? localStorage.getItem('currencyBudget') : 'Рубль')
+    this.sharedService.currency$.next(localStorage.getItem('currencyBudget') ? localStorage.getItem('currencyBudget')! : 'Рубль')
+    const showPrice = JSON.parse(localStorage.getItem('showPriceBudget')!)
+    this.sharedService.showPrice$.next(showPrice ? showPrice : false)
+  }
+
+  onCurrencyChange(event: any): void {
+    localStorage.setItem('currencyBudget', event)
+    this.sharedService.currency$.next(localStorage.getItem('currencyBudget')!)
   }
 
   showDialog(): void {
@@ -54,6 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   toggleShowPrice(): void {
+    localStorage.setItem('showPriceBudget', (!this.sharedService.showPrice$.value).toString())
     this.sharedService.showPrice$.next(!this.sharedService.showPrice$.value)
   }
 

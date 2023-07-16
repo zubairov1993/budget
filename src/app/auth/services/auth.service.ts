@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { Observable, BehaviorSubject } from 'rxjs'
+import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
 
 import { environment } from "src/environments/environment"
@@ -12,7 +12,6 @@ import { UserI, FBResponseI } from '../interfaces/auth.interface'
 })
 export class AuthService {
   http = inject(HttpClient)
-  setCurrency$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
   login(user: UserI): Observable<FBResponseI> {
     const url = `${environment.firebaseConfig.signInWithPasswordPath}${environment.firebaseConfig.apiKey}`
@@ -23,8 +22,6 @@ export class AuthService {
           localStorage.setItem('uidBudget', response.localId)
           localStorage.setItem('tokenBudget', response.idToken)
           localStorage.setItem('tokenBudget-exp', expDate.toString())
-
-          this.setCurrency$.next(true)
         } else {
           localStorage.clear()
         }
@@ -34,10 +31,6 @@ export class AuthService {
 
   get localId() {
     return localStorage.getItem('uidBudget') ? localStorage.getItem('uidBudget') : null
-  }
-
-  logout(): void {
-    localStorage.clear()
   }
 
   isAuthenticated(): boolean {
@@ -52,5 +45,12 @@ export class AuthService {
 
   get token(): string | null {
     return this.isAuthenticated() ? localStorage.getItem('tokenBudget') : null
+  }
+
+  logout(): void {
+    localStorage.removeItem('uidBudget')
+    localStorage.removeItem('tokenBudget')
+    localStorage.removeItem('tokenBudget-exp')
+    // localStorage.clear()
   }
 }

@@ -6,8 +6,6 @@ import { SharedService } from '../services/shared.service'
 export class HidePricePipe implements PipeTransform {
   sharedService = inject(SharedService)
 
-  constructor() {}
-
   transform(price: number | null): string {
     if (this.sharedService.showPrice$.value) {
       return price !== null && price !== undefined ? price.toString() : ''
