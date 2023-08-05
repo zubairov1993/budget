@@ -1,28 +1,39 @@
-::ng-deep.years {
+::ng-deep .years {
+  margin-bottom: 10px;
 
-  &__container {
-    margin-bottom: 10px;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
 
-    &_header {
+    &_right {
       display: flex;
-      justify-content: space-between;
       align-items: center;
 
-      &-right {
-        display: flex;
-        align-items: center;
-
-        button {
-          margin-right: 10px;
-        }
+      button {
+        margin-right: 10px;
       }
     }
   }
 }
 
-::ng-deep._expanded {
-  height: 85vh !important;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  position: relative;
+// ::ng-deep ._expanded {
+//   height: 85vh !important;
+//   overflow-x: hidden;
+//   overflow-y: scroll;
+//   position: relative;
+// }
+
+::ng-deep .t-content {
+  padding: 10px !important;
+}
+
+// phone
+@media screen and (max-width: 767px) {
+  .years__header {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 12px;
+  }
 }

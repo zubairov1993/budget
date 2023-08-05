@@ -5,7 +5,17 @@ import { HttpClientModule } from '@angular/common/http'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreModule } from '@ngrx/store'
 
-import { TuiButtonModule, TuiDialogModule, TuiTooltipModule, TuiCalendarModule, TuiHintModule, TuiTextfieldControllerModule } from '@taiga-ui/core'
+import {
+  TuiButtonModule,
+  TuiDialogModule,
+  TuiTooltipModule,
+  TuiCalendarModule,
+  TuiHintModule,
+  TuiTextfieldControllerModule,
+  TuiLoaderModule,
+  TuiHostedDropdownModule,
+  TuiDataListModule,
+} from '@taiga-ui/core'
 import {
   TuiAccordionModule,
   TuiDataListWrapperModule,
@@ -19,6 +29,7 @@ import {
 import { TuiTableModule } from '@taiga-ui/addon-table'
 import { TuiBarModule, TuiLegendItemModule, TuiRingChartModule } from '@taiga-ui/addon-charts'
 import { TuiHoveredModule } from '@taiga-ui/cdk'
+
 
 import { HidePricePipe } from './pipes/hide-price.pipe'
 
@@ -57,6 +68,9 @@ import { reducers } from './store/reducers'
 		TuiCalendarModule,
 		TuiHintModule,
 		TuiTextfieldControllerModule,
+		TuiLoaderModule,
+		TuiHostedDropdownModule,
+    TuiDataListModule,
     EffectsModule.forFeature([GetBudgetEffect, CreateYearEffect, CreateMonthEffect, CreateDayEffect, CreateItemEffect, DeleteItemEffect]),
     StoreModule.forFeature('budget', reducers),
   ],
@@ -83,6 +97,9 @@ import { reducers } from './store/reducers'
 		TuiHintModule,
 		HidePricePipe,
 		TuiTextfieldControllerModule,
+		TuiLoaderModule,
+		TuiHostedDropdownModule,
+    TuiDataListModule,
   ],
   providers: [],
   bootstrap: []

@@ -10,10 +10,18 @@ import { AddProductDialogComponent } from './components/add-product-dialog/add-p
 import { MonthsListComponent } from './components/months-list/months-list.component'
 import { DaysListComponent } from './components/days-list/days-list.component'
 import { YearsListComponent } from './components/years-list/years-list.component'
+import { ActualDayComponent } from './components/actual-day/actual-day.component'
 
 
 @NgModule({
-  declarations: [ BudgetComponent, AddProductDialogComponent, MonthsListComponent, DaysListComponent, YearsListComponent ],
+  declarations: [
+    BudgetComponent,
+    AddProductDialogComponent,
+    MonthsListComponent,
+    DaysListComponent,
+    YearsListComponent,
+    ActualDayComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,

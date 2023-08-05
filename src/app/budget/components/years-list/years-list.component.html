@@ -1,33 +1,27 @@
 <div *ngIf="budgets$ | async">
 
   <div *ngFor="let year of budgets$ | async">
-    <tui-accordion class="years__container">
+    <tui-accordion class="years">
       <tui-accordion-item [open]="isCurrentYear(year.year)">
-        <div class="years__container_header">
+        <div class="years__header">
           <div>{{ year.year }} год</div>
 
-          <div class="years__container_header-right">
-            <button tuiButton type="button" size="s" *ngIf="year.months.length > 2 && year.year === currentYear">
-              <span *ngIf="numberOfMonths === -year.months.length" (click)="changeNumberOfMonths($event, year)">Показать последний месяц</span>
-              <span *ngIf="numberOfMonths === -1" (click)="changeNumberOfMonths($event, year)">Показать все месяцы</span>
-            </button>
+          <div class="years__header_right">
 
             <div>
               <b>потрачено за год:</b>
-              тенге - {{ year.totalPriceYear | isShowPrice }} &#8376;,
-              рублей - {{ budgetService.convertToRub(year.totalPriceYear) | isShowPrice }} &#8381;
-              <!-- <span *ngIf="sharedService.currency$.value === 'Тенге'">
+              <span *ngIf="sharedService.currency$.value === 'Тенге'">
                 тенге - {{ year.totalPriceYear | isShowPrice }} &#8376;
               </span>
               <span *ngIf="sharedService.currency$.value === 'Рубль'">
                 рублей - {{ budgetService.convertToRub(year.totalPriceYear) | isShowPrice }} &#8381;
-              </span> -->
+              </span>
             </div>
           </div>
         </div>
 
         <ng-template tuiAccordionItemContent>
-          <app-months-list [yearProps]="year" [numberOfMonths]="numberOfMonths"></app-months-list>
+          <app-months-list [yearProps]="year"></app-months-list>
         </ng-template>
 
       </tui-accordion-item>

@@ -1,14 +1,16 @@
 import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, inject, OnDestroy } from '@angular/core'
 import { Router } from '@angular/router'
-import { Subscription } from 'rxjs'
-import { Store } from '@ngrx/store'
+import { Subscription, Observable } from 'rxjs'
+import { select, Store } from '@ngrx/store'
+
+import { isLoadingSelector } from '../../../shared/store/selectors'
 
 import { deleteItem } from 'src/app/shared/store/actions/delete-item.action'
 
 import { BudgetService } from '../../services/budget.service'
 import { SharedService } from '../../../shared/services/shared.service'
 
-import { DayDataI, MonthDataI, BudgetStateI } from '../../../shared/interfaces/budget.interface'
+import { DayDataI, MonthDataI, BudgetStateI, ItemDataI } from '../../../shared/interfaces/budget.interface';
 import { DeleteItemActionI } from '../../../shared/interfaces/item-action.interface'
 
 @Component({
@@ -27,18 +29,19 @@ export class DaysListComponent implements OnInit, OnDestroy {
   @Input() monthProps: MonthDataI | null = null
   @Input() yearName: string | null | undefined = null
   @Input() year: number | null | undefined = null
-  @Input() numberOfDays: number = -2
 
   open = false
   days: DayDataI[] = []
 
+  selectedItem: ItemDataI | null | undefined = null
+  isLoading$!: Observable<boolean>
   allSubscription: Subscription[] = []
 
   readonly columns = [ 'name', 'category', 'priceT', 'priceRu', 'other' ]
 
   ngOnInit(): void {
     this.days = this.monthProps?.days ? this.monthProps?.days : []
-
+    this.isLoading$ = this.store.pipe(select(isLoadingSelector))
     const showPrice = this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
     const currency = this.sharedService.currency$.subscribe(() => this.cdr.detectChanges())
     this.allSubscription.push(showPrice, currency)
@@ -62,9 +65,9 @@ export class DaysListComponent implements OnInit, OnDestroy {
     return day === currentDate.getDate()
   }
 
-  openDialogDelete() {
+  openDialogDelete(item: ItemDataI) {
     this.open = true
-    console.log('this.open: ', this.open);
+    this.selectedItem = item
   }
 
   closeDialogDelete() {

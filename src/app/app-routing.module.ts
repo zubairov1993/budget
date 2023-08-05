@@ -18,11 +18,16 @@ const routes: Routes = [
         loadChildren: () => import('./budget/budget.module').then(m => m.BudgetModule),
       },
       {
+        path: 'list/actual',
+        canActivate: [AuthGuard],
+        loadChildren: () => import('./budget/budget.module').then(m => m.BudgetModule),
+      },
+      {
         path: 'chart',
         canActivate: [AuthGuard],
         loadChildren: () => import('./chart/chart.module').then(m => m.ChartModule),
       },
-      { path: '**', redirectTo: '/list' }
+      { path: '**', redirectTo: '/list/actual' }
     ]
   }
 ]

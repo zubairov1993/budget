@@ -16,7 +16,7 @@ import { createDayAction } from '../../../shared/store/actions/create-day.action
 import { createItemAction, createItemSuccessAction } from '../../../shared/store/actions/create-item.action'
 
 import { budgetSelector } from 'src/app/shared/store/selectors'
-import { yearSelector } from '../../../shared/store/selectors'
+import { yearSelector, isLoadingSelector } from '../../../shared/store/selectors'
 
 import { YearDataI, MonthDataI, DayDataI, ItemDataI, BudgetStateI } from '../../../shared/interfaces/budget.interface'
 import { CreateYearActionI } from '../../../shared/interfaces/year-action.interface'
@@ -39,7 +39,8 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
   private actions$ = inject(Actions)
 
   budgets$!: Observable<YearDataI[] | null>
-  currentYear: YearDataI| null | undefined = null
+  currentYear: YearDataI | null | undefined = null
+  isLoading$!: Observable<boolean>
   allSubscription: Subscription[] = []
 
   form: FormGroup = this.formBuilder.group({
@@ -56,6 +57,7 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
     const currentDate: Date = new Date()
     const year: number = currentDate.getFullYear()
     this.budgets$ = this.store.pipe(select(budgetSelector))
+    this.isLoading$ = this.store.pipe(select(isLoadingSelector))
 
     const selectedYearSubscribe = this.store.pipe(select(yearSelector(year))).subscribe(selectedYear => this.currentYear = selectedYear)
 

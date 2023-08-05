@@ -18,10 +18,7 @@ export class MonthsListComponent implements OnInit, OnDestroy {
   cdr = inject(ChangeDetectorRef)
 
   @Input() yearProps: YearDataI | null = null
-  @Input() numberOfMonths: number = -1
   months: MonthDataI[] = []
-  numberOfDays: number = -2
-  currentMonth: number = new Date().getMonth() + 1
   allSubscription: Subscription[] = []
 
   constructor() {}
@@ -41,12 +38,6 @@ export class MonthsListComponent implements OnInit, OnDestroy {
   getMonthNameByIndex(index: number): string {
     const monthNames: string[] = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
     return monthNames[index]
-  }
-
-  changeNumberOfDays(event: any, month: MonthDataI): void {
-    event.stopPropagation()
-    if (this.numberOfDays === -month.days.length) this.numberOfDays = -2
-    else this.numberOfDays = -month.days.length
   }
 
   ngOnDestroy(): void {

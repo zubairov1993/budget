@@ -1,42 +1,8 @@
 <tui-root>
-  <div class="app_budget">
-    <div class="app_budget__header" *ngIf="router.url !== '/auth'">
-      <div>
 
-        <button tuiButton type="button" size="m" (click)="showDialog()" *ngIf="router.url === '/list'">
-          Добавить
-        </button>
-
-      </div>
-
-      <div class="app_budget__header_right">
-
-        <div>
-          <tui-select class="app_budget__header_right-field"
-            tuiTextfieldSize="m"
-            [formControl]="currency"
-            (ngModelChange)="onCurrencyChange($event)">
-            Валюта
-            <tui-data-list-wrapper *tuiDataList [items]="currencies"></tui-data-list-wrapper>
-          </tui-select>
-        </div>
-
-        <button *ngIf="router.url !== '/list'" [routerLink]="['/list']" routerLinkActive="router-link-active" tuiButton type="button" size="m">
-          Список
-        </button>
-        <button *ngIf="router.url !== '/chart'" [routerLink]="['/chart']" tuiButton type="button" size="m">
-          Диаграма
-        </button>
-        <button tuiButton type="button" size="m" (click)="toggleShowPrice()">
-          <span *ngIf="!sharedService.showPrice$.value">Показать цену</span>
-          <span *ngIf="sharedService.showPrice$.value">Скрыть цену</span>
-        </button>
-        <button *ngIf="authService.isAuthenticated()" [routerLink]="['/auth']" tuiButton type="button" size="m">
-          Выйти
-        </button>
-      </div>
-    </div>
-    <router-outlet></router-outlet>
+  <div class="app">
+    <div class="app__menu" *ngIf="authService.isAuthenticated()"><app-vertical-menu></app-vertical-menu></div>
+    <div class="app__outlet"><router-outlet></router-outlet></div>
   </div>
 
 </tui-root>

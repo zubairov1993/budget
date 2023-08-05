@@ -5,8 +5,6 @@ import { Observable, Subscription } from 'rxjs'
 import { SharedService } from '../../../shared/services/shared.service'
 import { BudgetService } from '../../services/budget.service'
 
-import { getBudgetAction } from '../../../shared/store/actions/get-budget.action'
-
 import { isLoadingSelector, errorSelector, budgetSelector } from '../../../shared/store/selectors'
 
 import { YearDataI, BudgetStateI } from '../../../shared/interfaces/budget.interface'
@@ -26,12 +24,9 @@ export class YearsListComponent implements OnInit, OnDestroy {
   isLoading$!: Observable<boolean>
   error$!: Observable<string | null>
   budgets$!: Observable<YearDataI[] | null>
-  currentYear: number = new Date().getFullYear()
-  numberOfMonths: number = -1
   allSubscription: Subscription[] = []
 
   ngOnInit(): void {
-    this.store.dispatch(getBudgetAction())
     this.initializeValues()
     const showPrice = this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
     const currency = this.sharedService.currency$.subscribe(() => this.cdr.detectChanges())
@@ -47,12 +42,6 @@ export class YearsListComponent implements OnInit, OnDestroy {
   isCurrentYear(year: number): boolean {
     const currentDate: Date = new Date()
     return year === currentDate.getFullYear()
-  }
-
-  changeNumberOfMonths(event: any, year: YearDataI): void {
-    event.stopPropagation()
-    if (this.numberOfMonths === -year.months.length) this.numberOfMonths = -1
-    else this.numberOfMonths = -year.months.length
   }
 
   ngOnDestroy(): void {

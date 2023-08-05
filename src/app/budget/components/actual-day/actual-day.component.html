@@ -1,0 +1,112 @@
+<div class="actual_day" *ngIf="currentDay?.items">
+
+  <div class="actual_day__header">
+    <div>
+      {{ getDayInfo(currentDay!.date).dayName }} {{ getDayInfo(currentDay!.date).dayNumber }} число
+    </div>
+
+    <div>
+      <b>потрачено за день:</b>
+
+      <span *ngIf="sharedService.currency$.value === 'Тенге'">
+        тенге - {{ currentDay!.totalPriceDay | isShowPrice }} &#8376;
+      </span>
+      <span *ngIf="sharedService.currency$.value === 'Рубль'">
+        рублей - {{ budgetService.convertToRub(currentDay!.totalPriceDay) | isShowPrice }} &#8381;
+      </span>
+    </div>
+  </div>
+
+
+  <div class="actual_day__accordion">
+    <tui-accordion class="actual_day__accordion_item" *ngFor="let item of currentDay?.items">
+      <tui-accordion-item>
+        <div>
+          {{ item.name }}
+        </div>
+
+        <ng-template tuiAccordionItemContent>
+          <div class="actual_day__accordion_item-content">
+            <div>
+              Наименование: {{ item.name }}
+            </div>
+            <div>
+              Категория: {{ item.category }}
+            </div>
+            <div>
+              Цена в Тенге: {{ item.priceT | isShowPrice }} &#8376;
+            </div>
+            <div>
+              Цена в Рублях: {{ item.priceRu | isShowPrice }} &#8381;
+            </div>
+
+            <div>
+              <button type="button" (click)="openDialogDelete(item)">Удалить</button>
+            </div>
+          </div>
+        </ng-template>
+
+      </tui-accordion-item>
+    </tui-accordion>
+  </div>
+
+  <div class="actual_day__table">
+
+    <table tuiTable [columns]="columns">
+      <thead>
+        <tr tuiThGroup>
+          <th *tuiHead="'name'" tuiTh [resizable]="true" [sticky]="true" [sorter]="null">
+            Наименование
+          </th>
+          <th *tuiHead="'category'" tuiTh [sticky]="true" [sorter]="null">
+            Категория
+          </th>
+          <th *tuiHead="'priceT'" tuiTh [sticky]="true" [sorter]="null">
+            Цена в Тенге
+          </th>
+          <th *tuiHead="'priceRu'" tuiTh [sticky]="true" [sorter]="null">
+            Цена в Рублях
+          </th>
+          <th *tuiHead="'other'" tuiTh [sticky]="true" [sorter]="null">
+          </th>
+        </tr>
+      </thead>
+
+      <tbody tuiTbody [data]="currentDay!.items">
+        <tr *ngFor="let item of currentDay?.items; index as i" tuiTr>
+          <td *tuiCell="'name'" tuiTd>
+            {{ item.name }}
+          </td>
+          <td *tuiCell="'category'" tuiTd>
+            {{ item.category }}
+          </td>
+          <td *tuiCell="'priceT'" tuiTd>
+            {{ item.priceT | isShowPrice }} &#8376;
+          </td>
+          <td *tuiCell="'priceRu'" tuiTd>
+            {{ item.priceRu | isShowPrice }} &#8381;
+          </td>
+          <td *tuiCell="'other'" tuiTd>
+            <button type="button" (click)="openDialogDelete(item)">Удалить</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #template [(tuiDialog)]="open" [tuiDialogOptions]="{label: 'Вы действительно хотите удалить ?', size: 's'}">
+  <div class="dialog">
+    <div class="dialog__btns">
+      <button tuiButton type="button" appearance="outline" size="m" (click)="closeDialogDelete()">
+        Нет
+      </button>
+
+      <tui-loader class="loader" [showLoader]="(isLoading$ | async)!" [inheritColor]="true" [overlay]="true">
+        <button tuiButton type="button" appearance="accent" size="m" (click)="deleteItem(currentDay?.id!, currentDay?.day!, selectedItem?.id!)">
+          Да
+        </button>
+      </tui-loader>
+    </div>
+  </div>
+</ng-template>

@@ -17,6 +17,7 @@ import { AuthGuard } from './shared/guards/auth.guard'
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor'
 
 import { AppComponent } from './app.component'
+import { VerticalMenuComponent } from './vertical-menu/vertical-menu.component'
 
 const INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -26,6 +27,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
 @NgModule({
   declarations: [
     AppComponent,
+    VerticalMenuComponent,
   ],
   imports: [
     BrowserModule,

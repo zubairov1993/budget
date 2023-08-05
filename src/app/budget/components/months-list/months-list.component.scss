@@ -7,6 +7,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-size: 14px;
 
       &-right {
         display: flex;
@@ -19,9 +20,18 @@
     }
   }
 
-  ._expanded {
-    height: 71vh !important;
-    overflow-x: hidden;
-    overflow-y: scroll;
+  // ._expanded {
+  //   height: 71vh !important;
+  //   overflow-x: hidden;
+  //   overflow-y: scroll;
+  // }
+}
+
+// phone
+@media screen and (max-width: 767px) {
+  .months__container_header {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 12px;
   }
 }

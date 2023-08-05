@@ -1,33 +1,26 @@
-.app_budget {
-  padding: 0 10px;
+.app {
+  display: flex;
 
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 60px;
+  &__menu {
+    width: 80px;
+  }
 
-    &_right {
-      display: flex;
-
-      &-field {
-        width: 200px;
-        margin-right: 10px;
-      }
-    }
-
-    button {
-      margin-right: 10px;
-
-      &:last-child {
-        margin-right: 0;
-      }
-    }
+  &__outlet {
+    width: 100%;
+    padding: 20px;
   }
 }
 
-.action {
-  position: fixed;
-  bottom: 0;
-  right: 0;
+
+// phone
+@media screen and (max-width: 767px) {
+  .app {
+    &__menu {
+      width: 50px;
+    }
+
+    &__outlet {
+      padding-right: 10px;
+    }
+  }
 }

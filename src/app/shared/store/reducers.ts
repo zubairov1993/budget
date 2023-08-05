@@ -2,11 +2,11 @@ import { BudgetStateI } from '../interfaces/budget.interface'
 import { Action, createReducer, on } from '@ngrx/store'
 
 import { getBudgetAction, getBudgetSuccessAction, getBudgetFailureAction } from './actions/get-budget.action'
-import { createItemSuccessAction } from './actions/create-item.action'
-import { createYearSuccessAction } from './actions/create-year.action'
-import { createMonthSuccessAction } from './actions/create-month.action'
-import { createDaySuccessAction } from './actions/create-day.action'
-import { deleteItemSuccessAction } from './actions/delete-item.action'
+import { createItemSuccessAction, createItemAction } from './actions/create-item.action'
+import { createYearSuccessAction, createYearAction } from './actions/create-year.action'
+import { createMonthSuccessAction, createMonthAction } from './actions/create-month.action'
+import { createDaySuccessAction, createDayAction } from './actions/create-day.action'
+import { deleteItemSuccessAction, deleteItem } from './actions/delete-item.action'
 
 const initialState: BudgetStateI = {
   isLoading: false,
@@ -27,6 +27,10 @@ const budgetReducer = createReducer(
       data: action.response
     }
   }),
+  on(createYearAction, (state): BudgetStateI => ({
+    ...state,
+    isLoading: true,
+  })),
   on(createYearSuccessAction, (state, action): BudgetStateI => {
     let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
     if (newState.data === null) newState.data = []
@@ -37,6 +41,10 @@ const budgetReducer = createReducer(
       isLoading: false
     }
   }),
+  on(createMonthAction, (state): BudgetStateI => ({
+    ...state,
+    isLoading: true,
+  })),
   on(createMonthSuccessAction, (state, action): BudgetStateI => {
     let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
     if (newState.data === null) newState.data = []
@@ -48,6 +56,10 @@ const budgetReducer = createReducer(
       isLoading: false
     }
   }),
+  on(createDayAction, (state): BudgetStateI => ({
+    ...state,
+    isLoading: true,
+  })),
   on(createDaySuccessAction, (state, action): BudgetStateI => {
     let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
     if (newState.data === null) newState.data = []
@@ -66,6 +78,10 @@ const budgetReducer = createReducer(
       isLoading: false
     }
   }),
+  on(createItemAction, (state): BudgetStateI => ({
+    ...state,
+    isLoading: true,
+  })),
   on(createItemSuccessAction, (state, action): BudgetStateI => {
     let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
     if (newState.data === null) newState.data = []
@@ -78,6 +94,10 @@ const budgetReducer = createReducer(
       isLoading: false
     }
   }),
+  on(deleteItem, (state): BudgetStateI => ({
+    ...state,
+    isLoading: true,
+  })),
   on(deleteItemSuccessAction, (state, action) => {
     let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
     if (newState.data === null) newState.data = []

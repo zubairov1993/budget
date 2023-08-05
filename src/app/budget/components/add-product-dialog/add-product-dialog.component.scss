@@ -18,13 +18,6 @@
     &_item {
       width: 100%;
     }
-
-    &_hint {
-      display: flex;
-      width: 330px;
-      margin-left: 10px;
-    }
-
   }
 
   &__btns {
@@ -46,3 +39,14 @@
   display: none;
 }
 
+// phone
+@media screen and (max-width: 767px) {
+  .add_product__fields {
+    flex-direction: column;
+    margin-bottom: 0;
+
+    &_item {
+      margin-bottom: 10px;
+    }
+  }
+}

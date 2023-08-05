@@ -1,27 +1,27 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from "@ngrx/store"
 
 import { AppStateI } from '../../shared/interfaces/app-state.interface'
-import { BudgetStateI, YearDataI, MonthDataI, DayDataI } from '../interfaces/budget.interface'
+import { BudgetStateI, YearDataI, MonthDataI } from '../interfaces/budget.interface'
 
 export const budgetFeatureSelector = createFeatureSelector<AppStateI, BudgetStateI>('budget')
 export const isLoadingSelector = createSelector(budgetFeatureSelector, (budgetStateI: BudgetStateI) => budgetStateI.isLoading)
 export const errorSelector = createSelector(budgetFeatureSelector, (budgetStateI: BudgetStateI) => budgetStateI.error)
 export const budgetSelector = createSelector(budgetFeatureSelector, (budgetStateI: BudgetStateI) => budgetStateI.data)
 
-export const yearSelector = (yearId: number): MemoizedSelector<AppStateI, YearDataI | undefined> => createSelector(
+export const yearSelector = (yearNum: number): MemoizedSelector<AppStateI, YearDataI | undefined> => createSelector(
   budgetSelector,
-  (budget: YearDataI[] | null) => budget?.find(year => year.year === yearId)
+  (budget: YearDataI[] | null) => budget?.find(year => year.year === yearNum)
 )
 
-// export const monthSelector = (yearId: string, monthId: string) => createSelector(
-//   yearSelector(yearId),
-//   (year: YearDataI | undefined) => year?.months.find(month => month.id === monthId)
-// );
+export const monthSelector = (yearNum: number, monthNum: number) => createSelector(
+  yearSelector(yearNum),
+  (year: YearDataI | undefined) => year?.months.find(month => month.month === monthNum)
+)
 
-// export const daySelector = (yearId: string, monthId: string, dayId: string) => createSelector(
-//   monthSelector(yearId, monthId),
-//   (month: MonthDataI | undefined) => month?.days.find(day => day.id === dayId)
-// );
+export const daySelector = (yearNum: number, monthNum: number, dayNum: number) => createSelector(
+  monthSelector(yearNum, monthNum),
+  (month: MonthDataI | undefined) => month?.days.find(day => day.day === dayNum)
+)
 
 // export const itemSelector = (yearId: string, monthId: string, dayId: string, itemId: string) => createSelector(
 //   daySelector(yearId, monthId, dayId),
