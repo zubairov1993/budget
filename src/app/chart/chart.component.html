@@ -31,8 +31,9 @@
     </tui-ring-chart>
 
     <div class="charts__chart_legend">
-      <tui-legend-item class="charts__chart_legend-item"
-        *ngFor="let label of sharedService.catogories; let index = index"
+      @for (label of sharedService.catogories; track label; let index = $index) {
+  <tui-legend-item class="charts__chart_legend-item"
+       
         size="s"
         [color]="getColor(index)"
         [text]="label"
@@ -40,6 +41,7 @@
         (tuiHoveredChange)="onHoverKZ(index, $event)">
         <div>{{ chartService.totalsKZ$.value[index] | isShowPrice }} &#8376;</div>
       </tui-legend-item>
+}
     </div>
 
   </div>
@@ -51,8 +53,9 @@
     </tui-ring-chart>
 
     <div class="charts__chart_legend">
-      <tui-legend-item class="charts__chart_legend-item"
-        *ngFor="let label of sharedService.catogories; let index = index"
+      @for (label of sharedService.catogories; track label; let index = $index) {
+  <tui-legend-item class="charts__chart_legend-item"
+       
         size="s"
         [color]="getColor(index)"
         [text]="label"
@@ -60,6 +63,7 @@
         (tuiHoveredChange)="onHoverRU(index, $event)">
         <div>{{ chartService.totalsRU$.value[index] | isShowPrice }} &#8381;</div>
       </tui-legend-item>
+}
     </div>
 
   </div>

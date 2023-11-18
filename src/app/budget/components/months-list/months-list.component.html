@@ -1,4 +1,5 @@
-<div class="months" *ngFor="let month of months">
+@for (month of months; track month) {
+  <div class="months">
   <tui-accordion class="months__container">
     <tui-accordion-item [open]="isCurrentMonth(month.month)">
       <div class="months__container_header">
@@ -8,12 +9,16 @@
 
           <div>
             <b>потрачено за месяц:</b>
-            <span *ngIf="sharedService.currency$.value === 'Тенге'">
+            @if (sharedService.currency$.value === 'Тенге') {
+<span>
               тенге - {{ month.totalPriceMonth | isShowPrice }} &#8376;
             </span>
-            <span *ngIf="sharedService.currency$.value === 'Рубль'">
+}
+            @if (sharedService.currency$.value === 'Рубль') {
+<span>
               рублей - {{ budgetService.convertToRub(month.totalPriceMonth) | isShowPrice }} &#8381;
             </span>
+}
           </div>
         </div>
       </div>
@@ -28,3 +33,4 @@
     </tui-accordion-item>
   </tui-accordion>
 </div>
+}

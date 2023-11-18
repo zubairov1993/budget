@@ -1,4 +1,5 @@
-<div class="actual_day" *ngIf="currentDay?.items">
+@if (currentDay?.items) {
+<div class="actual_day">
 
   <div class="actual_day__header">
     <div>
@@ -8,18 +9,23 @@
     <div>
       <b>потрачено за день:</b>
 
-      <span *ngIf="sharedService.currency$.value === 'Тенге'">
+      @if (sharedService.currency$.value === 'Тенге') {
+<span>
         тенге - {{ currentDay!.totalPriceDay | isShowPrice }} &#8376;
       </span>
-      <span *ngIf="sharedService.currency$.value === 'Рубль'">
+}
+      @if (sharedService.currency$.value === 'Рубль') {
+<span>
         рублей - {{ budgetService.convertToRub(currentDay!.totalPriceDay) | isShowPrice }} &#8381;
       </span>
+}
     </div>
   </div>
 
 
   <div class="actual_day__accordion">
-    <tui-accordion class="actual_day__accordion_item" *ngFor="let item of currentDay?.items">
+    @for (item of currentDay?.items; track item) {
+  <tui-accordion class="actual_day__accordion_item">
       <tui-accordion-item>
         <div>
           {{ item.name }}
@@ -48,6 +54,7 @@
 
       </tui-accordion-item>
     </tui-accordion>
+}
   </div>
 
   <div class="actual_day__table">
@@ -73,7 +80,8 @@
       </thead>
 
       <tbody tuiTbody [data]="currentDay!.items">
-        <tr *ngFor="let item of currentDay?.items; index as i" tuiTr>
+        @for (item of currentDay?.items; track item; let i = $index) {
+  <tr tuiTr>
           <td *tuiCell="'name'" tuiTd>
             {{ item.name }}
           </td>
@@ -90,10 +98,12 @@
             <button type="button" (click)="openDialogDelete(item)">Удалить</button>
           </td>
         </tr>
+}
       </tbody>
     </table>
   </div>
 </div>
+}
 
 <ng-template #template [(tuiDialog)]="open" [tuiDialogOptions]="{label: 'Вы действительно хотите удалить ?', size: 's'}">
   <div class="dialog">

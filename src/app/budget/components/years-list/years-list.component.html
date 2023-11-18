@@ -1,6 +1,8 @@
-<div *ngIf="budgets$ | async">
+@if (budgets$ | async) {
+<div>
 
-  <div *ngFor="let year of budgets$ | async">
+  @for (year of budgets$ | async; track year) {
+  <div>
     <tui-accordion class="years">
       <tui-accordion-item [open]="isCurrentYear(year.year)">
         <div class="years__header">
@@ -10,12 +12,16 @@
 
             <div>
               <b>потрачено за год:</b>
-              <span *ngIf="sharedService.currency$.value === 'Тенге'">
+              @if (sharedService.currency$.value === 'Тенге') {
+<span>
                 тенге - {{ year.totalPriceYear | isShowPrice }} &#8376;
               </span>
-              <span *ngIf="sharedService.currency$.value === 'Рубль'">
+}
+              @if (sharedService.currency$.value === 'Рубль') {
+<span>
                 рублей - {{ budgetService.convertToRub(year.totalPriceYear) | isShowPrice }} &#8381;
               </span>
+}
             </div>
           </div>
         </div>
@@ -27,6 +33,10 @@
       </tui-accordion-item>
     </tui-accordion>
   </div>
+}
 </div>
+}
 
-<div *ngIf="isLoading$ | async">Loading.....</div>
+@if (isLoading$ | async) {
+<div>Loading.....</div>
+}

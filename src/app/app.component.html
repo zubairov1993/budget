@@ -1,7 +1,9 @@
 <tui-root>
 
   <div class="app">
-    <div class="app__menu" *ngIf="authService.isAuthenticated()"><app-vertical-menu></app-vertical-menu></div>
+    @if (authService.isAuthenticated()) {
+<div class="app__menu"><app-vertical-menu></app-vertical-menu></div>
+}
     <div class="app__outlet"><router-outlet></router-outlet></div>
   </div>
 

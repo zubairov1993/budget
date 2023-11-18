@@ -1,4 +1,10 @@
-<div [ngSwitch]="router.url">
-  <ng-template ngSwitchCase="/list/actual"><app-actual-day></app-actual-day></ng-template>
-  <ng-template ngSwitchCase="/list"><app-years-list></app-years-list></ng-template>
+<div>
+@switch (router.url) {
+  @case ('/list/actual') {
+  <app-actual-day></app-actual-day>
+}
+  @case ('/list') {
+  <app-years-list></app-years-list>
+}
+}
 </div>

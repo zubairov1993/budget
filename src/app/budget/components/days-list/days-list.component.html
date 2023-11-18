@@ -1,4 +1,5 @@
-<div *ngFor="let day of days">
+@for (day of days; track day) {
+  <div>
   <tui-accordion class="days">
     <tui-accordion-item [open]="isCurrentDay(day.day)">
       <div class="days__header">
@@ -9,19 +10,24 @@
         <div>
           <b>потрачено за день:</b>
 
-          <span *ngIf="sharedService.currency$.value === 'Тенге'">
+          @if (sharedService.currency$.value === 'Тенге') {
+<span>
             тенге - {{ day.totalPriceDay | isShowPrice }} &#8376;
           </span>
-          <span *ngIf="sharedService.currency$.value === 'Рубль'">
+}
+          @if (sharedService.currency$.value === 'Рубль') {
+<span>
             рублей - {{ budgetService.convertToRub(day.totalPriceDay) | isShowPrice }} &#8381;
           </span>
+}
         </div>
       </div>
 
       <ng-template tuiAccordionItemContent>
 
         <div class="days__accordion">
-          <tui-accordion class="days__accordion_item" *ngFor="let item of day?.items">
+          @for (item of day?.items; track item) {
+  <tui-accordion class="days__accordion_item">
             <tui-accordion-item>
               <div>
                 {{ item.name }}
@@ -50,6 +56,7 @@
 
             </tui-accordion-item>
           </tui-accordion>
+}
         </div>
 
         <div class="days__table">
@@ -74,7 +81,8 @@
             </thead>
 
             <tbody tuiTbody [data]="day.items">
-              <tr *ngFor="let item of day.items; index as i" tuiTr>
+              @for (item of day.items; track item; let i = $index) {
+  <tr tuiTr>
                 <td *tuiCell="'name'" tuiTd>
                   {{ item.name }}
                 </td>
@@ -107,6 +115,7 @@
                   </ng-template>
                 </td>
               </tr>
+}
             </tbody>
           </table>
         </div>
@@ -115,3 +124,4 @@
     </tui-accordion-item>
   </tui-accordion>
 </div>
+}

@@ -1,8 +1,9 @@
 <nav class="navbar">
   <ul class="navbar__menu">
-    <li class="navbar__item"
+    @if (router.url === '/list' || router.url === '/list/actual') {
+<li class="navbar__item"
       (click)="showDialog()"
-      *ngIf="router.url === '/list' || router.url === '/list/actual'"
+     
       tuiHintAppearance="onDark"
       tuiHintDirection="right"
       [tuiHint]="add"
@@ -27,6 +28,7 @@
         </ng-template>
       </a>
     </li>
+}
 
     <li class="navbar__item">
       <a class="navbar__link"
@@ -38,7 +40,8 @@
 
         <tui-hosted-dropdown #dropdown [content]="content" [(open)]="dropdownOpen">
 
-          <svg *ngIf="sharedService.currency$.value === 'Тенге'"
+          @if (sharedService.currency$.value === 'Тенге') {
+<svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             version="1.1"
@@ -46,23 +49,28 @@
             viewBox="0 0 24 24">
             <path d="M5,3H19V5H5V3M5,6H19V8H13V21H11V8H5V6Z" />
           </svg>
+}
 
-          <svg *ngIf="sharedService.currency$.value === 'Рубль'" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+          @if (sharedService.currency$.value === 'Рубль') {
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path
               d="M290-120v-130h-90v-60h90v-110h-90v-60h90v-360h260q87.818 0 148.909 61.128Q760-717.744
               760-629.872T698.909-481Q637.818-420 550-420H350v110h170v60H350v130h-60Zm60-360h200q63 0
               106.5-43.5T700-630q0-63-43.5-106.5T550-780H350v300Z"/>
           </svg>
+}
 
         </tui-hosted-dropdown>
 
         <ng-template #content let-activeZone>
             <tui-data-list tuiDataListDropdownManager [size]="size">
-              <div *ngFor="let item of currencies">
+              @for (item of currencies; track item) {
+  <div>
                 <button tuiOption (click)="onCurrencyChange(item)">
                   {{ item }}
                 </button>
               </div>
+}
             </tui-data-list>
         </ng-template>
         <ng-template #currency>
@@ -71,8 +79,9 @@
       </a>
     </li>
 
-    <li class="navbar__item"
-      *ngIf="router.url !== '/list/actual'"
+    @if (router.url !== '/list/actual') {
+<li class="navbar__item"
+     
       [routerLink]="['/list/actual']"
       routerLinkActive="router-link-active"
       tuiHintAppearance="onDark"
@@ -93,9 +102,11 @@
         </ng-template>
       </a>
     </li>
+}
 
-    <li class="navbar__item"
-      *ngIf="router.url !== '/list'"
+    @if (router.url !== '/list') {
+<li class="navbar__item"
+     
       [routerLink]="['/list']"
       routerLinkActive="router-link-active"
       tuiHintAppearance="onDark"
@@ -116,9 +127,11 @@
         </ng-template>
       </a>
     </li>
+}
 
-    <li class="navbar__item"
-      *ngIf="router.url !== '/chart'"
+    @if (router.url !== '/chart') {
+<li class="navbar__item"
+     
       [routerLink]="['/chart']"
       tuiHintAppearance="onDark"
       tuiHintDirection="right"
@@ -138,6 +151,7 @@
         </ng-template>
       </a>
     </li>
+}
 
     <li class="navbar__item"
       (click)="toggleShowPrice()"
@@ -147,8 +161,9 @@
       [tuiHintShowDelay]="1"
       [tuiHintHideDelay]="1">
       <a class="navbar__link">
-        <svg
-          *ngIf="sharedService.showPrice$.value"
+        @if (sharedService.showPrice$.value) {
+<svg
+         
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 -960 960 960">
           <path
@@ -159,8 +174,10 @@
             757 757-39 44ZM223-654q-37 27-71.5 71T102-500q51 111 153.5 175.5T488-260q33 0
             65-4t48-12l-64-64q-11 5-27 7.5t-30 2.5q-70 0-120-49t-50-121q0-15 2.5-30t7.5-27l-97-97Zm305 142Zm-116 58Z"/>
         </svg>
-        <svg
-          *ngIf="!sharedService.showPrice$.value"
+}
+        @if (!sharedService.showPrice$.value) {
+<svg
+         
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 -960 960 960">
           <path
@@ -173,15 +190,21 @@
             240Q601-260 702.5-325.5 804-391 857-500q-53-109-154.331-174.5-101.332-65.5-222.5-65.5Q359-740
             257.5-674.5 156-609 102-500q54 109 155.331 174.5 101.332 65.5 222.5 65.5Z"/>
         </svg>
+}
         <ng-template #price>
-          <span *ngIf="!sharedService.showPrice$.value">Показать цену</span>
-          <span *ngIf="sharedService.showPrice$.value">Скрыть цену</span>
+          @if (!sharedService.showPrice$.value) {
+<span>Показать цену</span>
+}
+          @if (sharedService.showPrice$.value) {
+<span>Скрыть цену</span>
+}
         </ng-template>
       </a>
     </li>
 
-    <li class="navbar__item"
-      *ngIf="authService.isAuthenticated()"
+    @if (authService.isAuthenticated()) {
+<li class="navbar__item"
+     
       (click)="authService.logout()"
       [routerLink]="['/auth']"
       tuiHintAppearance="onDark"
@@ -200,6 +223,7 @@
         </ng-template>
       </a>
     </li>
+}
   </ul>
 </nav>
 

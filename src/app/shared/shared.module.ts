@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common'
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http'
