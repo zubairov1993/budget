@@ -5,13 +5,13 @@ import { catchError } from 'rxjs/operators'
 import { HttpErrorResponse } from '@angular/common/http'
 
 import { BudgetService } from '../../../budget/services/budget.service'
+import { createItemAction, createItemFailureAction, createItemSuccessAction, updateMountlyBudgetAction } from '../actions'
 
-import { createItemAction, createItemSuccessAction, createItemFailureAction } from '../actions/create-item.action'
 
 @Injectable()
 export class CreateItemEffect {
-  private actions$ = inject(Actions)
-  budgetService = inject(BudgetService)
+  private readonly actions$ = inject(Actions)
+  private readonly budgetService = inject(BudgetService)
 
   createItem$ = createEffect(() => this.actions$.pipe(
     ofType(createItemAction),
@@ -21,5 +21,12 @@ export class CreateItemEffect {
       }),
       catchError((errorResponse: HttpErrorResponse) => of(createItemFailureAction()))
     ))
+  ))
+
+  createitemAfterDay$ = createEffect(() => this.actions$.pipe(
+    ofType(createItemSuccessAction),
+    map(({ year, month, day, itemObj }) => {
+      return updateMountlyBudgetAction({ year, monthlyBudget: itemObj.priceT, bool: true })
+    })
   ))
 }

@@ -8,6 +8,7 @@ export interface YearDataI {
   id: string
   year: number
   totalPriceYear: number | null
+  monthlyBudget?: number | null
   months: MonthDataI[]
 }
 
@@ -32,4 +33,27 @@ export interface ItemDataI {
   category: string
   priceT: number
   priceRu: number
+}
+
+export interface YearEntity {
+  months: { [key: string]: MonthEntity };
+  year: number;
+}
+
+export interface MonthEntity {
+  days: { [key: string]: DayEntity };
+  month: number;
+}
+
+export interface DayEntity {
+  date: string;
+  day: number;
+  items: { [key: string]: ItemEntity };
+}
+
+export interface ItemEntity {
+  category: string;
+  name: string;
+  priceRu: number;
+  priceT: number;
 }

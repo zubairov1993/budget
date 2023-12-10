@@ -1,34 +1,33 @@
 <nav class="navbar">
   <ul class="navbar__menu">
     @if (router.url === '/list' || router.url === '/list/actual') {
-<li class="navbar__item"
-      (click)="showDialog()"
-     
-      tuiHintAppearance="onDark"
-      tuiHintDirection="right"
-      [tuiHint]="add"
-      [tuiHintShowDelay]="1"
-      [tuiHintHideDelay]="1">
-      <a class="navbar__link">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="48"
-          viewBox="0 -960 960 960"
-          width="48">
-          <path
-            d="M453-280h60v-166h167v-60H513v-174h-60v174H280v60h173v166Zm27.266 200q-82.734
-            0-155.5-31.5t-127.266-86q-54.5-54.5-86-127.341Q80-397.681 80-480.5q0-82.819
-            31.5-155.659Q143-709 197.5-763t127.341-85.5Q397.681-880 480.5-880q82.819 0
-            155.659 31.5Q709-817 763-763t85.5 127Q880-563 880-480.266q0 82.734-31.5 155.5T763-197.684q-54
-            54.316-127 86Q563-80 480.266-80Zm.234-60Q622-140 721-239.5t99-241Q820-622 721.188-721 622.375-820
-            480-820q-141 0-240.5 98.812Q140-622.375 140-480q0 141 99.5 240.5t241 99.5Zm-.5-340Z"/>
-        </svg>
-        <ng-template #add>
-          Добавить
-        </ng-template>
-      </a>
-    </li>
-}
+      <li class="navbar__item"
+        (click)="showDialog()"
+        tuiHintAppearance="onDark"
+        tuiHintDirection="right"
+        [tuiHint]="add"
+        [tuiHintShowDelay]="1"
+        [tuiHintHideDelay]="1">
+        <a class="navbar__link">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="48"
+            viewBox="0 -960 960 960"
+            width="48">
+            <path
+              d="M453-280h60v-166h167v-60H513v-174h-60v174H280v60h173v166Zm27.266 200q-82.734
+              0-155.5-31.5t-127.266-86q-54.5-54.5-86-127.341Q80-397.681 80-480.5q0-82.819
+              31.5-155.659Q143-709 197.5-763t127.341-85.5Q397.681-880 480.5-880q82.819 0
+              155.659 31.5Q709-817 763-763t85.5 127Q880-563 880-480.266q0 82.734-31.5 155.5T763-197.684q-54
+              54.316-127 86Q563-80 480.266-80Zm.234-60Q622-140 721-239.5t99-241Q820-622 721.188-721 622.375-820
+              480-820q-141 0-240.5 98.812Q140-622.375 140-480q0 141 99.5 240.5t241 99.5Zm-.5-340Z"/>
+          </svg>
+          <ng-template #add>
+            Добавить
+          </ng-template>
+        </a>
+      </li>
+    }
 
     <li class="navbar__item">
       <a class="navbar__link"
@@ -41,36 +40,36 @@
         <tui-hosted-dropdown #dropdown [content]="content" [(open)]="dropdownOpen">
 
           @if (sharedService.currency$.value === 'Тенге') {
-<svg
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            version="1.1"
-            id="mdi-currency-kzt"
-            viewBox="0 0 24 24">
-            <path d="M5,3H19V5H5V3M5,6H19V8H13V21H11V8H5V6Z" />
-          </svg>
-}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              id="mdi-currency-kzt"
+              viewBox="0 0 24 24">
+              <path d="M5,3H19V5H5V3M5,6H19V8H13V21H11V8H5V6Z" />
+            </svg>
+          }
 
           @if (sharedService.currency$.value === 'Рубль') {
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-            <path
-              d="M290-120v-130h-90v-60h90v-110h-90v-60h90v-360h260q87.818 0 148.909 61.128Q760-717.744
-              760-629.872T698.909-481Q637.818-420 550-420H350v110h170v60H350v130h-60Zm60-360h200q63 0
-              106.5-43.5T700-630q0-63-43.5-106.5T550-780H350v300Z"/>
-          </svg>
-}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path
+                d="M290-120v-130h-90v-60h90v-110h-90v-60h90v-360h260q87.818 0 148.909 61.128Q760-717.744
+                760-629.872T698.909-481Q637.818-420 550-420H350v110h170v60H350v130h-60Zm60-360h200q63 0
+                106.5-43.5T700-630q0-63-43.5-106.5T550-780H350v300Z"/>
+            </svg>
+          }
 
         </tui-hosted-dropdown>
 
         <ng-template #content let-activeZone>
             <tui-data-list tuiDataListDropdownManager [size]="size">
               @for (item of currencies; track item) {
-  <div>
-                <button tuiOption (click)="onCurrencyChange(item)">
-                  {{ item }}
-                </button>
-              </div>
-}
+                <div>
+                  <button tuiOption (click)="onCurrencyChange(item)">
+                    {{ item }}
+                  </button>
+                </div>
+              }
             </tui-data-list>
         </ng-template>
         <ng-template #currency>
@@ -80,78 +79,75 @@
     </li>
 
     @if (router.url !== '/list/actual') {
-<li class="navbar__item"
-     
-      [routerLink]="['/list/actual']"
-      routerLinkActive="router-link-active"
-      tuiHintAppearance="onDark"
-      tuiHintDirection="right"
-      [tuiHint]="today"
-      [tuiHintShowDelay]="1"
-      [tuiHintHideDelay]="1">
-      <a class="navbar__link">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-          <path
-            d="M352.817-310Q312-310 284-338.183q-28-28.183-28-69T284.183-476q28.183-28
-            69-28T422-475.817q28 28.183 28 69T421.817-338q-28.183 28-69 28ZM180-80q-24
-            0-42-18t-18-42v-620q0-24 18-42t42-18h65v-60h65v60h340v-60h65v60h65q24 0 42
-            18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm0-490h600v-130H180v130Zm0 0v-130 130Z"/>
-        </svg>
-        <ng-template #today>
-          Сегодня
-        </ng-template>
-      </a>
-    </li>
-}
+      <li class="navbar__item"
+        [routerLink]="['/list/actual']"
+        routerLinkActive="router-link-active"
+        tuiHintAppearance="onDark"
+        tuiHintDirection="right"
+        [tuiHint]="today"
+        [tuiHintShowDelay]="1"
+        [tuiHintHideDelay]="1">
+        <a class="navbar__link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path
+              d="M352.817-310Q312-310 284-338.183q-28-28.183-28-69T284.183-476q28.183-28
+              69-28T422-475.817q28 28.183 28 69T421.817-338q-28.183 28-69 28ZM180-80q-24
+              0-42-18t-18-42v-620q0-24 18-42t42-18h65v-60h65v60h340v-60h65v60h65q24 0 42
+              18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm0-490h600v-130H180v130Zm0 0v-130 130Z"/>
+          </svg>
+          <ng-template #today>
+            Сегодня
+          </ng-template>
+        </a>
+      </li>
+    }
 
     @if (router.url !== '/list') {
-<li class="navbar__item"
-     
-      [routerLink]="['/list']"
-      routerLinkActive="router-link-active"
-      tuiHintAppearance="onDark"
-      tuiHintDirection="right"
-      [tuiHint]="list"
-      [tuiHintShowDelay]="1"
-      [tuiHintHideDelay]="1">
-      <a class="navbar__link">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-          <path
-            d="M290-620v-60h550v60H290Zm0 170v-60h550v60H290Zm0 170v-60h550v60H290ZM150-620q-12
-            0-21-9t-9-21.5q0-12.5 9-21t21.5-8.5q12.5 0 21 8.625T180-650q0 12-8.625 21T150-620Zm0 170q-12
-            0-21-9t-9-21.5q0-12.5 9-21t21.5-8.5q12.5 0 21 8.625T180-480q0 12-8.625 21T150-450Zm0
-            170q-12 0-21-9t-9-21.5q0-12.5 9-21t21.5-8.5q12.5 0 21 8.625T180-310q0 12-8.625 21T150-280Z"/>
-        </svg>
-        <ng-template #list>
-          Список
-        </ng-template>
-      </a>
-    </li>
-}
+      <li class="navbar__item"
+        [routerLink]="['/list']"
+        routerLinkActive="router-link-active"
+        tuiHintAppearance="onDark"
+        tuiHintDirection="right"
+        [tuiHint]="list"
+        [tuiHintShowDelay]="1"
+        [tuiHintHideDelay]="1">
+        <a class="navbar__link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path
+              d="M290-620v-60h550v60H290Zm0 170v-60h550v60H290Zm0 170v-60h550v60H290ZM150-620q-12
+              0-21-9t-9-21.5q0-12.5 9-21t21.5-8.5q12.5 0 21 8.625T180-650q0 12-8.625 21T150-620Zm0 170q-12
+              0-21-9t-9-21.5q0-12.5 9-21t21.5-8.5q12.5 0 21 8.625T180-480q0 12-8.625 21T150-450Zm0
+              170q-12 0-21-9t-9-21.5q0-12.5 9-21t21.5-8.5q12.5 0 21 8.625T180-310q0 12-8.625 21T150-280Z"/>
+          </svg>
+          <ng-template #list>
+            Список
+          </ng-template>
+        </a>
+      </li>
+    }
 
     @if (router.url !== '/chart') {
-<li class="navbar__item"
-     
-      [routerLink]="['/chart']"
-      tuiHintAppearance="onDark"
-      tuiHintDirection="right"
-      [tuiHint]="chart"
-      [tuiHintShowDelay]="1"
-      [tuiHintHideDelay]="1">
-      <a class="navbar__link">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-          <path
-            d="M481-80q-82 0-155-31.5T198.5-197q-54.5-54-86-127T81-479q0-158 106.5-272T452-877v102q-115
-            11-192 95.5T183-479q0 124 87 210.5T481-182q72 0 136-32.5T726-306l88 51q-58 83-145.5
-            129T481-80Zm362-229-88-49q12-31 18-61.5t6-60.5q0-116-76.5-201T512-776v-102q157 11
-            263 124.5T881-484q0 45-9.5 88.5T843-309Z"/>
-        </svg>
-        <ng-template #chart>
-          Диаграма
-        </ng-template>
-      </a>
-    </li>
-}
+      <li class="navbar__item"
+        [routerLink]="['/chart']"
+        tuiHintAppearance="onDark"
+        tuiHintDirection="right"
+        [tuiHint]="chart"
+        [tuiHintShowDelay]="1"
+        [tuiHintHideDelay]="1">
+        <a class="navbar__link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path
+              d="M481-80q-82 0-155-31.5T198.5-197q-54.5-54-86-127T81-479q0-158 106.5-272T452-877v102q-115
+              11-192 95.5T183-479q0 124 87 210.5T481-182q72 0 136-32.5T726-306l88 51q-58 83-145.5
+              129T481-80Zm362-229-88-49q12-31 18-61.5t6-60.5q0-116-76.5-201T512-776v-102q157 11
+              263 124.5T881-484q0 45-9.5 88.5T843-309Z"/>
+          </svg>
+          <ng-template #chart>
+            Диаграма
+          </ng-template>
+        </a>
+      </li>
+    }
 
     <li class="navbar__item"
       (click)="toggleShowPrice()"
@@ -162,68 +158,67 @@
       [tuiHintHideDelay]="1">
       <a class="navbar__link">
         @if (sharedService.showPrice$.value) {
-<svg
-         
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 -960 960 960">
-          <path
-            d="m629-419-44-44q26-71-27-118t-115-24l-44-44q17-11 38-16t43-5q71 0 120.5 49.5T650-500q0 22-5.5
-            43.5T629-419Zm129 129-40-40q49-36 85.5-80.5T857-500q-50-111-150-175.5T490-740q-42
-            0-86 8t-69 19l-46-47q35-16 89.5-28T485-800q143 0 261.5 81.5T920-500q-26 64-67 117t-95
-            93Zm58 226L648-229q-35 14-79 21.5t-89 7.5q-146 0-265-81.5T40-500q20-52 55.5-101.5T182-696L56-822l42-43
-            757 757-39 44ZM223-654q-37 27-71.5 71T102-500q51 111 153.5 175.5T488-260q33 0
-            65-4t48-12l-64-64q-11 5-27 7.5t-30 2.5q-70 0-120-49t-50-121q0-15 2.5-30t7.5-27l-97-97Zm305 142Zm-116 58Z"/>
-        </svg>
-}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 -960 960 960">
+            <path
+              d="m629-419-44-44q26-71-27-118t-115-24l-44-44q17-11 38-16t43-5q71 0 120.5 49.5T650-500q0 22-5.5
+              43.5T629-419Zm129 129-40-40q49-36 85.5-80.5T857-500q-50-111-150-175.5T490-740q-42
+              0-86 8t-69 19l-46-47q35-16 89.5-28T485-800q143 0 261.5 81.5T920-500q-26 64-67 117t-95
+              93Zm58 226L648-229q-35 14-79 21.5t-89 7.5q-146 0-265-81.5T40-500q20-52 55.5-101.5T182-696L56-822l42-43
+              757 757-39 44ZM223-654q-37 27-71.5 71T102-500q51 111 153.5 175.5T488-260q33 0
+              65-4t48-12l-64-64q-11 5-27 7.5t-30 2.5q-70 0-120-49t-50-121q0-15 2.5-30t7.5-27l-97-97Zm305 142Zm-116 58Z"/>
+          </svg>
+        }
+
         @if (!sharedService.showPrice$.value) {
-<svg
-         
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 -960 960 960">
-          <path
-            d="M480.118-330Q551-330 600.5-379.618q49.5-49.617 49.5-120.5Q650-571
-            600.382-620.5q-49.617-49.5-120.5-49.5Q409-670 359.5-620.382q-49.5
-            49.617-49.5 120.5Q310-429 359.618-379.5q49.617 49.5 120.5 49.5Zm-.353-58Q433-388
-            400.5-420.735q-32.5-32.736-32.5-79.5Q368-547 400.735-579.5q32.736-32.5 79.5-32.5Q527-612
-            559.5-579.265q32.5 32.736 32.5 79.5Q592-453 559.265-420.5q-32.736 32.5-79.5 32.5ZM480-200q-146
-            0-264-83T40-500q58-134 176-217t264-83q146 0 264 83t176 217q-58 134-176 217t-264 83Zm0-300Zm-.169
-            240Q601-260 702.5-325.5 804-391 857-500q-53-109-154.331-174.5-101.332-65.5-222.5-65.5Q359-740
-            257.5-674.5 156-609 102-500q54 109 155.331 174.5 101.332 65.5 222.5 65.5Z"/>
-        </svg>
-}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 -960 960 960">
+            <path
+              d="M480.118-330Q551-330 600.5-379.618q49.5-49.617 49.5-120.5Q650-571
+              600.382-620.5q-49.617-49.5-120.5-49.5Q409-670 359.5-620.382q-49.5
+              49.617-49.5 120.5Q310-429 359.618-379.5q49.617 49.5 120.5 49.5Zm-.353-58Q433-388
+              400.5-420.735q-32.5-32.736-32.5-79.5Q368-547 400.735-579.5q32.736-32.5 79.5-32.5Q527-612
+              559.5-579.265q32.5 32.736 32.5 79.5Q592-453 559.265-420.5q-32.736 32.5-79.5 32.5ZM480-200q-146
+              0-264-83T40-500q58-134 176-217t264-83q146 0 264 83t176 217q-58 134-176 217t-264 83Zm0-300Zm-.169
+              240Q601-260 702.5-325.5 804-391 857-500q-53-109-154.331-174.5-101.332-65.5-222.5-65.5Q359-740
+              257.5-674.5 156-609 102-500q54 109 155.331 174.5 101.332 65.5 222.5 65.5Z"/>
+          </svg>
+        }
+
         <ng-template #price>
           @if (!sharedService.showPrice$.value) {
-<span>Показать цену</span>
-}
+            <span>Показать цену</span>
+          }
           @if (sharedService.showPrice$.value) {
-<span>Скрыть цену</span>
-}
+            <span>Скрыть цену</span>
+          }
         </ng-template>
       </a>
     </li>
 
     @if (authService.isAuthenticated()) {
-<li class="navbar__item"
-     
-      (click)="authService.logout()"
-      [routerLink]="['/auth']"
-      tuiHintAppearance="onDark"
-      tuiHintDirection="right"
-      [tuiHint]="logout"
-      [tuiHintShowDelay]="1"
-      [tuiHintHideDelay]="1">
-      <a class="navbar__link">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-          <path
-            d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h299v60H180v600h299v60H180Zm486-185-43-43
-            102-102H360v-60h363L621-612l43-43 176 176-174 174Z"/>
-        </svg>
-        <ng-template #logout>
-          Выйти
-        </ng-template>
-      </a>
-    </li>
-}
+      <li class="navbar__item"
+        (click)="authService.logout()"
+        [routerLink]="['/auth']"
+        tuiHintAppearance="onDark"
+        tuiHintDirection="right"
+        [tuiHint]="logout"
+        [tuiHintShowDelay]="1"
+        [tuiHintHideDelay]="1">
+        <a class="navbar__link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path
+              d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h299v60H180v600h299v60H180Zm486-185-43-43
+              102-102H360v-60h363L621-612l43-43 176 176-174 174Z"/>
+          </svg>
+          <ng-template #logout>
+            Выйти
+          </ng-template>
+        </a>
+      </li>
+    }
   </ul>
 </nav>
 

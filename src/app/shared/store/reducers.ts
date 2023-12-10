@@ -1,12 +1,7 @@
-import { BudgetStateI } from '../interfaces/budget.interface'
 import { Action, createReducer, on } from '@ngrx/store'
 
-import { getBudgetAction, getBudgetSuccessAction, getBudgetFailureAction } from './actions/get-budget.action'
-import { createItemSuccessAction, createItemAction } from './actions/create-item.action'
-import { createYearSuccessAction, createYearAction } from './actions/create-year.action'
-import { createMonthSuccessAction, createMonthAction } from './actions/create-month.action'
-import { createDaySuccessAction, createDayAction } from './actions/create-day.action'
-import { deleteItemSuccessAction, deleteItem } from './actions/delete-item.action'
+import { createDayAction, createDaySuccessAction, createItemAction, createItemSuccessAction, createMonthAction, createMonthSuccessAction, createYearAction, createYearSuccessAction, deleteItem, deleteItemSuccessAction, getBudgetAction, getBudgetFailureAction, getBudgetSuccessAction, updateMountlyBudgetAction, updateMountlyBudgetSuccessAction } from './actions'
+import { BudgetStateI } from '../interfaces'
 
 const initialState: BudgetStateI = {
   isLoading: false,
@@ -34,7 +29,7 @@ const budgetReducer = createReducer(
   on(createYearSuccessAction, (state, action): BudgetStateI => {
     let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
     if (newState.data === null) newState.data = []
-    const data = { year: action.year, id: action.yearName, totalPriceYear: null, months: [] }
+    const data = { year: action.year, id: action.yearName, totalPriceYear: null, monthlyBudget: 500, months: [] }
     newState.data.push(data)
     return {
       ...newState,
@@ -89,6 +84,20 @@ const budgetReducer = createReducer(
     const monthIndex = newState.data[yearIndex].months.findIndex(month => month.month === action.month)
     const dayIndex = newState.data[yearIndex].months[monthIndex].days.findIndex(day => day.day === action.day)
     newState.data[yearIndex].months[monthIndex].days[dayIndex].items.push(action.itemObj)
+    return {
+      ...newState,
+      isLoading: false
+    }
+  }),
+  on(updateMountlyBudgetAction, (state): BudgetStateI => ({
+    ...state,
+    isLoading: true,
+  })),
+  on(updateMountlyBudgetSuccessAction, (state, action): BudgetStateI => {
+    let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
+    if (newState.data === null) newState.data = []
+    const yearIndex = newState.data.findIndex(year => year.year === action.year)
+    newState.data[yearIndex].monthlyBudget = action.monthlyBudget
     return {
       ...newState,
       isLoading: false

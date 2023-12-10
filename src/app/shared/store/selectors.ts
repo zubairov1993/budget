@@ -1,7 +1,6 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from "@ngrx/store"
 
-import { AppStateI } from '../../shared/interfaces/app-state.interface'
-import { BudgetStateI, YearDataI, MonthDataI } from '../interfaces/budget.interface'
+import { AppStateI, BudgetStateI, MonthDataI, YearDataI } from "../interfaces"
 
 export const budgetFeatureSelector = createFeatureSelector<AppStateI, BudgetStateI>('budget')
 export const isLoadingSelector = createSelector(budgetFeatureSelector, (budgetStateI: BudgetStateI) => budgetStateI.isLoading)

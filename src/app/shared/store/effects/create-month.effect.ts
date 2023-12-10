@@ -5,18 +5,17 @@ import { catchError } from 'rxjs/operators'
 import { HttpErrorResponse } from '@angular/common/http'
 import { Router } from '@angular/router'
 
-import { SharedService } from '../../services/shared.service'
 import { BudgetService } from '../../../budget/services/budget.service'
+import { createDayAction, createMonthAction, createMonthFailureAction, createMonthSuccessAction } from '../actions'
+import { SharedService } from '../../services'
 
-import { createMonthAction, createMonthSuccessAction, createMonthFailureAction } from '../actions/create-month.action'
-import { createDayAction } from '../actions/create-day.action'
 
 @Injectable()
 export class CreateMonthEffect {
-  private actions$ = inject(Actions)
+  private readonly actions$ = inject(Actions)
   sharedService = inject(SharedService)
-  budgetService = inject(BudgetService)
-  router = inject(Router)
+  private readonly budgetService = inject(BudgetService)
+  private readonly = inject(Router)
 
   createMonth$ = createEffect(() => {
     return this.actions$.pipe(

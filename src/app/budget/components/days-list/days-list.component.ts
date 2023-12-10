@@ -5,13 +5,10 @@ import { select, Store } from '@ngrx/store'
 
 import { isLoadingSelector } from '../../../shared/store/selectors'
 
-import { deleteItem } from 'src/app/shared/store/actions/delete-item.action'
 
-import { BudgetService } from '../../services/budget.service'
-import { SharedService } from '../../../shared/services/shared.service'
 
-import { DayDataI, MonthDataI, BudgetStateI, ItemDataI } from '../../../shared/interfaces/budget.interface';
 import { DeleteItemActionI } from '../../../shared/interfaces/item-action.interface'
+import { BudgetStateI, DayDataI, ItemDataI, MonthDataI, SharedService, deleteItem } from 'src/app/shared'
 
 @Component({
   selector: 'app-days-list',
@@ -20,7 +17,6 @@ import { DeleteItemActionI } from '../../../shared/interfaces/item-action.interf
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DaysListComponent implements OnInit, OnDestroy {
-  budgetService = inject(BudgetService)
   sharedService = inject(SharedService)
   cdr = inject(ChangeDetectorRef)
   router = inject(Router)
@@ -86,11 +82,6 @@ export class DaysListComponent implements OnInit, OnDestroy {
     }
 
     this.store.dispatch(deleteItem(data))
-  }
-
-  errorProcessing(error: any): void {
-    console.log('error', error)
-    if (error.status === 401) this.router.navigate(['/auth'])
   }
 
   ngOnDestroy(): void {

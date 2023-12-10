@@ -1,36 +1,37 @@
 @for (month of months; track month) {
   <div class="months">
-  <tui-accordion class="months__container">
-    <tui-accordion-item [open]="isCurrentMonth(month.month)">
-      <div class="months__container_header">
-        <div>{{ getMonthNameByIndex(month.month - 1) }} месяц</div>
+    <tui-accordion class="months__container">
+      <tui-accordion-item [open]="isCurrentMonth(month.month)">
+        <div class="months__container_header">
+          <div>{{ getMonthNameByIndex(month.month - 1) }} месяц</div>
 
-        <div class="months__container_header-right">
+          <div class="months__container_header-right">
 
-          <div>
-            <b>потрачено за месяц:</b>
-            @if (sharedService.currency$.value === 'Тенге') {
-<span>
-              тенге - {{ month.totalPriceMonth | isShowPrice }} &#8376;
-            </span>
-}
-            @if (sharedService.currency$.value === 'Рубль') {
-<span>
-              рублей - {{ budgetService.convertToRub(month.totalPriceMonth) | isShowPrice }} &#8381;
-            </span>
-}
+            <div>
+              <b>потрачено за месяц:</b>
+              @if (sharedService.currency$.value === 'Тенге') {
+                <span>
+                  тенге - {{ month.totalPriceMonth | isShowPrice }} &#8376;
+                </span>
+              }
+
+              @if (sharedService.currency$.value === 'Рубль') {
+                <span>
+                  рублей - {{ sharedService.convertToRub(month.totalPriceMonth) | isShowPrice }} &#8381;
+                </span>
+              }
+            </div>
           </div>
         </div>
-      </div>
-      <ng-template tuiAccordionItemContent>
-        <app-days-list
-          [yearName]="yearProps?.id"
-          [year]="yearProps?.year"
-          [monthProps]="month">
-        </app-days-list>
-      </ng-template>
+        <ng-template tuiAccordionItemContent>
+          <app-days-list
+            [yearName]="yearProps?.id"
+            [year]="yearProps?.year"
+            [monthProps]="month">
+          </app-days-list>
+        </ng-template>
 
-    </tui-accordion-item>
-  </tui-accordion>
-</div>
+      </tui-accordion-item>
+    </tui-accordion>
+  </div>
 }

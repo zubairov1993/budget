@@ -1,8 +1,8 @@
 import { createAction, props } from '@ngrx/store'
 
 import { ActionTypes } from '../action-types'
+import { CreateMonthActionI, CreateMonthSuccessActionI } from '../../interfaces'
 
-import { CreateMonthActionI, CreateMonthSuccessActionI } from '../../interfaces/month-action.interface'
 
 export const createMonthAction = createAction(
   ActionTypes.CREATE_MONTH,

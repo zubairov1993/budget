@@ -2,12 +2,10 @@ import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, inject, 
 import { select, Store } from '@ngrx/store'
 import { Observable, Subscription } from 'rxjs'
 
-import { SharedService } from '../../../shared/services/shared.service'
-import { BudgetService } from '../../services/budget.service'
 
 import { isLoadingSelector, errorSelector, budgetSelector } from '../../../shared/store/selectors'
+import { BudgetStateI, SharedService, YearDataI } from 'src/app/shared'
 
-import { YearDataI, BudgetStateI } from '../../../shared/interfaces/budget.interface'
 
 @Component({
   selector: 'app-years-list',
@@ -18,7 +16,6 @@ import { YearDataI, BudgetStateI } from '../../../shared/interfaces/budget.inter
 export class YearsListComponent implements OnInit, OnDestroy {
   cdr = inject(ChangeDetectorRef)
   sharedService = inject(SharedService)
-  budgetService = inject(BudgetService)
   private store = inject(Store<BudgetStateI>)
 
   isLoading$!: Observable<boolean>

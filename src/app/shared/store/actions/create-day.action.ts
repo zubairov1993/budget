@@ -1,8 +1,8 @@
 import { createAction, props } from '@ngrx/store'
 
 import { ActionTypes } from '../action-types'
+import { CreateDayActionI, CreateDaySuccessActionI } from '../../interfaces'
 
-import { CreateDayActionI, CreateDaySuccessActionI } from '../../interfaces/day-action.interface'
 
 export const createDayAction = createAction(
   ActionTypes.CREATE_DAY,

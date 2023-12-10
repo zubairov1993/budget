@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs'
 import { TuiDialogService, TuiSizeL, TuiSizeS } from '@taiga-ui/core'
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus'
 
-import { SharedService } from '../shared/services/shared.service'
 
 import { AddProductDialogComponent } from '../budget/components/add-product-dialog/add-product-dialog.component'
+import { SharedService } from '../shared'
 
 @Component({
   selector: 'app-vertical-menu',
@@ -22,6 +22,11 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
   dialogs = inject(TuiDialogService)
   injector = inject(Injector)
   cdr = inject(ChangeDetectorRef)
+
+  readonly currencies = [ 'Рубль', 'Тенге' ]
+  dropdownOpen = false
+  size: TuiSizeL | TuiSizeS = 's'
+  allSubscription: Subscription[] = []
 
   ngOnInit(): void {
     this.sharedService.currency$.next(localStorage.getItem('currencyBudget') ? localStorage.getItem('currencyBudget')! : 'Рубль')
@@ -40,10 +45,6 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
       label: 'Добавление записи',
     },
   )
-  readonly currencies = [ 'Рубль', 'Тенге' ]
-  dropdownOpen = false
-  size: TuiSizeL | TuiSizeS = 's'
-  allSubscription: Subscription[] = []
 
   onCurrencyChange(currency: string): void {
     localStorage.setItem('currencyBudget', currency)

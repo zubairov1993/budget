@@ -30,20 +30,24 @@ import { TuiTableModule } from '@taiga-ui/addon-table'
 import { TuiBarModule, TuiLegendItemModule, TuiRingChartModule } from '@taiga-ui/addon-charts'
 import { TuiHoveredModule } from '@taiga-ui/cdk'
 
-
-import { HidePricePipe } from './pipes/hide-price.pipe'
-
-import { GetBudgetEffect } from './store/effects/get-budget.effect'
-import { CreateItemEffect } from './store/effects/create-item.effect'
-import { CreateDayEffect } from './store/effects/create-day.effect'
-import { CreateMonthEffect } from './store/effects/create-month.effect'
-import { CreateYearEffect } from './store/effects/create-year.effect'
-import { DeleteItemEffect } from './store/effects/delete-item.effect'
-
-import { reducers } from './store/reducers'
+import { CurrencyConverterDirective } from './directives';
+import { HidePricePipe } from './pipes';
+import {
+  CreateDayEffect,
+  CreateItemEffect,
+  CreateMonthEffect,
+  CreateYearEffect,
+  DeleteItemEffect,
+  GetBudgetEffect,
+  UpdateMountlyBudgetEffect,
+  reducers
+} from './store';
 
 @NgModule({
-  declarations: [ HidePricePipe ],
+  declarations: [
+    HidePricePipe,
+    CurrencyConverterDirective,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -71,7 +75,15 @@ import { reducers } from './store/reducers'
 		TuiLoaderModule,
 		TuiHostedDropdownModule,
     TuiDataListModule,
-    EffectsModule.forFeature([GetBudgetEffect, CreateYearEffect, CreateMonthEffect, CreateDayEffect, CreateItemEffect, DeleteItemEffect]),
+    EffectsModule.forFeature([
+      GetBudgetEffect,
+      CreateYearEffect,
+      CreateMonthEffect,
+      CreateDayEffect,
+      CreateItemEffect,
+      DeleteItemEffect,
+      UpdateMountlyBudgetEffect,
+    ]),
     StoreModule.forFeature('budget', reducers),
   ],
   exports: [

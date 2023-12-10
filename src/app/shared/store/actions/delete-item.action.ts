@@ -1,8 +1,8 @@
 import { createAction, props } from '@ngrx/store'
 
 import { ActionTypes } from '../action-types'
+import { DeleteItemActionI } from '../../interfaces'
 
-import { DeleteItemActionI } from '../../interfaces/item-action.interface'
 
 export const deleteItem = createAction(
   ActionTypes.DELETE_ITEM,

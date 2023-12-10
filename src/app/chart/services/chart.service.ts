@@ -4,9 +4,8 @@ import { BehaviorSubject } from 'rxjs'
 
 import { budgetSelector } from '../../shared/store/selectors'
 
-import { SharedService } from '../../shared/services/shared.service'
+import { BudgetStateI, SharedService, YearDataI } from 'src/app/shared'
 
-import { BudgetStateI, YearDataI } from '../../shared/interfaces/budget.interface'
 
 export interface DateI {
   year: number

@@ -5,14 +5,13 @@ import { catchError } from 'rxjs/operators'
 import { HttpErrorResponse } from '@angular/common/http'
 
 import { BudgetService } from '../../../budget/services/budget.service'
+import { createDayAction, createDayFailureAction, createDaySuccessAction, createItemAction } from '../actions'
 
-import { createDayAction, createDaySuccessAction, createDayFailureAction } from '../actions/create-day.action'
-import { createItemAction } from '../actions/create-item.action'
 
 @Injectable()
 export class CreateDayEffect {
-  private actions$ = inject(Actions)
-  budgetService = inject(BudgetService)
+  private readonly actions$ = inject(Actions)
+  private readonly budgetService = inject(BudgetService)
 
   createDay$ = createEffect(() => this.actions$.pipe(
     ofType(createDayAction),

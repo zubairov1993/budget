@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 
-import { AuthGuard } from './shared/guards/auth.guard'
+import { AuthGuard } from './shared'
 
 const routes: Routes = [
   {
@@ -10,7 +10,6 @@ const routes: Routes = [
       {
         path: 'auth',
         loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
-        data: { idx: 1 }
       },
       {
         path: 'list',
@@ -22,11 +21,11 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () => import('./budget/budget.module').then(m => m.BudgetModule),
       },
-      {
-        path: 'chart',
-        canActivate: [AuthGuard],
-        loadChildren: () => import('./chart/chart.module').then(m => m.ChartModule),
-      },
+      // {
+      //   path: 'chart',
+      //   canActivate: [AuthGuard],
+      //   loadChildren: () => import('./chart/chart.module').then(m => m.ChartModule),
+      // },
       { path: '**', redirectTo: '/list/actual' }
     ]
   }

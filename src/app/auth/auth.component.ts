@@ -9,7 +9,7 @@ import { loginAction } from './store/actions/login.action'
 import { isSubmittingSelector } from './store/selectors'
 
 import { UserI } from './interfaces/auth.interface'
-import { AppStateI } from '../shared/interfaces/app-state.interface'
+import { AppStateI } from '../shared'
 
 @Component({
   selector: 'app-login',

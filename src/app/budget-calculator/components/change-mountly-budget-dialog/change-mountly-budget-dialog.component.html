@@ -1,0 +1,26 @@
+<form class="add_product" [formGroup]="form">
+
+  <div class="add_product__fields">
+    <tui-input-number
+      class="add_product__fields_item"
+      decimal="never"
+      formControlName="monthlyBudget">
+      Введите сумму, расчитанную на месяц
+    </tui-input-number>
+  </div>
+
+  <div class="add_product__btns">
+    <div>
+      <tui-loader class="loader" [showLoader]="isLoading" [inheritColor]="true" [overlay]="true">
+        <button tuiButton type="button" [disabled]="form.invalid" appearance="accent" size="m" (click)="submit()">
+          готово
+        </button>
+      </tui-loader>
+    </div>
+    <div>
+      <button tuiButton type="button" appearance="outline" size="m" (click)="clear()">
+        очистить
+      </button>
+    </div>
+  </div>
+</form>

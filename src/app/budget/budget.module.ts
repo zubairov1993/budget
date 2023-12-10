@@ -3,15 +3,9 @@ import { NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { HttpClientModule } from '@angular/common/http'
 
-import { SharedModule } from '../shared/shared.module'
-
-import { BudgetComponent } from './budget.component'
-import { AddProductDialogComponent } from './components/add-product-dialog/add-product-dialog.component'
-import { MonthsListComponent } from './components/months-list/months-list.component'
-import { DaysListComponent } from './components/days-list/days-list.component'
-import { YearsListComponent } from './components/years-list/years-list.component'
-import { ActualDayComponent } from './components/actual-day/actual-day.component'
-
+import { SharedModule } from '../shared';
+import { ActualDayComponent, AddProductDialogComponent, DaysListComponent, MonthsListComponent, YearsListComponent } from './components';
+import { BudgetComponent } from './budget.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +14,7 @@ import { ActualDayComponent } from './components/actual-day/actual-day.component
     MonthsListComponent,
     DaysListComponent,
     YearsListComponent,
-    ActualDayComponent
+    ActualDayComponent,
   ],
   imports: [
     CommonModule,

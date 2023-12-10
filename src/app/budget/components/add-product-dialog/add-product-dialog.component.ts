@@ -7,22 +7,26 @@ import { select, Store } from '@ngrx/store'
 import { Observable, Subscription, take } from 'rxjs'
 import { Actions, ofType } from '@ngrx/effects'
 
-import { BudgetService } from '../../services/budget.service'
-import { SharedService } from '../../../shared/services/shared.service'
-
-import { createYearAction } from '../../../shared/store/actions/create-year.action'
-import { createMonthAction } from '../../../shared/store/actions/create-month.action'
-import { createDayAction } from '../../../shared/store/actions/create-day.action'
-import { createItemAction, createItemSuccessAction } from '../../../shared/store/actions/create-item.action'
-
-import { budgetSelector } from 'src/app/shared/store/selectors'
-import { yearSelector, isLoadingSelector } from '../../../shared/store/selectors'
-
-import { YearDataI, MonthDataI, DayDataI, ItemDataI, BudgetStateI } from '../../../shared/interfaces/budget.interface'
-import { CreateYearActionI } from '../../../shared/interfaces/year-action.interface'
-import { CreateMonthActionI } from '../../../shared/interfaces/month-action.interface'
-import { CreateDayActionI } from '../../../shared/interfaces/day-action.interface'
-import { CreateItemActionI } from '../../../shared/interfaces/item-action.interface'
+import {
+  BudgetStateI,
+  CreateDayActionI,
+  CreateItemActionI,
+  CreateMonthActionI,
+  CreateYearActionI,
+  DayDataI,
+  ItemDataI,
+  MonthDataI,
+  SharedService,
+  YearDataI,
+  budgetSelector,
+  createDayAction,
+  createItemAction,
+  createItemSuccessAction,
+  createMonthAction,
+  createYearAction,
+  isLoadingSelector,
+  yearSelector
+} from 'src/app/shared'
 
 @Component({
   selector: 'app-add-product-dialog',
@@ -32,7 +36,6 @@ import { CreateItemActionI } from '../../../shared/interfaces/item-action.interf
 })
 export class AddProductDialogComponent implements OnInit, OnDestroy {
   router = inject(Router)
-  budgetService = inject(BudgetService)
   sharedService = inject(SharedService)
   formBuilder = inject(FormBuilder)
   private store = inject(Store<BudgetStateI>)
@@ -74,11 +77,11 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
   }
 
   convertToRub() {
-    this.form.controls['priceRu'].setValue(this.budgetService.convertToRub(this.form.controls['priceT'].value))
+    this.form.controls['priceRu'].setValue(this.sharedService.convertToRub(this.form.controls['priceT'].value))
   }
 
   convertToTenge() {
-    this.form.controls['priceT'].setValue(this.budgetService.convertToTenge(this.form.controls['priceRu'].value))
+    this.form.controls['priceT'].setValue(this.sharedService.convertToTenge(this.form.controls['priceRu'].value))
   }
 
   getNamesPopular(): string[] {
@@ -133,6 +136,7 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
       id: null as any,
       year: year,
       totalPriceYear: null,
+      monthlyBudget: 500,
       months: [],
     }
 
@@ -200,11 +204,6 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
       day
     }
     this.store.dispatch(createItemAction(data))
-  }
-
-  errorProcessing(error: any): void {
-    console.log('error', error)
-    if (error.status === 401) this.router.navigate(['/auth'])
   }
 
   clear(): void {

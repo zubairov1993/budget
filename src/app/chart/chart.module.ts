@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { HttpClientModule } from '@angular/common/http'
 
-import { SharedModule } from '../shared/shared.module'
 
-import { ChartComponent } from './chart.component'
 
-import { ChartService } from './services/chart.service'
+import { SharedModule } from '../shared';
+import { ChartService } from './services';
+import { ChartComponent } from './chart.component';
 
 
 @NgModule({

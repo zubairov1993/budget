@@ -10,8 +10,8 @@ import { deleteItem, deleteItemSuccessAction, deleteItemFailureAction } from '..
 
 @Injectable()
 export class DeleteItemEffect {
-  private actions$ = inject(Actions)
-  budgetService = inject(BudgetService)
+  private readonly actions$ = inject(Actions)
+  private readonly budgetService = inject(BudgetService)
 
   createItem$ = createEffect(() => this.actions$.pipe(
     ofType(deleteItem),

@@ -74,6 +74,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "budget:build"
+          },
           "configurations": {
             "production": {
               "buildTarget": "budget:build:production"

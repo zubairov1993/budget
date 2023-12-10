@@ -10,14 +10,11 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 
-import { SharedModule } from './shared/shared.module'
-
-import { AuthGuard } from './shared/guards/auth.guard'
-
-import { AuthInterceptor } from './shared/interceptors/auth.interceptor'
-
 import { AppComponent } from './app.component'
-import { VerticalMenuComponent } from './vertical-menu/vertical-menu.component'
+import { AuthGuard, AuthInterceptor, SharedModule } from './shared'
+import { NavMenuComponent } from './nav-menu'
+import { VerticalMenuComponent } from './vertical-menu'
+import { BudgetCalculatorComponent, ChangeMountlyBudgetDialogComponent } from './budget-calculator'
 
 const INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -28,6 +25,9 @@ const INTERCEPTOR_PROVIDER: Provider = {
   declarations: [
     AppComponent,
     VerticalMenuComponent,
+    NavMenuComponent,
+    BudgetCalculatorComponent,
+    ChangeMountlyBudgetDialogComponent
   ],
   imports: [
     BrowserModule,

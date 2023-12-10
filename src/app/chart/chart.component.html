@@ -32,16 +32,16 @@
 
     <div class="charts__chart_legend">
       @for (label of sharedService.catogories; track label; let index = $index) {
-  <tui-legend-item class="charts__chart_legend-item"
-       
-        size="s"
-        [color]="getColor(index)"
-        [text]="label"
-        [active]="isItemActiveKZ(index)"
-        (tuiHoveredChange)="onHoverKZ(index, $event)">
-        <div>{{ chartService.totalsKZ$.value[index] | isShowPrice }} &#8376;</div>
-      </tui-legend-item>
-}
+        <tui-legend-item class="charts__chart_legend-item"
+
+          size="s"
+          [color]="getColor(index)"
+          [text]="label"
+          [active]="isItemActiveKZ(index)"
+          (tuiHoveredChange)="onHoverKZ(index, $event)">
+          <div>{{ chartService.totalsKZ$.value[index] | isShowPrice }} &#8376;</div>
+        </tui-legend-item>
+      }
     </div>
 
   </div>
@@ -54,16 +54,15 @@
 
     <div class="charts__chart_legend">
       @for (label of sharedService.catogories; track label; let index = $index) {
-  <tui-legend-item class="charts__chart_legend-item"
-       
-        size="s"
-        [color]="getColor(index)"
-        [text]="label"
-        [active]="isItemActiveRU(index)"
-        (tuiHoveredChange)="onHoverRU(index, $event)">
-        <div>{{ chartService.totalsRU$.value[index] | isShowPrice }} &#8381;</div>
-      </tui-legend-item>
-}
+        <tui-legend-item class="charts__chart_legend-item"
+          size="s"
+          [color]="getColor(index)"
+          [text]="label"
+          [active]="isItemActiveRU(index)"
+          (tuiHoveredChange)="onHoverRU(index, $event)">
+          <div>{{ chartService.totalsRU$.value[index] | isShowPrice }} &#8381;</div>
+        </tui-legend-item>
+      }
     </div>
 
   </div>

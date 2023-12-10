@@ -2,15 +2,19 @@ import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef, 
 import { Observable, Subscription } from 'rxjs'
 import { select, Store } from '@ngrx/store'
 
-import { deleteItem } from 'src/app/shared/store/actions/delete-item.action'
-
-import { yearSelector, monthSelector, daySelector } from '../../../shared/store/selectors'
-
-import { BudgetService } from '../../services/budget.service'
-import { SharedService } from '../../../shared/services/shared.service'
-
-import { DeleteItemActionI } from '../../../shared/interfaces/item-action.interface'
-import { DayDataI, BudgetStateI, YearDataI, MonthDataI, ItemDataI } from '../../../shared/interfaces/budget.interface'
+import {
+  BudgetStateI,
+  DayDataI,
+  DeleteItemActionI,
+  ItemDataI,
+  MonthDataI,
+  SharedService,
+  YearDataI,
+  daySelector,
+  deleteItem,
+  monthSelector,
+  yearSelector
+} from 'src/app/shared'
 
 @Component({
   selector: 'app-actual-day',
@@ -20,7 +24,6 @@ import { DayDataI, BudgetStateI, YearDataI, MonthDataI, ItemDataI } from '../../
 })
 export class ActualDayComponent implements OnInit, OnDestroy {
   private store = inject(Store<BudgetStateI>)
-  budgetService = inject(BudgetService)
   sharedService = inject(SharedService)
   readonly columns = [ 'name', 'category', 'priceT', 'priceRu', 'other' ]
   cdr = inject(ChangeDetectorRef)

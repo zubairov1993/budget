@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, inject } from '@angular/core'
+import { SharedService } from '../services'
 
-import { SharedService } from '../services/shared.service'
 
 @Pipe({ name: 'isShowPrice', pure: false })
 export class HidePricePipe implements PipeTransform {

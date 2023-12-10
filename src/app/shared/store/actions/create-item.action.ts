@@ -1,8 +1,8 @@
 import { createAction, props } from '@ngrx/store'
 
 import { ActionTypes } from '../action-types'
+import { CreateItemActionI, CreateItemSuccessAction } from '../../interfaces'
 
-import { CreateItemActionI, CreateItemSuccessAction } from '../../interfaces/item-action.interface'
 
 export const createItemAction = createAction(
   ActionTypes.CREATE_ITEM,

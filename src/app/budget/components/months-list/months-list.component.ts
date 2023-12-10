@@ -1,10 +1,8 @@
 import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, inject, OnDestroy } from '@angular/core'
 import { Subscription } from 'rxjs'
 
-import { BudgetService } from '../../services/budget.service'
-import { SharedService } from '../../../shared/services/shared.service'
+import { MonthDataI, SharedService, YearDataI } from 'src/app/shared'
 
-import { MonthDataI, YearDataI } from '../../../shared/interfaces/budget.interface'
 
 @Component({
   selector: 'app-months-list',
@@ -13,7 +11,6 @@ import { MonthDataI, YearDataI } from '../../../shared/interfaces/budget.interfa
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonthsListComponent implements OnInit, OnDestroy {
-  budgetService = inject(BudgetService)
   sharedService = inject(SharedService)
   cdr = inject(ChangeDetectorRef)
 

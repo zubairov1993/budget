@@ -2,8 +2,9 @@
 
   <div class="app">
     @if (authService.isAuthenticated()) {
-<div class="app__menu"><app-vertical-menu></app-vertical-menu></div>
-}
+      <app-nav-menu></app-nav-menu>
+      <!-- <div class="app__menu"><app-vertical-menu></app-vertical-menu></div> -->
+    }
     <div class="app__outlet"><router-outlet></router-outlet></div>
   </div>
 

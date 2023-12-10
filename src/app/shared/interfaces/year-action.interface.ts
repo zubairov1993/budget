@@ -1,4 +1,4 @@
-import { YearDataI, ItemDataI } from './budget.interface'
+import { ItemDataI, YearDataI } from "./budget.interface"
 
 export interface CreateYearActionI {
   yearObj: YearDataI

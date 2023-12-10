@@ -2,8 +2,8 @@ import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, inject, 
 import { TuiDay, TuiDayRange, TuiMonth } from '@taiga-ui/cdk'
 import { Subscription } from 'rxjs'
 
-import { SharedService } from '../shared/services/shared.service'
-import { ChartService } from './services/chart.service'
+import { SharedService } from '../shared'
+import { ChartService } from './services'
 
 @Component({
   selector: 'app-chart',

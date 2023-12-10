@@ -6,13 +6,12 @@ import { HttpErrorResponse } from '@angular/common/http'
 
 import { BudgetService } from '../../../budget/services/budget.service'
 
-import { createYearAction, createYearSuccessAction, createYearFailureAction } from '../actions/create-year.action'
-import { createMonthAction } from '../actions/create-month.action'
+import { createMonthAction, createYearAction, createYearFailureAction, createYearSuccessAction } from '../actions'
 
 @Injectable()
 export class CreateYearEffect {
-  private actions$ = inject(Actions)
-  budgetService = inject(BudgetService)
+  private readonly actions$ = inject(Actions)
+  private readonly budgetService = inject(BudgetService)
 
   createYear$ = createEffect(() => this.actions$.pipe(
     ofType(createYearAction),
