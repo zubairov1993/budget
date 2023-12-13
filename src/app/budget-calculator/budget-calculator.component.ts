@@ -37,19 +37,18 @@ export class BudgetCalculatorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sharedService.monthlyBudget$.subscribe(count => {
-      this.monthlyBudget = count
-      this.daysInMonth = this.getDaysInCurrentMonth();
+      this.monthlyBudget = count;
+      this.daysInMonth = this.getRemainingDaysInCurrentMonth(); // Используем новый метод
       this.dailyBudget = this.monthlyBudget / this.daysInMonth;
-      this.cdr.detectChanges()
-    })
+      this.cdr.detectChanges();
+    });
   }
 
-  private getDaysInCurrentMonth(): number {
+  private getRemainingDaysInCurrentMonth(): number {
     const now = new Date();
-    const start = new Date(now.getFullYear(), now.getMonth(), 1);
     const end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-    const dayCount = (end.getTime() - start.getTime()) / (1000 * 3600 * 24);
-    return dayCount;
+    const remainingDays = (end.getTime() - now.getTime()) / (1000 * 3600 * 24);
+    return Math.ceil(remainingDays); // Округление в большую сторону, если остаток дня.
   }
 
   onDoubleClick(): void {

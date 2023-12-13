@@ -33,7 +33,6 @@ export class SharedService {
   ]
   rubConverter: number | null = 0.1722
   currentYearUid: string | null = null
-  currentMonthlyBudget: number | null = null
 
   mykey = '74758fc93d4a03f7a088d0dc'
   private readonly CACHE_KEY = 'exchange_rates'
@@ -83,7 +82,8 @@ export class SharedService {
   }
 
   updateMonthlyBudget(newMonthlyBudget: number, bool: boolean): Observable<any> {
-    const value = bool ? this.currentMonthlyBudget! - newMonthlyBudget : newMonthlyBudget
+    const value = bool ? this.monthlyBudget$.value - newMonthlyBudget : newMonthlyBudget
+    this.monthlyBudget$.next(value);
     const uid = this.authService.localId;
     const route = `${environment.firebaseConfig.databaseURL}/years/${uid}/${this.currentYearUid}/monthlyBudget.json`;
     return this.http.put(route, { monthlyBudget: value });
@@ -106,7 +106,6 @@ export class SharedService {
       Object.keys(data).forEach((id) => {
         const year = data[id].year
         this.monthlyBudget$.next(data[id].monthlyBudget.monthlyBudget)
-        this.currentMonthlyBudget = data[id].monthlyBudget.monthlyBudget
         const monthsData = data[id].months
         let totalPriceYear = 0
 
@@ -239,8 +238,7 @@ export class SharedService {
     }
 
     // Преобразование Map в массив и сортировка по количеству
-    let sortedItems = Array.from(itemCounts.values())
-                            .sort((a, b) => b.count - a.count);
+    let sortedItems = Array.from(itemCounts.values()).sort((a, b) => b.count - a.count);
 
     // Вывод в консоль для проверки
     // sortedItems.forEach(entry => {

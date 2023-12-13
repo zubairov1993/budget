@@ -89,20 +89,20 @@ const budgetReducer = createReducer(
       isLoading: false
     }
   }),
-  on(updateMountlyBudgetAction, (state): BudgetStateI => ({
-    ...state,
-    isLoading: true,
-  })),
-  on(updateMountlyBudgetSuccessAction, (state, action): BudgetStateI => {
-    let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
-    if (newState.data === null) newState.data = []
-    const yearIndex = newState.data.findIndex(year => year.year === action.year)
-    newState.data[yearIndex].monthlyBudget = action.monthlyBudget
-    return {
-      ...newState,
-      isLoading: false
-    }
-  }),
+  // on(updateMountlyBudgetAction, (state): BudgetStateI => ({
+  //   ...state,
+  //   isLoading: true,
+  // })),
+  // on(updateMountlyBudgetSuccessAction, (state, action): BudgetStateI => {
+  //   let newState: BudgetStateI = JSON.parse(JSON.stringify(state))
+  //   if (newState.data === null) newState.data = []
+  //   const yearIndex = newState.data.findIndex(year => year.year === action.year)
+  //   newState.data[yearIndex].monthlyBudget = action.monthlyBudget
+  //   return {
+  //     ...newState,
+  //     isLoading: false
+  //   }
+  // }),
   on(deleteItem, (state): BudgetStateI => ({
     ...state,
     isLoading: true,
