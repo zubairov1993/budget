@@ -105,13 +105,15 @@ export class SharedService {
     if (data) {
       Object.keys(data).forEach((id) => {
         const year = data[id].year
-        this.monthlyBudget$.next(data[id].monthlyBudget.monthlyBudget)
         const monthsData = data[id].months
         let totalPriceYear = 0
 
         const currentDate: Date = new Date()
         const currentYear: number = currentDate.getFullYear()
-        if (year === currentYear) this.currentYearUid = id
+        if (year === currentYear) {
+          this.currentYearUid = id
+          this.monthlyBudget$.next(data[id].monthlyBudget.monthlyBudget)
+        }
 
         if (monthsData) {
           const months: MonthDataI[] = Object.keys(monthsData).map((monthName) => {
