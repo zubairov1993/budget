@@ -110,9 +110,11 @@ export class SharedService {
 
         const currentDate: Date = new Date()
         const currentYear: number = currentDate.getFullYear()
+
         if (year === currentYear) {
           this.currentYearUid = id
           this.monthlyBudget$.next(data[id].monthlyBudget.monthlyBudget)
+
         }
 
         if (monthsData) {
