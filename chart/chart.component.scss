@@ -1,0 +1,56 @@
+// :host {
+//   --tui-chart-0: #8b008b; // Темно-пурпурный
+//   --tui-chart-1: #ff69b4; // Розовато-лавандовый
+//   --tui-chart-2: #00ffff; //Бирюзовый
+//   --tui-chart-3: #9932cc; //Фиолетовый
+//   --tui-chart-4: #ffa500; // Оранжевый
+//   --tui-chart-5: #8fbc8f; //Серо-зеленый
+//   --tui-chart-6: #ff00ff; //Фуксия
+//   --tui-chart-7: #ff6347; //Красно-оранжевый
+//   --tui-chart-8: #00ff00; //Ярко-зеленый
+//   --tui-chart-9: #f0e68c; //Желтовато-бежевый
+// }
+
+:host {
+  --tui-chart-0: #B7C0EE; //светло-лиловый
+  --tui-chart-1: #F6C4D2; //светло-розовый
+  --tui-chart-2: #79B4A9; //зеленый тюркоаз
+  --tui-chart-3: #E6B6D8; //фуксия
+  --tui-chart-4: #FDFD96; //светло-желтый
+  --tui-chart-5: #ff69b4; // Розовато-лавандовый
+  --tui-chart-6: #F5D0A9; //персиковый
+  --tui-chart-7: #C2B280; //золотисто-коричневый
+  --tui-chart-8: #8b008b; // Темно-пурпурный
+  --tui-chart-9: #F7E7CE; //светло-коричневый
+}
+
+.calendars {
+  display: flex;
+  justify-content: space-around;
+}
+
+.charts {
+  display: flex;
+  justify-content: space-around;
+
+  &__chart {
+    display: flex;
+    align-items: center;
+
+    &_legend {
+      display: flex;
+      flex-wrap: wrap;
+      width: 300px;
+      margin: 0 0 0 2rem;
+
+      &-item {
+        margin: 0 0.5rem 0.75rem 0;
+      }
+    }
+  }
+}
+
+.hide {
+  display: none;
+}
+

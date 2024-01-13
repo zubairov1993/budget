@@ -1,0 +1,43 @@
+@if (budgets$ | async) {
+  <div>
+
+    @for (year of budgets$ | async; track year) {
+      <div>
+        <tui-accordion class="years">
+          <tui-accordion-item [open]="isCurrentYear(year.year)">
+            <div class="years__header">
+              <div>{{ year.year }} год</div>
+
+              <div class="years__header_right">
+
+                <div>
+                  <b>потрачено за год:</b>
+                  @if (sharedService.currency$.value === 'Тенге') {
+                    <span>
+                      тенге - {{ year.totalPriceYear | isShowPrice }} &#8376;
+                    </span>
+                  }
+
+                  @if (sharedService.currency$.value === 'Рубль') {
+                    <span>
+                      рублей - {{ sharedService.convertToRub(year.totalPriceYear) | isShowPrice }} &#8381;
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <ng-template tuiAccordionItemContent>
+              <app-months-list [yearProps]="year"></app-months-list>
+            </ng-template>
+
+          </tui-accordion-item>
+        </tui-accordion>
+      </div>
+    }
+  </div>
+}
+
+@if (isLoading$ | async) {
+  <div>Loading.....</div>
+}

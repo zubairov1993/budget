@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.budget_calculator {
+  &__item {
+    &_count {
+      color: red;
+    }
+  }
+}

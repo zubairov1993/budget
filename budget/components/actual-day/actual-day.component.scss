@@ -1,0 +1,101 @@
+::ng-deep .actual_day {
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d7d7d7;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+
+  &__accordion {
+    display: none;
+    flex-direction: column;
+
+    &_item {
+      margin-bottom: 10px;
+
+      &-content {
+        display: flex;
+        flex-direction: column;
+
+        button {
+          cursor: pointer;
+          background: transparent;
+          border: none;
+          color: red;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  &__table {
+    display: flex;
+
+    table {
+      width: 100%;
+
+      th:last-child {
+        width: 80px;
+      }
+
+      td:last-child {
+        button {
+          cursor: pointer;
+          background: transparent;
+          border: none;
+          color: red;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  // ._expanded {
+  //   height: auto !important;
+  //   overflow-x: hidden;
+  //   overflow-y: scroll;
+  // }
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__btns {
+    display: flex;
+    margin-top: 20px;
+
+    button {
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+// tablet
+@media screen and (max-width: 1023px) {
+  .actual_day {
+    &__accordion {
+      display: flex;
+    }
+
+    &__table {
+      display: none;
+    }
+  }
+}
+
+// phone
+@media screen and (max-width: 767px) {
+  .actual_day {
+    &__header {
+      flex-direction: column;
+    }
+  }
+}

@@ -1,0 +1,21 @@
+.app {
+  padding: 20px;
+
+  &__outlet {
+    width: 100%;
+  }
+}
+
+
+// phone
+@media screen and (max-width: 767px) {
+  .app {
+    &__menu {
+      width: 50px;
+    }
+
+    &__outlet {
+      padding-right: 10px;
+    }
+  }
+}

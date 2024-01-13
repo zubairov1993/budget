@@ -1,0 +1,32 @@
+.auth {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__wrapper {
+    width: 400px;
+    margin: 0 auto;
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    &_btn {
+      width: 100%;
+      background: #526ed3;
+      color: #fff;
+      height: 50px;
+      border-radius: 4px;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  }
+}
+
+.opacity {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,0 +1,46 @@
+<nav class="nav">
+  <div class="nav-item" (click)="showDialog()">
+    Добавить
+  </div>
+
+  <div class="nav-item" (click)="onCurrencyChange(sharedService.currency$.value)">
+    @if (sharedService.currency$.value === 'Тенге') {
+      Рубль
+    }
+
+    @if (sharedService.currency$.value === 'Рубль') {
+      Тенге
+    }
+  </div>
+
+  <div class="nav-item" [routerLink]="['/list/actual']">
+    Сегодня
+  </div>
+
+  <div class="nav-item" [routerLink]="['/list']">
+    Список
+  </div>
+
+  <div class="nav-item" (click)="toggleShowPrice()">
+    @if (!sharedService.showPrice$.value) {
+      <span>Показать цену</span>
+    }
+    @if (sharedService.showPrice$.value) {
+      <span>Скрыть цену</span>
+    }
+  </div>
+
+  <!-- @if (routerUrl !== '/chart') {
+    <div class="nav-item" [routerLink]="['/chart']" >
+      Диаграма
+    </div>
+  } -->
+
+  <app-budget-calculator></app-budget-calculator>
+
+  @if (authService.isAuthenticated()) {
+    <div class="nav-item" [routerLink]="['/auth']" (click)="authService.logout()" >
+      Выйти
+    </div>
+  }
+</nav>
