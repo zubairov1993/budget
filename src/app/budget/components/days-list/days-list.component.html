@@ -98,28 +98,28 @@
                     </td>
                     <td *tuiCell="'other'" tuiTd>
                       <button type="button" (click)="openDialogDelete(item)">Удалить</button>
-
-                      <ng-template #template [(tuiDialog)]="open" [tuiDialogOptions]="{label: 'Вы действительно хотите удалить ?', size: 's'}">
-                        <div class="dialog">
-                          <div class="dialog__btns">
-                            <button tuiButton type="button" appearance="outline" size="m" (click)="closeDialogDelete()">
-                              Нет
-                            </button>
-
-                            <tui-loader class="loader" [showLoader]="(isLoading$ | async)!" [inheritColor]="true" [overlay]="true">
-                              <button tuiButton type="button" appearance="accent" size="m" (click)="deleteItem(day.id!, day.day!, item.id!)">
-                                Да
-                              </button>
-                            </tui-loader>
-                          </div>
-                        </div>
-                      </ng-template>
                     </td>
                   </tr>
                 }
               </tbody>
             </table>
           </div>
+
+          <ng-template #template [(tuiDialog)]="open" [tuiDialogOptions]="{label: 'Вы действительно хотите удалить ?', size: 's'}">
+            <div class="dialog">
+              <div class="dialog__btns">
+                <button tuiButton type="button" appearance="outline" size="m" (click)="closeDialogDelete()">
+                  Нет
+                </button>
+
+                <tui-loader class="loader" [showLoader]="(isLoading$ | async)!" [inheritColor]="true" [overlay]="true">
+                  <button tuiButton type="button" appearance="accent" size="m" (click)="deleteItem(day.id!, day.day!)">
+                    Да
+                  </button>
+                </tui-loader>
+              </div>
+            </div>
+          </ng-template>
 
         </ng-template>
       </tui-accordion-item>

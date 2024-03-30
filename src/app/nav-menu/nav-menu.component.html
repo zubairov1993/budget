@@ -3,7 +3,7 @@
     Добавить
   </div>
 
-  <div class="nav-item" (click)="onCurrencyChange(sharedService.currency$.value)">
+  <!-- <div class="nav-item" (click)="onCurrencyChange(sharedService.currency$.value)">
     @if (sharedService.currency$.value === 'Тенге') {
       Рубль
     }
@@ -11,7 +11,7 @@
     @if (sharedService.currency$.value === 'Рубль') {
       Тенге
     }
-  </div>
+  </div> -->
 
   <div class="nav-item" [routerLink]="['/list/actual']">
     Сегодня
@@ -21,14 +21,18 @@
     Список
   </div>
 
-  <div class="nav-item" (click)="toggleShowPrice()">
+  <div class="nav-item" [routerLink]="['/list/search']">
+    Поиск
+  </div>
+
+  <!-- <div class="nav-item" (click)="toggleShowPrice()">
     @if (!sharedService.showPrice$.value) {
       <span>Показать цену</span>
     }
     @if (sharedService.showPrice$.value) {
       <span>Скрыть цену</span>
     }
-  </div>
+  </div> -->
 
   <!-- @if (routerUrl !== '/chart') {
     <div class="nav-item" [routerLink]="['/chart']" >

@@ -113,7 +113,7 @@
       </button>
 
       <tui-loader class="loader" [showLoader]="(isLoading$ | async)!" [inheritColor]="true" [overlay]="true">
-        <button tuiButton type="button" appearance="accent" size="m" (click)="deleteItem(currentDay?.id!, currentDay?.day!, selectedItem?.id!)">
+        <button tuiButton type="button" appearance="accent" size="m" (click)="deleteItem(currentDay?.id!, currentDay?.day!)">
           Да
         </button>
       </tui-loader>

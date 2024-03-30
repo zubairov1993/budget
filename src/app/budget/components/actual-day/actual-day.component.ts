@@ -73,7 +73,7 @@ export class ActualDayComponent implements OnInit, OnDestroy {
     this.open = false
   }
 
-  deleteItem(dayName: string, day: number, itemId: string): void {
+  deleteItem(dayName: string, day: number): void {
     const data: DeleteItemActionI = {
       yearName: this.currentYear?.id!,
       year: this.currentYear?.year!,
@@ -81,7 +81,7 @@ export class ActualDayComponent implements OnInit, OnDestroy {
       month: this.currentMonth?.month!,
       dayName: dayName,
       day,
-      itemId
+      itemId: this.selectedItem!.id
     }
 
     this.store.dispatch(deleteItem(data))

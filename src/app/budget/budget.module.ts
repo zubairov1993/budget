@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { SharedModule } from '../shared';
 import { ActualDayComponent, AddProductDialogComponent, DaysListComponent, MonthsListComponent, YearsListComponent } from './components';
 import { BudgetComponent } from './budget.component';
+import { SearchListComponent } from './components/search-list/search-list.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { BudgetComponent } from './budget.component';
     DaysListComponent,
     YearsListComponent,
     ActualDayComponent,
+    SearchListComponent,
   ],
   imports: [
     CommonModule,

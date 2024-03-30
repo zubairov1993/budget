@@ -25,6 +25,7 @@ import {
   TuiSelectModule,
   TuiCheckboxBlockModule,
   TuiStringifyContentPipeModule,
+  TuiInputDateModule,
 } from '@taiga-ui/kit'
 import { TuiTableModule } from '@taiga-ui/addon-table'
 import { TuiBarModule, TuiLegendItemModule, TuiRingChartModule } from '@taiga-ui/addon-charts'
@@ -75,6 +76,7 @@ import {
 		TuiLoaderModule,
 		TuiHostedDropdownModule,
     TuiDataListModule,
+    TuiInputDateModule,
     EffectsModule.forFeature([
       GetBudgetEffect,
       CreateYearEffect,
@@ -112,6 +114,7 @@ import {
 		TuiLoaderModule,
 		TuiHostedDropdownModule,
     TuiDataListModule,
+    TuiInputDateModule,
   ],
   providers: [],
   bootstrap: []

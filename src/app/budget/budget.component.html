@@ -1,5 +1,8 @@
 <div>
   @switch (router.url) {
+    @case ('/list/search') {
+      <app-search-list></app-search-list>
+    }
     @case ('/list/actual') {
       <app-actual-day></app-actual-day>
     }

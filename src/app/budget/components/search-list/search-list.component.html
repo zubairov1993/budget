@@ -1,0 +1,65 @@
+<div class="search_list">
+  <form class="search_list__fields" [formGroup]="testForm">
+    <tui-input class="search_list__fields_search" formControlName="name">
+      Введите название продукта
+      <tui-data-list-wrapper
+        (itemClick)="selectedName()"
+        *tuiDataList
+        emptyContent="No results found"
+        size="xs"
+        [items]="getNamesPopular() | tuiFilterByInput">
+      </tui-data-list-wrapper>
+    </tui-input>
+    <tui-input-date
+      class="search_list__fields_date"
+      formControlName="date"
+      (ngModelChange)="selectedDate()">
+      Choose a date
+    </tui-input-date>
+  </form>
+
+  <div class="search_list__table">
+    <table tuiTable [columns]="columns">
+      <thead>
+        <tr tuiThGroup>
+          <th *tuiHead="'name'" tuiTh [resizable]="true" [sticky]="true" [sorter]="null">
+            Наименование
+          </th>
+          <th *tuiHead="'category'" tuiTh [sticky]="true" [sorter]="null">
+            Категория
+          </th>
+          <th *tuiHead="'priceT'" tuiTh [sticky]="true" [sorter]="null">
+            Цена в Тенге
+          </th>
+          <th *tuiHead="'priceRu'" tuiTh [sticky]="true" [sorter]="null">
+            Цена в Рублях
+          </th>
+          <th *tuiHead="'date'" tuiTh [sticky]="true" [sorter]="null">
+            Дата
+          </th>
+        </tr>
+      </thead>
+
+      <tbody tuiTbody [data]="searchList">
+        @for (item of searchList; track item; let i = $index) {
+          <tr tuiTr>
+            <td *tuiCell="'name'" tuiTd>
+              {{ item.name }}
+            </td>
+            <td *tuiCell="'category'" tuiTd>
+              {{ item.category }}
+            </td>
+            <td *tuiCell="'priceT'" tuiTd>
+              {{ item.priceT | isShowPrice }} &#8376;
+            </td>
+            <td *tuiCell="'priceRu'" tuiTd>
+              {{ item.priceRu | isShowPrice }} &#8381;
+            </td>
+            <td *tuiCell="'date'" tuiTd>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

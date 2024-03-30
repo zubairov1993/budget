@@ -1,0 +1,28 @@
+.search_list {
+
+
+  &__fields {
+    width: 100%;
+    display: flex;
+    margin-bottom: 10px;
+
+    &_search {
+      width: 70%;
+      margin-right: 10px;
+    }
+
+    &_date {
+      width: 30%;
+    }
+  }
+
+
+
+  &__table {
+    display: flex;
+
+    table {
+      width: 100%;
+    }
+  }
+}

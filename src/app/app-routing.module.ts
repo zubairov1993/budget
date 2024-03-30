@@ -21,6 +21,11 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () => import('./budget/budget.module').then(m => m.BudgetModule),
       },
+      {
+        path: 'list/search',
+        canActivate: [AuthGuard],
+        loadChildren: () => import('./budget/budget.module').then(m => m.BudgetModule),
+      },
       // {
       //   path: 'chart',
       //   canActivate: [AuthGuard],

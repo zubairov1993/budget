@@ -70,7 +70,7 @@ export class DaysListComponent implements OnInit, OnDestroy {
     this.open = false
   }
 
-  deleteItem(dayName: string, day: number, itemId: string): void {
+  deleteItem(dayName: string, day: number): void {
     const data: DeleteItemActionI = {
       yearName: this.yearName!,
       year: this.year!,
@@ -78,7 +78,7 @@ export class DaysListComponent implements OnInit, OnDestroy {
       month: this.monthProps?.month!,
       dayName: dayName,
       day,
-      itemId
+      itemId: this.selectedItem!.id
     }
 
     this.store.dispatch(deleteItem(data))
