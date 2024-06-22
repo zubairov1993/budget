@@ -19,7 +19,7 @@ export class SearchListComponent implements OnInit {
 
   readonly testForm = new FormGroup({
     name: new FormControl(''),
-    date: new FormControl(''),
+    date: new FormControl(null),
   });
 
 

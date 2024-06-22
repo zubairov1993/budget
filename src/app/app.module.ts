@@ -42,7 +42,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
       registrationStrategy: 'registerWhenStable:30000'
     }),
     StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true}),
     EffectsModule.forRoot([]),
 ],
   providers: [{ provide: TUI_SANITIZER, useClass: NgDompurifySanitizer }, INTERCEPTOR_PROVIDER, AuthGuard],

@@ -18,7 +18,7 @@ export class SharedService {
   authService = inject(AuthService)
   monthlyBudget$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
   currency$: BehaviorSubject<string> = new BehaviorSubject<string>('Тенге')
-  showPrice$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true)
+  showPrice$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
   popularItems$: BehaviorSubject<ItemDataI[]> = new BehaviorSubject<ItemDataI[]>([])
   catogories = [
     'Еда',

@@ -31,7 +31,7 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sharedService.currency$.next(localStorage.getItem('currencyBudget') ? localStorage.getItem('currencyBudget')! : 'Тенге')
     const showPrice = JSON.parse(localStorage.getItem('showPriceBudget')!)
-    this.sharedService.showPrice$.next(showPrice ? showPrice : true)
+    this.sharedService.showPrice$.next(showPrice ? showPrice : false)
     const showPrice$ = this.sharedService.showPrice$.subscribe(() => this.cdr.detectChanges())
     const currency = this.sharedService.currency$.subscribe(() => this.cdr.detectChanges())
     this.allSubscription.push(showPrice, showPrice$, currency)
