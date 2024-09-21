@@ -1,69 +1,46 @@
-<!-- <button tuiButton type="button" size="m" (click)="forEntirePeriod()">
-  За весь период
-</button> -->
-
 <div class="calendars">
   <tui-calendar
-      [value]="date"
-      [showAdjacent]="false"
-      [maxViewedMonth]="firstMonth"
-      [month]="firstMonth"
-      [(hoveredItem)]="hoveredItem"
-      (monthChange)="onMonthChangeFirst($event)"
-      (dayClick)="onDayClick($event)"
-  ></tui-calendar>
+    [(hoveredItem)]="hoveredItem"
+    [value]="date"
+    [showAdjacent]="false"
+    [maxViewedMonth]="firstMonth"
+    [month]="firstMonth"
+    (monthChange)="onMonthChangeFirst($event)"
+    (dayClick)="onDayClick($event)"></tui-calendar>
   <tui-calendar
-      [value]="date"
-      [showAdjacent]="false"
-      [month]="middleMonth"
-      [minViewedMonth]="middleMonth"
-      [(hoveredItem)]="hoveredItem"
-      (monthChange)="onMonthChangeMiddle($event)"
-      (dayClick)="onDayClick($event)"
-  ></tui-calendar>
+    [(hoveredItem)]="hoveredItem"
+    [value]="date"
+    [showAdjacent]="false"
+    [month]="middleMonth"
+    [minViewedMonth]="middleMonth"
+    (monthChange)="onMonthChangeMiddle($event)"
+    (dayClick)="onDayClick($event)"></tui-calendar>
 </div>
 
-<div class="charts">
-  <div class="charts__chart" [class.hide]="sharedService.currency$.value === 'Рубль'">
-
-    <tui-ring-chart [size]="'xl'" [value]="chartService.totalsKZ$.value" [(activeItemIndex)]="activeIndexKZ">
-      <div>Общее {{ sumArrayValues(chartService.totalsKZ$.value) | isShowPrice }} &#8376;</div>
+<div class="charts" *ngIf="values.length">
+  <div class="charts__chart">
+    <tui-ring-chart
+      [(activeItemIndex)]="activeIndexRU"
+      [size]="'xl'"
+      [value]="values">
+      <div>
+        Общее
+        {{ sumArrayValues(values) | number: '1.0-0' }} &#8381;
+      </div>
     </tui-ring-chart>
 
     <div class="charts__chart_legend">
-      @for (label of sharedService.catogories; track label; let index = $index) {
-        <tui-legend-item class="charts__chart_legend-item"
-
-          size="s"
-          [color]="getColor(index)"
-          [text]="label"
-          [active]="isItemActiveKZ(index)"
-          (tuiHoveredChange)="onHoverKZ(index, $event)">
-          <div>{{ chartService.totalsKZ$.value[index] | isShowPrice }} &#8376;</div>
-        </tui-legend-item>
-      }
-    </div>
-
-  </div>
-
-  <div class="charts__chart" [class.hide]="sharedService.currency$.value === 'Тенге'">
-
-    <tui-ring-chart [size]="'xl'" [value]="chartService.totalsRU$.value" [(activeItemIndex)]="activeIndexRU">
-      <div>Общее {{ sumArrayValues(chartService.totalsRU$.value) | isShowPrice }} &#8381;</div>
-    </tui-ring-chart>
-
-    <div class="charts__chart_legend">
-      @for (label of sharedService.catogories; track label; let index = $index) {
-        <tui-legend-item class="charts__chart_legend-item"
-          size="s"
+      @for (label of categories; track label; let index = $index) {
+        <tui-legend-item
+          class="charts__chart_legend-item"
           [color]="getColor(index)"
           [text]="label"
           [active]="isItemActiveRU(index)"
-          (tuiHoveredChange)="onHoverRU(index, $event)">
-          <div>{{ chartService.totalsRU$.value[index] | isShowPrice }} &#8381;</div>
+          (tuiHoveredChange)="onHoverRU(index, $event)"
+          size="s">
+          <div>{{ values[index] | number: '1.0-0' }} &#8381;</div>
         </tui-legend-item>
       }
     </div>
-
   </div>
 </div>

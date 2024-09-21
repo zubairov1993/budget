@@ -1,11 +1,14 @@
-<ng-container *ngIf="sharedService.currency$ | async as currency">
+<ng-container>
   <div class="budget_calculator" (dblclick)="onDoubleClick()">
     <div class="budget_calculator__item">
-      Месячный Бюджет: {{ monthlyBudget | number : '1.0-0' }} &#8376;
+      Месячный Бюджет: {{ monthlyBudget | number: '1.0-0' }} &#8381;
     </div>
     <div class="budget_calculator__item">
-      Дневной Бюджет: <b class="budget_calculator__item_count">{{ dailyBudget | number : '1.0-0' }} </b> &#8376;
+      Дневной Бюджет:
+      <b class="budget_calculator__item_count"
+        >{{ dailyBudget | number: '1.0-0' }}
+      </b>
+      &#8381;
     </div>
   </div>
-
 </ng-container>

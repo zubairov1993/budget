@@ -1,5 +1,4 @@
 .add_product {
-
   &__checkbox {
     width: 100%;
     margin-bottom: 10px;
@@ -33,10 +32,6 @@
 
 ::ng-deep [tuioption]:focus {
   background-color: red !important;
-}
-
-.hide {
-  display: none;
 }
 
 // phone

@@ -1,88 +1,48 @@
-import { Injectable, inject } from '@angular/core'
-import { HttpClient } from '@angular/common/http'
-import { BehaviorSubject, Observable, map, of } from 'rxjs';
-
-import { environment } from "src/environments/environment"
-
-import { AuthService } from '../../auth/services/auth.service'
-
-import { catchError } from 'rxjs/operators';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Router } from '@angular/router';
+
+import { environment } from 'src/environments/environment';
+
+import { AuthService } from '../../auth/services/auth.service';
 import { DayDataI, ItemDataI, MonthDataI, YearDataI } from '../interfaces';
 
-@Injectable({ providedIn: "root" })
-
+@Injectable({ providedIn: 'root' })
 export class SharedService {
-  router = inject(Router)
-  http = inject(HttpClient)
-  authService = inject(AuthService)
-  monthlyBudget$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
-  currency$: BehaviorSubject<string> = new BehaviorSubject<string>('Тенге')
-  showPrice$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
-  popularItems$: BehaviorSubject<ItemDataI[]> = new BehaviorSubject<ItemDataI[]>([])
-  catogories = [
-    'Еда',
-    'Вещи',
-    'Медицинское',
-    'Детское',
-    'Техника',
-    'Дорога',
-    'Аренда',
-    'Учеба',
-    'Прочее',
-  ]
-  rubConverter: number | null = 0.1722
-  currentYearUid: string | null = null
-
-  mykey = '74758fc93d4a03f7a088d0dc'
-  private readonly CACHE_KEY = 'exchange_rates'
-  private readonly CACHE_LIFETIME = 24 * 60 * 60 * 1000
+  router = inject(Router);
+  http = inject(HttpClient);
+  authService = inject(AuthService);
+  monthlyBudget$: BehaviorSubject<number>;
+  popularItems$: BehaviorSubject<ItemDataI[]>;
+  currentYearUid: string | null;
+  categories: string[];
 
   constructor() {
-    this.getExchangeRates().subscribe(response => {
-      const rate = response.conversion_rates['RUB']
-      if (response && response.conversion_rates) this.rubConverter = rate ? rate : 0.1722
-    }, (error: any) => this.errorProcessing(error))
+    this.monthlyBudget$ = new BehaviorSubject<number>(0);
+    this.popularItems$ = new BehaviorSubject<ItemDataI[]>([]);
+    this.currentYearUid = null;
+    this.categories = [
+      'Еда',
+      'Автомобиль',
+      'Медицинское',
+      'Аренда',
+      'Детское',
+      'Дорога',
+      'Вещи',
+      'Техника',
+      'Учеба',
+      'Прочее',
+    ];
   }
 
-  getExchangeRates(): Observable<any> {
-    const databaseUrl = `https://v6.exchangerate-api.com/v6/${this.mykey}/latest/KZT`
-    const cachedRates = localStorage.getItem(this.CACHE_KEY)
-    if (cachedRates) {
-      const { timestamp, conversion_rates } = JSON.parse(cachedRates)
-      if (Date.now() - timestamp < this.CACHE_LIFETIME) {
-        return of({ conversion_rates })
-      }
-    }
-    return this.http.get<any>(databaseUrl).pipe(
-      map(response => {
-        localStorage.setItem(this.CACHE_KEY, JSON.stringify({
-          timestamp: Date.now(),
-          conversion_rates: response.conversion_rates
-        }))
-        return response
-      }),
-      catchError(error => {
-        console.error('Error fetching exchange rates', error)
-        return of(null)
-      })
-    )
-  }
-
-  convertToRub(priceT: number | null): number {
-    let price = 0
-    if (this.rubConverter && priceT) price = +(priceT * this.rubConverter).toFixed(2)
-    return price
-  }
-
-  convertToTenge(priceR: number | null): number {
-    let price = 0
-    if (this.rubConverter && priceR) price = +(priceR / this.rubConverter).toFixed(2)
-    return price
-  }
-
-  updateMonthlyBudget(newMonthlyBudget: number, bool: boolean): Observable<any> {
-    const value = bool ? this.monthlyBudget$.value - newMonthlyBudget : newMonthlyBudget
+  updateMonthlyBudget(
+    newMonthlyBudget: number,
+    bool: boolean,
+  ): Observable<any> {
+    const value = bool
+      ? this.monthlyBudget$.value - newMonthlyBudget
+      : newMonthlyBudget;
     this.monthlyBudget$.next(value);
     const uid = this.authService.localId;
     const route = `${environment.firebaseConfig.databaseURL}/years/${uid}/${this.currentYearUid}/monthlyBudget.json`;
@@ -91,109 +51,110 @@ export class SharedService {
 
   getBudget(): Observable<any> {
     const uid = this.authService.localId;
-    const path = `${environment.firebaseConfig.databaseURL}/years/${uid}.json`
+    const path = `${environment.firebaseConfig.databaseURL}/years/${uid}.json`;
     return this.http.get<any>(path).pipe(
       map((response: any) => {
-        return this.parseData(response)
+        return this.parseData(response);
       }),
-    )
+    );
   }
 
-  parseData(data: {[key: string]: any}): YearDataI[] {
-    const result: YearDataI[] = []
+  parseData(data: { [key: string]: any }): YearDataI[] {
+    const result: YearDataI[] = [];
 
     if (data) {
       Object.keys(data).forEach((id) => {
-        const year = data[id].year
-        const monthsData = data[id].months
-        let totalPriceYear = 0
+        const year = data[id].year;
+        const monthsData = data[id].months;
+        let totalPriceYear = 0;
 
-        const currentDate: Date = new Date()
-        const currentYear: number = currentDate.getFullYear()
+        const currentDate: Date = new Date();
+        const currentYear: number = currentDate.getFullYear();
         if (year === currentYear) {
-          this.currentYearUid = id
-          this.monthlyBudget$.next(data[id].monthlyBudget.monthlyBudget)
+          this.currentYearUid = id;
+          this.monthlyBudget$.next(data[id].monthlyBudget.monthlyBudget);
         }
 
         if (monthsData) {
-          const months: MonthDataI[] = Object.keys(monthsData).map((monthName) => {
-            const daysData = monthsData[monthName].days
-            let totalPriceMonth = 0
-            let days: DayDataI[] = []
+          const months: MonthDataI[] = Object.keys(monthsData).map(
+            (monthName) => {
+              const daysData = monthsData[monthName].days;
+              let totalPriceMonth = 0;
+              let days: DayDataI[] = [];
 
-            if (daysData) {
-              days = Object.keys(daysData).map((dayName) => {
-                const dayData = daysData[dayName]
-                let totalPriceDay = 0
-                let items: ItemDataI[] = []
+              if (daysData) {
+                days = Object.keys(daysData).map((dayName) => {
+                  const dayData = daysData[dayName];
+                  let totalPriceDay = 0;
+                  let items: ItemDataI[] = [];
 
-                if (dayData?.items) {
-                  items = Object.keys(dayData?.items).map((itemId) => {
-                    const itemData = dayData.items[itemId]
-                    const item: ItemDataI = {
-                      id: itemId,
-                      name: itemData.name,
-                      category: itemData.category,
-                      priceT: itemData.priceT,
-                      priceRu: itemData.priceRu,
-                    }
+                  if (dayData?.items) {
+                    items = Object.keys(dayData?.items).map((itemId) => {
+                      const itemData = dayData.items[itemId];
+                      const item: ItemDataI = {
+                        id: itemId,
+                        name: itemData.name,
+                        category: itemData.category,
+                        priceRu: itemData.priceRu,
+                      };
 
-                    totalPriceDay += itemData.priceT
-                    return item
-                  })
-                }
+                      totalPriceDay += itemData.priceRu;
+                      return item;
+                    });
+                  }
 
-                const day: DayDataI = {
-                  id: dayName,
-                  day: dayData.day,
-                  date: dayData.date,
-                  totalPriceDay: totalPriceDay,
-                  items: items,
-                }
+                  const day: DayDataI = {
+                    id: dayName,
+                    day: dayData.day,
+                    date: dayData.date,
+                    totalPriceDay: totalPriceDay,
+                    items: items,
+                  };
 
-                totalPriceMonth += totalPriceDay
-                return day
-              })
-            }
+                  totalPriceMonth += totalPriceDay;
+                  return day;
+                });
+              }
 
-            const month: MonthDataI = {
-              id: monthName,
-              month: monthsData[monthName].month,
-              totalPriceMonth: totalPriceMonth,
-              days: days,
-            }
+              const month: MonthDataI = {
+                id: monthName,
+                month: monthsData[monthName].month,
+                totalPriceMonth: totalPriceMonth,
+                days: days,
+              };
 
-            totalPriceYear += totalPriceMonth
-            return month
-
-          })
+              totalPriceYear += totalPriceMonth;
+              return month;
+            },
+          );
 
           const resultData: YearDataI = {
             id: id,
             year: year,
             totalPriceYear: totalPriceYear,
             months: months,
-          }
-          result.push(resultData)
+          };
+          result.push(resultData);
         }
-      })
+      });
     }
 
-    return this.sortData(result)
+    return this.sortData(result);
   }
 
   sortData(data: YearDataI[]): YearDataI[] {
     if (data) {
-      data.sort((a, b) => a.year - b.year)
+      data.sort((a, b) => a.year - b.year);
       for (const year of data) {
-        year.months.sort((a, b) => a.month - b.month)
-        for (const month of year.months) month.days.sort((a, b) => a.day - b.day)
+        year.months.sort((a, b) => a.month - b.month);
+        for (const month of year.months)
+          month.days.sort((a, b) => a.day - b.day);
       }
     }
 
-    this.createMostPopularItems(data)
-    this.popularItems$.next(this.createPopularItemList(data))
-    return data
+    this.createMostPopularItems(data);
+    this.popularItems$.next(this.createPopularItemList(data));
+    return data;
   }
 
   createPopularItemList(data: YearDataI[]): ItemDataI[] {
@@ -219,7 +180,7 @@ export class SharedService {
   }
 
   createMostPopularItems(data: YearDataI[]): ItemDataI[] {
-    let itemCounts = new Map<string, { count: number, item: ItemDataI }>();
+    let itemCounts = new Map<string, { count: number; item: ItemDataI }>();
 
     for (const year of data) {
       for (const month of year.months) {
@@ -240,7 +201,9 @@ export class SharedService {
     }
 
     // Преобразование Map в массив и сортировка по количеству
-    let sortedItems = Array.from(itemCounts.values()).sort((a, b) => b.count - a.count);
+    let sortedItems = Array.from(itemCounts.values()).sort(
+      (a, b) => b.count - a.count,
+    );
 
     // Вывод в консоль для проверки
     // sortedItems.forEach(entry => {
@@ -249,9 +212,8 @@ export class SharedService {
     // console.log('sortedItems: ', sortedItems);
 
     // Возвращаем массив объектов ItemDataI самых популярных товаров
-    return sortedItems.map(entry => entry.item);
+    return sortedItems.map((entry) => entry.item);
   }
-
 
   // { "rules": { "years": { "$uid": { ".read": "$uid === auth.uid", ".write": "$uid === auth.uid" } } } }
   // { "rules": { "data": { "$uid": { ".read": "$uid === auth.uid", ".write": "$uid === auth.uid" } } } }
@@ -264,7 +226,7 @@ export class SharedService {
   // }
 
   errorProcessing(error: any): void {
-    console.log('error', error)
-    if (error.status === 401) this.router.navigate(['/auth'])
+    console.log('error', error);
+    if (error.status === 401) this.router.navigate(['/auth']);
   }
 }

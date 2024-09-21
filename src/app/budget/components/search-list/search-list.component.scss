@@ -1,6 +1,4 @@
 .search_list {
-
-
   &__fields {
     width: 100%;
     display: flex;
@@ -16,13 +14,19 @@
     }
   }
 
-
-
   &__table {
     display: flex;
 
     table {
       width: 100%;
+
+      th:nth-child(3) {
+        width: 160px;
+      }
+
+      th:last-child {
+        width: 160px;
+      }
     }
   }
 }

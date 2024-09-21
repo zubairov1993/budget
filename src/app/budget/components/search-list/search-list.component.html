@@ -3,45 +3,61 @@
     <tui-input class="search_list__fields_search" formControlName="name">
       Введите название продукта
       <tui-data-list-wrapper
-        (itemClick)="selectedName()"
         *tuiDataList
+        [items]="getNamesPopular() | tuiFilterByInput"
+        (itemClick)="filterItemsByNameAndCategoryWithDate()"
         emptyContent="No results found"
-        size="xs"
-        [items]="getNamesPopular() | tuiFilterByInput">
+        size="xs">
       </tui-data-list-wrapper>
     </tui-input>
-    <tui-input-date
+
+    <tui-select class="search_list__fields_search" formControlName="category">
+      Выберите категорию продукта
+      <input tuiTextfield />
+      <tui-data-list-wrapper
+        *tuiDataList
+        [items]="categories"
+        (itemClick)="
+          filterItemsByNameAndCategoryWithDate()
+        "></tui-data-list-wrapper>
+    </tui-select>
+
+    <!-- <tui-input-date
       class="search_list__fields_date"
-      formControlName="date"
-      (ngModelChange)="selectedDate()">
+      (ngModelChange)="selectedDate()"
+      formControlName="date">
       Choose a date
-    </tui-input-date>
+    </tui-input-date> -->
   </form>
 
+  <div *ngIf="filteredItems.length">
+    Найдено элементов: {{ filteredItems.length }}
+  </div>
+
   <div class="search_list__table">
-    <table tuiTable [columns]="columns">
+    <table [columns]="columns" tuiTable>
       <thead>
         <tr tuiThGroup>
-          <th *tuiHead="'name'" tuiTh [resizable]="true" [sticky]="true" [sorter]="null">
+          <th
+            *tuiHead="'name'"
+            [resizable]="true"
+            [sticky]="true"
+            [sorter]="null"
+            tuiTh>
             Наименование
           </th>
-          <th *tuiHead="'category'" tuiTh [sticky]="true" [sorter]="null">
+          <th *tuiHead="'category'" [sticky]="true" [sorter]="null" tuiTh>
             Категория
           </th>
-          <th *tuiHead="'priceT'" tuiTh [sticky]="true" [sorter]="null">
-            Цена в Тенге
-          </th>
-          <th *tuiHead="'priceRu'" tuiTh [sticky]="true" [sorter]="null">
+          <th *tuiHead="'priceRu'" [sticky]="true" [sorter]="null" tuiTh>
             Цена в Рублях
           </th>
-          <th *tuiHead="'date'" tuiTh [sticky]="true" [sorter]="null">
-            Дата
-          </th>
+          <th *tuiHead="'date'" [sticky]="true" [sorter]="null" tuiTh>Дата</th>
         </tr>
       </thead>
 
-      <tbody tuiTbody [data]="searchList">
-        @for (item of searchList; track item; let i = $index) {
+      <tbody [data]="filteredItems" tuiTbody>
+        @for (item of filteredItems; track item; let i = $index) {
           <tr tuiTr>
             <td *tuiCell="'name'" tuiTd>
               {{ item.name }}
@@ -49,13 +65,11 @@
             <td *tuiCell="'category'" tuiTd>
               {{ item.category }}
             </td>
-            <td *tuiCell="'priceT'" tuiTd>
-              {{ item.priceT | isShowPrice }} &#8376;
-            </td>
             <td *tuiCell="'priceRu'" tuiTd>
-              {{ item.priceRu | isShowPrice }} &#8381;
+              {{ item.priceRu | number: '1.0-0' }} &#8381;
             </td>
             <td *tuiCell="'date'" tuiTd>
+              {{ item.date | date: 'dd.MM.yyyy HH:mm:ss' }}
             </td>
           </tr>
         }

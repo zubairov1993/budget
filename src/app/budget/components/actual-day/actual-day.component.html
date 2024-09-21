@@ -1,27 +1,20 @@
 @if (currentDay?.items) {
   <div class="actual_day">
-
     <div class="actual_day__header">
       <div>
-        {{ getDayInfo(currentDay!.date).dayName }} {{ getDayInfo(currentDay!.date).dayNumber }} число
+        {{ getDayInfo(currentDay!.date).dayName }}
+        {{ getDayInfo(currentDay!.date).dayNumber }} число
       </div>
 
       <div>
         <b>потрачено за день:</b>
-
-        @if (sharedService.currency$.value === 'Тенге') {
-          <span>
-            тенге - {{ currentDay!.totalPriceDay | isShowPrice }} &#8376;
-          </span>
-        }
-        @if (sharedService.currency$.value === 'Рубль') {
-          <span>
-            рублей - {{ sharedService.convertToRub(currentDay!.totalPriceDay) | isShowPrice }} &#8381;
-          </span>
-        }
+        <span>
+          рублей -
+          {{ currentDay!.totalPriceDay | number: '1.0-0' }}
+          &#8381;
+        </span>
       </div>
     </div>
-
 
     <div class="actual_day__accordion">
       @for (item of currentDay?.items; track item) {
@@ -33,53 +26,47 @@
 
             <ng-template tuiAccordionItemContent>
               <div class="actual_day__accordion_item-content">
+                <div>Наименование: {{ item.name }}</div>
+                <div>Категория: {{ item.category }}</div>
                 <div>
-                  Наименование: {{ item.name }}
-                </div>
-                <div>
-                  Категория: {{ item.category }}
-                </div>
-                <div>
-                  Цена в Тенге: {{ item.priceT | isShowPrice }} &#8376;
-                </div>
-                <div>
-                  Цена в Рублях: {{ item.priceRu | isShowPrice }} &#8381;
+                  Цена в Рублях: {{ item.priceRu | number: '1.0-0' }} &#8381;
                 </div>
 
                 <div>
-                  <button type="button" (click)="openDialogDelete(item)">Удалить</button>
+                  <button (click)="openDialogDelete(item)" type="button">
+                    Удалить
+                  </button>
                 </div>
               </div>
             </ng-template>
-
           </tui-accordion-item>
         </tui-accordion>
       }
     </div>
 
     <div class="actual_day__table">
-
-      <table tuiTable [columns]="columns">
+      <table [columns]="columns" tuiTable>
         <thead>
           <tr tuiThGroup>
-            <th *tuiHead="'name'" tuiTh [resizable]="true" [sticky]="true" [sorter]="null">
+            <th
+              *tuiHead="'name'"
+              [resizable]="true"
+              [sticky]="true"
+              [sorter]="null"
+              tuiTh>
               Наименование
             </th>
-            <th *tuiHead="'category'" tuiTh [sticky]="true" [sorter]="null">
+            <th *tuiHead="'category'" [sticky]="true" [sorter]="null" tuiTh>
               Категория
             </th>
-            <th *tuiHead="'priceT'" tuiTh [sticky]="true" [sorter]="null">
-              Цена в Тенге
-            </th>
-            <th *tuiHead="'priceRu'" tuiTh [sticky]="true" [sorter]="null">
+            <th *tuiHead="'priceRu'" [sticky]="true" [sorter]="null" tuiTh>
               Цена в Рублях
             </th>
-            <th *tuiHead="'other'" tuiTh [sticky]="true" [sorter]="null">
-            </th>
+            <th *tuiHead="'other'" [sticky]="true" [sorter]="null" tuiTh></th>
           </tr>
         </thead>
 
-        <tbody tuiTbody [data]="currentDay!.items">
+        <tbody [data]="currentDay!.items" tuiTbody>
           @for (item of currentDay?.items; track item; let i = $index) {
             <tr tuiTr>
               <td *tuiCell="'name'" tuiTd>
@@ -88,14 +75,13 @@
               <td *tuiCell="'category'" tuiTd>
                 {{ item.category }}
               </td>
-              <td *tuiCell="'priceT'" tuiTd>
-                {{ item.priceT | isShowPrice }} &#8376;
-              </td>
               <td *tuiCell="'priceRu'" tuiTd>
-                {{ item.priceRu | isShowPrice }} &#8381;
+                {{ item.priceRu | number: '1.0-0' }} &#8381;
               </td>
               <td *tuiCell="'other'" tuiTd>
-                <button type="button" (click)="openDialogDelete(item)">Удалить</button>
+                <button (click)="openDialogDelete(item)" type="button">
+                  Удалить
+                </button>
               </td>
             </tr>
           }
@@ -105,15 +91,35 @@
   </div>
 }
 
-<ng-template #template [(tuiDialog)]="open" [tuiDialogOptions]="{label: 'Вы действительно хотите удалить ?', size: 's'}">
+<ng-template
+  #template
+  [(tuiDialog)]="open"
+  [tuiDialogOptions]="{
+    label: 'Вы действительно хотите удалить ?',
+    size: 's',
+  }">
   <div class="dialog">
     <div class="dialog__btns">
-      <button tuiButton type="button" appearance="outline" size="m" (click)="closeDialogDelete()">
+      <button
+        (click)="closeDialogDelete()"
+        tuiButton
+        type="button"
+        appearance="outline"
+        size="m">
         Нет
       </button>
 
-      <tui-loader class="loader" [showLoader]="(isLoading$ | async)!" [inheritColor]="true" [overlay]="true">
-        <button tuiButton type="button" appearance="accent" size="m" (click)="deleteItem(currentDay?.id!, currentDay?.day!)">
+      <tui-loader
+        class="loader"
+        [showLoader]="(isLoading$ | async)!"
+        [inheritColor]="true"
+        [overlay]="true">
+        <button
+          (click)="deleteItem(currentDay?.id!, currentDay?.day!)"
+          tuiButton
+          type="button"
+          appearance="accent"
+          size="m">
           Да
         </button>
       </tui-loader>

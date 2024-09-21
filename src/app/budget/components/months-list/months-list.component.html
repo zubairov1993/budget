@@ -6,20 +6,13 @@
           <div>{{ getMonthNameByIndex(month.month - 1) }} месяц</div>
 
           <div class="months__container_header-right">
-
             <div>
               <b>потрачено за месяц:</b>
-              @if (sharedService.currency$.value === 'Тенге') {
-                <span>
-                  тенге - {{ month.totalPriceMonth | isShowPrice }} &#8376;
-                </span>
-              }
-
-              @if (sharedService.currency$.value === 'Рубль') {
-                <span>
-                  рублей - {{ sharedService.convertToRub(month.totalPriceMonth) | isShowPrice }} &#8381;
-                </span>
-              }
+              <span>
+                рублей -
+                {{ month.totalPriceMonth | number: '1.0-0' }}
+                &#8381;
+              </span>
             </div>
           </div>
         </div>
@@ -30,7 +23,6 @@
             [monthProps]="month">
           </app-days-list>
         </ng-template>
-
       </tui-accordion-item>
     </tui-accordion>
   </div>

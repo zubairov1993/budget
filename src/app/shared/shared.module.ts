@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core'
-import { ReactiveFormsModule, FormsModule } from '@angular/forms'
-import { HttpClientModule } from '@angular/common/http'
-import { EffectsModule } from '@ngrx/effects'
-import { StoreModule } from '@ngrx/store'
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 
 import {
   TuiButtonModule,
@@ -15,7 +15,7 @@ import {
   TuiLoaderModule,
   TuiHostedDropdownModule,
   TuiDataListModule,
-} from '@taiga-ui/core'
+} from '@taiga-ui/core';
 import {
   TuiAccordionModule,
   TuiDataListWrapperModule,
@@ -26,13 +26,15 @@ import {
   TuiCheckboxBlockModule,
   TuiStringifyContentPipeModule,
   TuiInputDateModule,
-} from '@taiga-ui/kit'
-import { TuiTableModule } from '@taiga-ui/addon-table'
-import { TuiBarModule, TuiLegendItemModule, TuiRingChartModule } from '@taiga-ui/addon-charts'
-import { TuiHoveredModule } from '@taiga-ui/cdk'
+} from '@taiga-ui/kit';
+import { TuiTableModule } from '@taiga-ui/addon-table';
+import {
+  TuiBarModule,
+  TuiLegendItemModule,
+  TuiRingChartModule,
+} from '@taiga-ui/addon-charts';
+import { TuiHoveredModule } from '@taiga-ui/cdk';
 
-import { CurrencyConverterDirective } from './directives';
-import { HidePricePipe } from './pipes';
 import {
   CreateDayEffect,
   CreateItemEffect,
@@ -41,40 +43,36 @@ import {
   DeleteItemEffect,
   GetBudgetEffect,
   UpdateMountlyBudgetEffect,
-  reducers
+  reducers,
 } from './store';
 
 @NgModule({
-  declarations: [
-    HidePricePipe,
-    CurrencyConverterDirective,
-  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
     TuiDialogModule,
-		TuiFilterByInputPipeModule,
-		TuiDataListWrapperModule,
-		TuiInputModule,
-		TuiSelectModule,
-		TuiInputNumberModule,
-		TuiAccordionModule,
-		TuiTableModule,
-		TuiButtonModule,
-		TuiCheckboxBlockModule,
-		TuiTooltipModule,
-		TuiStringifyContentPipeModule,
-		TuiLegendItemModule,
-		TuiBarModule,
-		TuiRingChartModule,
-		TuiHoveredModule,
-		TuiCalendarModule,
-		TuiHintModule,
-		TuiTextfieldControllerModule,
-		TuiLoaderModule,
-		TuiHostedDropdownModule,
+    TuiFilterByInputPipeModule,
+    TuiDataListWrapperModule,
+    TuiInputModule,
+    TuiSelectModule,
+    TuiInputNumberModule,
+    TuiAccordionModule,
+    TuiTableModule,
+    TuiButtonModule,
+    TuiCheckboxBlockModule,
+    TuiTooltipModule,
+    TuiStringifyContentPipeModule,
+    TuiLegendItemModule,
+    TuiBarModule,
+    TuiRingChartModule,
+    TuiHoveredModule,
+    TuiCalendarModule,
+    TuiHintModule,
+    TuiTextfieldControllerModule,
+    TuiLoaderModule,
+    TuiHostedDropdownModule,
     TuiDataListModule,
     TuiInputDateModule,
     EffectsModule.forFeature([
@@ -92,31 +90,30 @@ import {
     ReactiveFormsModule,
     FormsModule,
     TuiDialogModule,
-		TuiFilterByInputPipeModule,
-		TuiDataListWrapperModule,
-		TuiInputModule,
-		TuiSelectModule,
-		TuiInputNumberModule,
-		TuiAccordionModule,
-		TuiTableModule,
-		TuiButtonModule,
-		TuiCheckboxBlockModule,
-		TuiTooltipModule,
-		TuiStringifyContentPipeModule,
-		TuiLegendItemModule,
-		TuiBarModule,
-		TuiRingChartModule,
-		TuiHoveredModule,
-		TuiCalendarModule,
-		TuiHintModule,
-		HidePricePipe,
-		TuiTextfieldControllerModule,
-		TuiLoaderModule,
-		TuiHostedDropdownModule,
+    TuiFilterByInputPipeModule,
+    TuiDataListWrapperModule,
+    TuiInputModule,
+    TuiSelectModule,
+    TuiInputNumberModule,
+    TuiAccordionModule,
+    TuiTableModule,
+    TuiButtonModule,
+    TuiCheckboxBlockModule,
+    TuiTooltipModule,
+    TuiStringifyContentPipeModule,
+    TuiLegendItemModule,
+    TuiBarModule,
+    TuiRingChartModule,
+    TuiHoveredModule,
+    TuiCalendarModule,
+    TuiHintModule,
+    TuiTextfieldControllerModule,
+    TuiLoaderModule,
+    TuiHostedDropdownModule,
     TuiDataListModule,
     TuiInputDateModule,
   ],
   providers: [],
-  bootstrap: []
+  bootstrap: [],
 })
-export class SharedModule { }
+export class SharedModule {}

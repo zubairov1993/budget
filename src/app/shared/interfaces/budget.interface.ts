@@ -1,38 +1,45 @@
 export interface BudgetStateI {
-  isLoading: boolean
-  error: string | null
-  data: YearDataI[] | null
+  isLoading: boolean;
+  error: string | null;
+  data: YearDataI[] | null;
 }
 
 export interface YearDataI {
-  id: string
-  year: number
-  totalPriceYear: number | null
-  monthlyBudget?: number | null
-  months: MonthDataI[]
+  id: string;
+  year: number;
+  totalPriceYear: number | null;
+  monthlyBudget?: number | null;
+  months: MonthDataI[];
 }
 
 export interface MonthDataI {
-  id: string
-  month: number
-  totalPriceMonth: number | null
-  days: DayDataI[]
+  id: string;
+  month: number;
+  totalPriceMonth: number | null;
+  days: DayDataI[];
 }
 
 export interface DayDataI {
-  id: string
-  day: number
-  date: string
-  totalPriceDay: number | null
-  items: ItemDataI[]
+  id: string;
+  day: number;
+  date: string;
+  totalPriceDay: number | null;
+  items: ItemDataI[];
 }
 
 export interface ItemDataI {
-  id: string
-  name: string
-  category: string
-  priceT: number
-  priceRu: number
+  id: string;
+  name: string;
+  category: string;
+  priceRu: number;
+}
+
+export interface FilteredItemI {
+  id: string;
+  name: string;
+  category: string;
+  priceRu: number;
+  date: string;
 }
 
 export interface YearEntity {
@@ -55,5 +62,4 @@ export interface ItemEntity {
   category: string;
   name: string;
   priceRu: number;
-  priceT: number;
 }
