@@ -22,6 +22,7 @@
     "@angular/router": "^19.2.3",
     "@angular/service-worker": "^19.2.3",
     "@ngrx/effects": "^19.0.1",
+    "@ngrx/operators": "^18.0.0",
     "@ngrx/store": "^19.0.1",
     "@ngrx/store-devtools": "^19.0.1",
     "@taiga-ui/addon-charts": "^4.29.0",
@@ -31,27 +32,25 @@
     "@taiga-ui/addon-table": "^4.29.0",
     "@taiga-ui/cdk": "^4.29.0",
     "@taiga-ui/core": "^4.29.0",
-    "@taiga-ui/icons": "^4.29.0",
     "@taiga-ui/dompurify": "^4.1.7",
     "@taiga-ui/editor": "^4.21.0",
     "@taiga-ui/event-plugins": "^4.2.3",
+    "@taiga-ui/icons": "^4.29.0",
     "@taiga-ui/kit": "^4.29.0",
     "@taiga-ui/layout": "^4.29.0",
-    "@taiga-ui/styles": "^4.29.0",
     "@taiga-ui/legacy": "4.29.0",
-    "dompurify": "^2.5.6",
+    "@taiga-ui/styles": "^4.29.0",
+    "dompurify": "^3.0.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.8.1",
-    "zone.js": "~0.15.0",
-    "@ngrx/operators": "^18.0.0"
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.4",
     "@angular/cli": "^19.2.4",
     "@angular/compiler-cli": "^19.2.3",
-    "@types/dompurify": "2.2.3",
+    "@types/dompurify": "^3.0.5",
     "@types/jasmine": "~4.3.0",
-    "codelyzer": "^0.0.28",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -60,7 +59,6 @@
     "karma-jasmine-html-reporter": "~2.0.0",
     "prettier": "^3.3.3",
     "prettier-plugin-organize-attributes": "^1.0.0",
-    "tslint": "^6.1.3",
     "typescript": "^5.8.2"
   }
 }
