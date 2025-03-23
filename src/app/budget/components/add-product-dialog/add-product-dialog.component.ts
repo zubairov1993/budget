@@ -57,7 +57,6 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
     name: [null, [Validators.required]],
     category: [null, [Validators.required]],
     priceRu: [null, [Validators.required]],
-    yesterday: [null],
   });
 
   constructor(
@@ -75,23 +74,20 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
       .pipe(select(yearSelector(year)))
       .subscribe((selectedYear) => (this.currentYear = selectedYear));
 
-    const nameSubscribe = this.form.controls['name'].valueChanges.subscribe(
-      (data) => {
-        if (this.getCategory(data)) {
-          this.form.controls['category'].setValue(
-            this.getCategory(data).category,
-          );
-          this.form.controls['priceRu'].setValue(
-            this.getCategory(data).priceRu,
-          );
-        }
-      },
-    );
+    this.form.controls['name'].valueChanges.subscribe((data) => {
+      if (this.getCategory(data)) {
+        this.form.controls['category'].setValue(
+          this.getCategory(data).category,
+        );
+        this.form.controls['priceRu'].setValue(this.getCategory(data).priceRu);
+      }
+    });
 
     const actions = this.actions$
       .pipe(ofType(createItemSuccessAction), take(1))
       .subscribe(() => this.context.completeWith(this.form.value));
-    this.allSubscription.push(selectedYearSubscribe, nameSubscribe, actions);
+
+    this.allSubscription.push(selectedYearSubscribe, actions);
   }
 
   getNamesPopular(): string[] {
@@ -118,11 +114,7 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
     const year: number = currentDate.getFullYear();
     const month: number = currentDate.getMonth() + 1;
     let day: number = currentDate.getDate();
-    const isYesterday = this.form.value.yesterday;
-    if (isYesterday) day = day - 1;
     let date: Date = new Date();
-    if (isYesterday) date.setDate(date.getDate() - 1);
-
     const isoDate = date.toISOString();
 
     if (this.currentYear) {

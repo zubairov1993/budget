@@ -1,20 +1,4 @@
 <form class="add_product" [formGroup]="form">
-  <div>
-    <tui-checkbox-block
-      class="add_product__checkbox"
-      formControlName="yesterday"
-      contentAlign="left"
-      nativeId="example3"
-      size="l">
-      <div class="add_product__checkbox_tooltip">
-        Добавить за вчерашний день
-        <tui-tooltip
-          describeId="example3"
-          content="если вы выберите данный пункт данные добавятся за вчерашний день"></tui-tooltip>
-      </div>
-    </tui-checkbox-block>
-  </div>
-
   <div class="add_product__fields">
     <tui-input class="add_product__fields_item" formControlName="name">
       Введите название продукта

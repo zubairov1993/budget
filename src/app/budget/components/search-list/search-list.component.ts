@@ -6,6 +6,7 @@ import {
   inject,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { TuiComparator } from '@taiga-ui/addon-table';
 import { TuiDay, TuiDayRange } from '@taiga-ui/cdk';
 import { startWith, switchMap } from 'rxjs';
 import { FilteredItemI, SharedService, YearDataI } from 'src/app/shared';
@@ -13,7 +14,7 @@ import { FilteredItemI, SharedService, YearDataI } from 'src/app/shared';
 @Component({
   selector: 'app-search-list',
   templateUrl: './search-list.component.html',
-  styleUrl: './search-list.component.scss',
+  styleUrls: ['./search-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchListComponent implements OnInit {
@@ -23,8 +24,23 @@ export class SearchListComponent implements OnInit {
   protected readonly columns = ['name', 'category', 'priceRu', 'date'];
 
   filteredItems: FilteredItemI[] = [];
-  categories: string[];
+  sortedItems: FilteredItemI[] = [];
+  categories: string[] = [];
+  totalSpent: number = 0;
 
+  // Создаем компараторы
+  protected readonly nameComparator: TuiComparator<FilteredItemI> = (a, b) =>
+    a.name.localeCompare(b.name);
+  protected readonly categoryComparator: TuiComparator<FilteredItemI> = (
+    a,
+    b,
+  ) => a.category.localeCompare(b.category);
+  protected readonly priceComparator: TuiComparator<FilteredItemI> = (a, b) =>
+    a.priceRu - b.priceRu;
+  protected readonly dateComparator: TuiComparator<FilteredItemI> = (a, b) =>
+    new Date(a.date).getTime() - new Date(b.date).getTime();
+  currentSorter: TuiComparator<FilteredItemI> = (a, b) => 0; // Дефолтный компаратор
+  sortDirection: 1 | -1 = 1; // Обновили тип
   readonly testForm = new FormGroup({
     name: new FormControl(''),
     category: new FormControl(''),
@@ -45,6 +61,7 @@ export class SearchListComponent implements OnInit {
     const name = this.testForm.controls.name.value;
     const category = this.testForm.controls.category.value;
     const filteredItems: FilteredItemI[] = [];
+    let totalSpent = 0;
 
     this.sharedService.getBudget().subscribe((data) => {
       if (data?.length !== 0) {
@@ -59,7 +76,6 @@ export class SearchListComponent implements OnInit {
                   ? item.category?.toLowerCase() === category?.toLowerCase()
                   : false;
 
-                // Изменяем условие фильтрации: если совпадает хотя бы одно из полей
                 if (matchesName || matchesCategory) {
                   filteredItems.push({
                     id: item.id,
@@ -68,16 +84,41 @@ export class SearchListComponent implements OnInit {
                     priceRu: item.priceRu,
                     date: day.date,
                   });
+                  totalSpent += item.priceRu; // Увеличиваем сумму
                 }
               });
             });
           });
         });
       }
+
       this.filteredItems = filteredItems;
-      console.log('this.filteredItems: ', this.filteredItems);
+      this.totalSpent = totalSpent;
+      this.sortItems(); // Применяем сортировку
       this.cdr.detectChanges();
     });
+  }
+
+  // Устанавливаем текущий сортировщик
+  setSorter(sorter: TuiComparator<FilteredItemI>): void {
+    if (this.currentSorter === sorter) {
+      this.sortDirection = this.sortDirection === 1 ? -1 : 1; // Меняем направление
+    } else {
+      this.currentSorter = sorter;
+      this.sortDirection = 1; // По умолчанию сортировка по возрастанию
+    }
+    this.sortItems();
+  }
+
+  // Логика сортировки
+  sortItems(): void {
+    this.sortedItems = [...this.filteredItems].sort((a, b) =>
+      this.currentSorter ? this.currentSorter(a, b) * this.sortDirection : 0,
+    );
+  }
+
+  trackById(index: number, item: FilteredItemI): string {
+    return item.id;
   }
 
   onDayClick(day: any): void {
