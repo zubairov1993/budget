@@ -7,13 +7,13 @@
         [items]="getNamesPopular() | tuiFilterByInput"
         (itemClick)="filterItemsByNameAndCategoryWithDate()"
         emptyContent="No results found"
-        size="xs">
+        size="s">
       </tui-data-list-wrapper>
     </tui-input>
 
     <tui-select class="search_list__fields_search" formControlName="category">
       Выберите категорию продукта
-      <input tuiTextfield />
+      <input tuiTextfieldLegacy />
       <tui-data-list-wrapper
         *tuiDataList
         [items]="categories"

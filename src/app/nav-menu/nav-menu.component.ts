@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth/services/auth.service';
 import { TuiDialogService } from '@taiga-ui/core';
 import { Subscription } from 'rxjs';
-import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { AddProductDialogComponent } from '../budget/components/add-product-dialog/add-product-dialog.component';
 import { SharedService } from '../shared';
 

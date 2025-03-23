@@ -1,10 +1,7 @@
-import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
-import {
-  TuiRootModule,
-  TuiDialogModule,
-  TuiAlertModule,
-  TUI_SANITIZER,
-} from '@taiga-ui/core';
+import { TUI_SANITIZER } from '@taiga-ui/legacy';
+import { NG_EVENT_PLUGINS } from '@taiga-ui/event-plugins';
+import { NgDompurifySanitizer } from '@taiga-ui/dompurify';
+import { TuiRoot, TuiAlert, TuiDialog } from '@taiga-ui/core';
 import { NgModule, isDevMode, Provider } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,9 +36,9 @@ const INTERCEPTOR_PROVIDER: Provider = {
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    TuiRootModule,
-    TuiDialogModule,
-    TuiAlertModule,
+    TuiRoot,
+    TuiDialog,
+    TuiAlert,
     SharedModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
@@ -59,6 +56,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
     INTERCEPTOR_PROVIDER,
     AuthGuard,
+    NG_EVENT_PLUGINS,
   ],
   bootstrap: [AppComponent],
 })

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, inject } from '@angular/core';
 import { SharedService } from '../shared';
-import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService } from '@taiga-ui/core';
 import { ChangeMountlyBudgetDialogComponent } from './components';
 import { Subscription } from 'rxjs';

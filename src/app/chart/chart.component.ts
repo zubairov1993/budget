@@ -102,7 +102,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   getColor(index: number): string {
-    return `var(--tui-chart-${index})`;
+    return `var(--tui-chart-categorical-0${index})`;
   }
 
   sumArrayValues(arr: number[]): number {

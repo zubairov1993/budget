@@ -1,5 +1,4 @@
 <form class="add_product" [formGroup]="form">
-
   <div class="add_product__fields">
     <tui-input-number
       class="add_product__fields_item"
@@ -11,14 +10,29 @@
 
   <div class="add_product__btns">
     <div>
-      <tui-loader class="loader" [showLoader]="isLoading" [inheritColor]="true" [overlay]="true">
-        <button tuiButton type="button" [disabled]="form.invalid" appearance="accent" size="m" (click)="submit()">
+      <tui-loader
+        class="loader"
+        [showLoader]="isLoading"
+        [inheritColor]="true"
+        [overlay]="true">
+        <button
+          [disabled]="form.invalid"
+          (click)="submit()"
+          tuiButton
+          type="button"
+          appearance="accent"
+          size="m">
           готово
         </button>
       </tui-loader>
     </div>
     <div>
-      <button tuiButton type="button" appearance="outline" size="m" (click)="clear()">
+      <button
+        (click)="clear()"
+        tuiButton
+        type="button"
+        appearance="outline"
+        size="m">
         очистить
       </button>
     </div>

@@ -6,12 +6,12 @@
         *tuiDataList
         [items]="getNamesPopular() | tuiFilterByInput"
         emptyContent="No results found"
-        size="xs"></tui-data-list-wrapper>
+        size="s"></tui-data-list-wrapper>
     </tui-input>
 
     <tui-select class="add_product__fields_item" formControlName="category">
       Выберите категорию продукта
-      <input tuiTextfield />
+      <input tuiTextfieldLegacy />
       <tui-data-list-wrapper
         *tuiDataList
         [items]="sharedService.categories"></tui-data-list-wrapper>
@@ -28,7 +28,7 @@
   </div>
 
   <div class="add_product__btns">
-    <div [tuiHint]="tooltip" tuiHintAppearance="onDark" tuiHintDirection="left">
+    <div [tuiHint]="tooltip" tuiHintAppearance="dark" tuiHintDirection="left">
       <tui-loader
         class="loader"
         [showLoader]="(isLoading$ | async)!"

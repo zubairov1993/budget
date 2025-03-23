@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
+import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subscription, take } from 'rxjs';
