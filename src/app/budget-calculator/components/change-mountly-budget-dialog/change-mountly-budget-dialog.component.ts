@@ -10,10 +10,11 @@ import { Store } from '@ngrx/store'
 import { Actions, ofType } from '@ngrx/effects'
 
 @Component({
-  selector: 'app-change-mountly-budget-dialog',
-  templateUrl: './change-mountly-budget-dialog.component.html',
-  styleUrls: ['./change-mountly-budget-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-change-mountly-budget-dialog',
+    templateUrl: './change-mountly-budget-dialog.component.html',
+    styleUrls: ['./change-mountly-budget-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ChangeMountlyBudgetDialogComponent implements OnInit, OnDestroy {
   router = inject(Router)

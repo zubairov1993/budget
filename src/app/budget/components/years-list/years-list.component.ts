@@ -17,10 +17,11 @@ import {
 import { BudgetStateI, SharedService, YearDataI } from 'src/app/shared';
 
 @Component({
-  selector: 'app-years-list',
-  templateUrl: './years-list.component.html',
-  styleUrls: ['./years-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-years-list',
+    templateUrl: './years-list.component.html',
+    styleUrls: ['./years-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class YearsListComponent implements OnInit, OnDestroy {
   cdr = inject(ChangeDetectorRef);

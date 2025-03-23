@@ -36,10 +36,11 @@ import {
 } from 'src/app/shared';
 
 @Component({
-  selector: 'app-add-product-dialog',
-  templateUrl: './add-product-dialog.component.html',
-  styleUrls: ['./add-product-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-add-product-dialog',
+    templateUrl: './add-product-dialog.component.html',
+    styleUrls: ['./add-product-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AddProductDialogComponent implements OnInit, OnDestroy {
   router = inject(Router);

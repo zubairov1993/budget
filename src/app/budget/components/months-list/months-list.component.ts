@@ -12,10 +12,11 @@ import { Subscription } from 'rxjs';
 import { MonthDataI, SharedService, YearDataI } from 'src/app/shared';
 
 @Component({
-  selector: 'app-months-list',
-  templateUrl: './months-list.component.html',
-  styleUrls: ['./months-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-months-list',
+    templateUrl: './months-list.component.html',
+    styleUrls: ['./months-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MonthsListComponent implements OnInit, OnDestroy {
   sharedService = inject(SharedService);

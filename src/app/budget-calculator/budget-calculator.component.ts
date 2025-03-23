@@ -6,9 +6,10 @@ import { ChangeMountlyBudgetDialogComponent } from './components';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-budget-calculator',
-  templateUrl: './budget-calculator.component.html',
-  styleUrl: './budget-calculator.component.scss'
+    selector: 'app-budget-calculator',
+    templateUrl: './budget-calculator.component.html',
+    styleUrl: './budget-calculator.component.scss',
+    standalone: false
 })
 export class BudgetCalculatorComponent implements OnInit, OnDestroy {
   sharedService = inject(SharedService)

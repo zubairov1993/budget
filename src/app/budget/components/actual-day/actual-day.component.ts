@@ -24,10 +24,11 @@ import {
 } from 'src/app/shared';
 
 @Component({
-  selector: 'app-actual-day',
-  templateUrl: './actual-day.component.html',
-  styleUrls: ['./actual-day.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-actual-day',
+    templateUrl: './actual-day.component.html',
+    styleUrls: ['./actual-day.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ActualDayComponent implements OnInit, OnDestroy {
   private store = inject(Store<BudgetStateI>);

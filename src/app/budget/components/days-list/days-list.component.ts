@@ -24,10 +24,11 @@ import {
 } from 'src/app/shared';
 
 @Component({
-  selector: 'app-days-list',
-  templateUrl: './days-list.component.html',
-  styleUrls: ['./days-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-days-list',
+    templateUrl: './days-list.component.html',
+    styleUrls: ['./days-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DaysListComponent implements OnInit, OnDestroy {
   sharedService = inject(SharedService);

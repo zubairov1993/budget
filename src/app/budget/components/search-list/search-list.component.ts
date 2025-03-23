@@ -12,10 +12,11 @@ import { startWith, switchMap } from 'rxjs';
 import { FilteredItemI, SharedService, YearDataI } from 'src/app/shared';
 
 @Component({
-  selector: 'app-search-list',
-  templateUrl: './search-list.component.html',
-  styleUrls: ['./search-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-search-list',
+    templateUrl: './search-list.component.html',
+    styleUrls: ['./search-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SearchListComponent implements OnInit {
   private readonly sharedService = inject(SharedService);

@@ -13,10 +13,11 @@ import { SharedService } from '../shared';
 import { ChartService } from './services';
 
 @Component({
-  selector: 'app-chart',
-  templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-chart',
+    templateUrl: './chart.component.html',
+    styleUrls: ['./chart.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ChartComponent implements OnInit, OnDestroy {
   private readonly sharedService = inject(SharedService);

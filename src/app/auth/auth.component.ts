@@ -12,10 +12,11 @@ import { UserI } from './interfaces/auth.interface'
 import { AppStateI } from '../shared'
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-login',
+    templateUrl: './auth.component.html',
+    styleUrls: ['./auth.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AuthComponent {
   formBuilder = inject(FormBuilder)
