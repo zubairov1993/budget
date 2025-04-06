@@ -1,114 +1,96 @@
 import {
   Component,
   Input,
-  ChangeDetectorRef,
   ChangeDetectionStrategy,
   OnInit,
   inject,
   OnDestroy,
+  WritableSignal,
+  signal,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subscription, Observable } from 'rxjs';
-import { select, Store } from '@ngrx/store';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
-import { isLoadingSelector } from '../../../shared/store/selectors';
-
-import { DeleteItemActionI } from '../../../shared/interfaces/item-action.interface';
-import {
-  BudgetStateI,
-  DayDataI,
-  ItemDataI,
-  MonthDataI,
-  SharedService,
-  deleteItem,
-} from 'src/app/shared';
+import { DayDataI, ItemDataI, MonthDataI, SharedService } from 'src/app/shared';
+import { BudgetService } from '../../services';
 
 @Component({
-    selector: 'app-days-list',
-    templateUrl: './days-list.component.html',
-    styleUrls: ['./days-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-days-list',
+  templateUrl: './days-list.component.html',
+  styleUrls: ['./days-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DaysListComponent implements OnInit, OnDestroy {
-  sharedService = inject(SharedService);
-  cdr = inject(ChangeDetectorRef);
-  router = inject(Router);
-  private store = inject(Store<BudgetStateI>);
+  private readonly budgetService = inject(BudgetService);
+  private readonly sharedService = inject(SharedService);
 
   @Input() monthProps: MonthDataI | null = null;
   @Input() yearName: string | null | undefined = null;
   @Input() year: number | null | undefined = null;
 
-  open = false;
-  days: DayDataI[] = [];
+  protected open: boolean;
+  protected readonly columns: string[];
+  protected readonly days: WritableSignal<DayDataI[]>;
+  private readonly selectedItem: WritableSignal<ItemDataI | null>;
+  protected readonly loading: WritableSignal<boolean>;
+  private readonly destroy$: Subject<void>;
 
-  selectedItem: ItemDataI | null | undefined = null;
-  isLoading$!: Observable<boolean>;
-  allSubscription: Subscription[] = [];
-
-  readonly columns = ['name', 'category', 'priceRu', 'other'];
-
-  ngOnInit(): void {
-    // const currency = this.sharedService.currency$.subscribe(() =>
-    //   this.cdr.detectChanges(),
-    // );
-    this.days = this.monthProps?.days ? this.monthProps?.days : [];
-    this.isLoading$ = this.store.pipe(select(isLoadingSelector));
+  constructor() {
+    this.open = false;
+    this.columns = ['name', 'category', 'priceRu', 'other'];
+    this.days = signal<DayDataI[]>([]);
+    this.selectedItem = signal<ItemDataI | null>(null);
+    this.loading = signal<boolean>(false);
+    this.destroy$ = new Subject<void>();
   }
 
-  getDayInfo(dateString: string): { dayName: string; dayNumber: number } {
+  ngOnInit(): void {
+    this.days.set(this.monthProps?.days ? this.monthProps?.days : []);
+  }
+
+  protected getDayInfo(dateString: string): { dayName: string; dayNumber: number } {
     const date: Date = new Date(dateString);
     const dayNumber: number = date.getDate();
     const dayName: string = this.getDayNameByNumber(date.getDay());
     return { dayName, dayNumber };
   }
 
-  getDayNameByNumber(dayNumber: number): string {
+  private getDayNameByNumber(dayNumber: number): string {
     dayNumber = dayNumber === 0 ? 7 : dayNumber;
-    const daysOfWeek = [
-      'Понедельник',
-      'Вторник',
-      'Среда',
-      'Четверг',
-      'Пятница',
-      'Суббота',
-      'Воскресенье',
-    ];
+    const daysOfWeek = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
     return daysOfWeek[dayNumber - 1];
   }
 
-  isCurrentDay(day: number): boolean {
+  protected isCurrentDay(day: number): boolean {
     const currentDate: Date = new Date();
     return day === currentDate.getDate();
   }
 
-  openDialogDelete(item: ItemDataI) {
+  protected openDialogDelete(item: ItemDataI) {
     this.open = true;
-    this.selectedItem = item;
+    this.selectedItem.set(item);
   }
 
-  closeDialogDelete() {
+  protected closeDialogDelete() {
     this.open = false;
   }
 
-  deleteItem(dayName: string, day: number): void {
-    const data: DeleteItemActionI = {
-      yearName: this.yearName!,
-      year: this.year!,
-      monthName: this.monthProps?.id!,
-      month: this.monthProps?.month!,
-      dayName: dayName,
-      day,
-      itemId: this.selectedItem!.id,
-    };
-
-    this.store.dispatch(deleteItem(data));
+  protected deleteItem(dayName: string): void {
+    this.loading.set(true);
+    this.budgetService
+      .deleteItem(this.yearName!, this.monthProps?.id!, dayName, this.selectedItem()!.id)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe(() => {
+        this.closeDialogDelete();
+        this.sharedService.getBudget();
+      });
   }
 
   ngOnDestroy(): void {
-    this.allSubscription.forEach((sub) => {
-      if (sub) sub.unsubscribe();
-    });
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

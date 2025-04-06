@@ -1,46 +1,32 @@
-import {
-  Component,
-  Input,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  OnInit,
-  inject,
-  OnDestroy,
-} from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, Input, ChangeDetectionStrategy, WritableSignal, signal, OnInit } from '@angular/core';
 
-import { MonthDataI, SharedService, YearDataI } from 'src/app/shared';
+import { MonthDataI, YearDataI } from 'src/app/shared';
 
 @Component({
-    selector: 'app-months-list',
-    templateUrl: './months-list.component.html',
-    styleUrls: ['./months-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-months-list',
+  templateUrl: './months-list.component.html',
+  styleUrls: ['./months-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class MonthsListComponent implements OnInit, OnDestroy {
-  sharedService = inject(SharedService);
-  cdr = inject(ChangeDetectorRef);
-
+export class MonthsListComponent implements OnInit {
   @Input() yearProps: YearDataI | null = null;
-  months: MonthDataI[] = [];
-  allSubscription: Subscription[] = [];
+  protected readonly months: WritableSignal<MonthDataI[]>;
 
-  constructor() {}
-
-  ngOnInit(): void {
-    // const currency = this.sharedService.currency$.subscribe(() =>
-    //   this.cdr.detectChanges(),
-    // );
-    this.months = this.yearProps?.months ? this.yearProps?.months : [];
+  constructor() {
+    this.months = signal<MonthDataI[]>([]);
   }
 
-  isCurrentMonth(month: number): boolean {
+  ngOnInit(): void {
+    this.months.set(this.yearProps?.months ? this.yearProps?.months : []);
+  }
+
+  protected isCurrentMonth(month: number): boolean {
     const currentDate: Date = new Date();
     return month === currentDate.getMonth() + 1;
   }
 
-  getMonthNameByIndex(index: number): string {
+  protected getMonthNameByIndex(index: number): string {
     const monthNames: string[] = [
       'Январь',
       'Февраль',
@@ -56,11 +42,5 @@ export class MonthsListComponent implements OnInit, OnDestroy {
       'Декабрь',
     ];
     return monthNames[index];
-  }
-
-  ngOnDestroy(): void {
-    this.allSubscription.forEach((sub) => {
-      if (sub) sub.unsubscribe();
-    });
   }
 }

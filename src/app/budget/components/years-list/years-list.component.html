@@ -1,6 +1,6 @@
-@if (budgets$ | async) {
+@if (budget()) {
   <div>
-    @for (year of budgets$ | async; track year) {
+    @for (year of budget(); track year) {
       <div>
         <tui-accordion class="years">
           <tui-accordion-item [open]="isCurrentYear(year.year)">
@@ -27,8 +27,4 @@
       </div>
     }
   </div>
-}
-
-@if (isLoading$ | async) {
-  <div>Loading.....</div>
 }

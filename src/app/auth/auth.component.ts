@@ -1,45 +1,39 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { select, Store } from '@ngrx/store'
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Observable } from 'rxjs'
-
-import { loginAction } from './store/actions/login.action'
-
-import { isSubmittingSelector } from './store/selectors'
-
-import { UserI } from './interfaces/auth.interface'
-import { AppStateI } from '../shared'
+import { UserI } from './interfaces/auth.interface';
+import { AuthService } from './services';
+import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './auth.component.html',
-    styleUrls: ['./auth.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-login',
+  templateUrl: './auth.component.html',
+  styleUrls: ['./auth.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AuthComponent {
-  formBuilder = inject(FormBuilder)
-  private store = inject(Store<AppStateI>)
-
-  isSubmitting$: Observable<boolean>
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly formBuilder = inject(FormBuilder);
 
   loginForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]]
-  })
-
-  constructor() {
-    this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector))
-  }
+    password: ['', [Validators.required]],
+  });
 
   onSubmit(): void {
-    if (this.loginForm.invalid) return
+    if (this.loginForm.invalid) {
+      return;
+    }
     const user: UserI = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
-      returnSecureToken: true
-    }
-    this.store.dispatch(loginAction({ request: user }))
+      returnSecureToken: true,
+    };
+
+    this.authService.login(user).subscribe(() => {
+      this.router.navigate(['/list/actual']);
+    });
   }
 }

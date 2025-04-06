@@ -1,4 +1,4 @@
-@for (month of months; track month) {
+@for (month of months(); track month) {
   <div class="months">
     <tui-accordion class="months__container">
       <tui-accordion-item [open]="isCurrentMonth(month.month)">
@@ -17,11 +17,7 @@
           </div>
         </div>
         <ng-template tuiAccordionItemContent>
-          <app-days-list
-            [yearName]="yearProps?.id"
-            [year]="yearProps?.year"
-            [monthProps]="month">
-          </app-days-list>
+          <app-days-list [yearName]="yearProps?.id" [year]="yearProps?.year" [monthProps]="month"> </app-days-list>
         </ng-template>
       </tui-accordion-item>
     </tui-accordion>

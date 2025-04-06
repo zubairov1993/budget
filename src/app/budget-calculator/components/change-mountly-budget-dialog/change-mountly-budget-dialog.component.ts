@@ -5,22 +5,15 @@ import {
   OnInit,
   inject,
   OnDestroy,
-  ChangeDetectorRef,
+  WritableSignal,
+  signal,
 } from '@angular/core';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { Router } from '@angular/router';
-import { Subscription, take } from 'rxjs';
+import { finalize, Subject, take, takeUntil } from 'rxjs';
 
-import {
-  BudgetStateI,
-  SharedService,
-  updateMountlyBudgetAction,
-  updateMountlyBudgetSuccessAction,
-} from 'src/app/shared';
-import { Store } from '@ngrx/store';
-import { Actions, ofType } from '@ngrx/effects';
+import { SharedService } from 'src/app/shared';
 
 @Component({
   selector: 'app-change-mountly-budget-dialog',
@@ -29,75 +22,56 @@ import { Actions, ofType } from '@ngrx/effects';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class ChangeMountlyBudgetDialogComponent implements OnInit, OnDestroy {
-  router = inject(Router);
-  sharedService = inject(SharedService);
-  formBuilder = inject(FormBuilder);
-  cdr = inject(ChangeDetectorRef);
-  private store = inject(Store<BudgetStateI>);
-  private actions$ = inject(Actions);
+export class ChangeMouthyBudgetDialogComponent implements OnInit, OnDestroy {
+  private readonly sharedService = inject(SharedService);
+  private readonly formBuilder = inject(FormBuilder);
 
-  currentMonthlyBudget: number = 0;
-
-  isLoading: boolean = false;
-  allSubscription: Subscription[] = [];
+  protected readonly loading: WritableSignal<boolean>;
 
   form: FormGroup = this.formBuilder.group({
     monthlyBudget: [null, [Validators.required]],
   });
+  private readonly destroy$: Subject<void>;
+
+  private get monthlyBudget(): WritableSignal<number> {
+    return this.sharedService.monthlyBudget;
+  }
 
   constructor(
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly context: TuiDialogContext<number, number>,
-  ) {}
-
-  ngOnInit(): void {
-    const monthlyBudget = this.sharedService.monthlyBudget$.subscribe(
-      (count) => {
-        this.currentMonthlyBudget = count;
-        this.form.controls['monthlyBudget'].setValue(this.currentMonthlyBudget);
-        this.cdr.detectChanges();
-      },
-    );
-    const actions = this.actions$
-      .pipe(ofType(updateMountlyBudgetSuccessAction), take(1))
-      .subscribe(() => this.context.completeWith(this.form.value));
-    this.allSubscription.push(monthlyBudget, actions);
+  ) {
+    this.loading = signal<boolean>(false);
+    this.destroy$ = new Subject<void>();
   }
 
-  submit(): void {
-    if (
-      this.form.controls['monthlyBudget'].value !== this.currentMonthlyBudget
-    ) {
-      this.isLoading = true;
-      this.cdr.detectChanges();
-      const currentDate: Date = new Date();
-      const currentYear: number = currentDate.getFullYear();
+  ngOnInit(): void {
+    this.form.controls['monthlyBudget'].setValue(this.monthlyBudget());
+  }
 
-      const data = {
-        year: currentYear,
-        monthlyBudget: this.form.controls['monthlyBudget'].value,
-        bool: false,
-      };
-      this.store.dispatch(updateMountlyBudgetAction(data));
+  protected submit(): void {
+    if (this.form.controls['monthlyBudget'].value !== this.monthlyBudget()) {
+      this.loading.set(true);
+      this.sharedService
+        .updateMonthlyBudget(this.form.controls['monthlyBudget'].value, false)
+        .pipe(
+          take(1),
+          takeUntil(this.destroy$),
+          finalize(() => this.loading.set(false)),
+        )
+        .subscribe((response: { monthlyBudget: number }) => {
+          this.context.completeWith(this.form.value);
+          this.monthlyBudget.set(response.monthlyBudget);
+        });
     }
   }
 
-  errorProcessing(error: any): void {
-    console.log('error', error);
-    this.isLoading = false;
-    this.cdr.detectChanges();
-    this.context.completeWith(this.form.value);
-    if (error.status === 401) this.router.navigate(['/auth']);
-  }
-
-  clear(): void {
+  protected clear(): void {
     this.form.reset();
   }
 
   ngOnDestroy(): void {
-    this.allSubscription.forEach((sub) => {
-      if (sub) sub.unsubscribe();
-    });
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

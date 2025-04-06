@@ -4,50 +4,54 @@ import {
   OnInit,
   ChangeDetectorRef,
   inject,
-  OnDestroy,
+  WritableSignal,
+  Signal,
+  signal,
 } from '@angular/core';
 import { TuiDay, TuiDayRange, TuiMonth } from '@taiga-ui/cdk';
-import { Subscription } from 'rxjs';
 
 import { SharedService } from '../shared';
 import { ChartService } from './services';
 
 @Component({
-    selector: 'app-chart',
-    templateUrl: './chart.component.html',
-    styleUrls: ['./chart.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-chart',
+  templateUrl: './chart.component.html',
+  styleUrls: ['./chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class ChartComponent implements OnInit, OnDestroy {
+export class ChartComponent implements OnInit {
   private readonly sharedService = inject(SharedService);
   private readonly chartService = inject(ChartService);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  date: TuiDayRange | null = null;
-  firstMonth = TuiMonth.currentLocal().append({ month: -1 });
-  middleMonth = TuiMonth.currentLocal();
-  hoveredItem: TuiDay | null = null;
+  protected readonly date: WritableSignal<TuiDayRange | null>;
+  protected readonly firstMonth: WritableSignal<TuiMonth>;
+  protected readonly middleMonth: WritableSignal<TuiMonth>;
+  protected hoveredItem: TuiDay | null;
+  protected activeIndexRU: number;
 
-  activeIndexRU = NaN;
-  values: number[];
-  categories: string[];
-  allSubscription: Subscription[] = [];
+  protected get totalPrice(): Signal<number[]> {
+    return this.chartService.totalPrice;
+  }
+
+  protected get categories(): WritableSignal<string[]> {
+    return this.sharedService.categories;
+  }
 
   constructor() {
-    this.values = [];
-    this.categories = this.sharedService.categories;
+    this.date = signal<TuiDayRange | null>(null);
+    this.firstMonth = signal<TuiMonth>(TuiMonth.currentLocal().append({ month: -1 }));
+    this.middleMonth = signal<TuiMonth>(TuiMonth.currentLocal());
+    this.hoveredItem = null;
+    this.activeIndexRU = NaN;
   }
 
   ngOnInit(): void {
     this.forEntirePeriod();
-    this.chartService.totalsRU$.subscribe((v) => {
-      this.values = v;
-      this.cdr.detectChanges();
-    });
   }
 
-  forEntirePeriod(): void {
+  private forEntirePeriod(): void {
     const dateFrom = { year: 2023, month: 5, day: 1 };
     const today = new Date();
     const year = today.getFullYear();
@@ -55,65 +59,57 @@ export class ChartComponent implements OnInit, OnDestroy {
     const day = today.getDate();
     const dateTo = { year, month, day };
 
-    this.date = new TuiDayRange(
-      new TuiDay(2023, 4, 1),
-      new TuiDay(year, month - 1, day),
-    );
+    this.date.set(new TuiDayRange(new TuiDay(2023, 4, 1), new TuiDay(year, month - 1, day)));
 
     this.chartService.changeDate(dateFrom, dateTo);
     this.cdr.detectChanges();
   }
 
-  onDayClick(day: TuiDay): void {
-    if (this.date === null || !this.date.isSingleDay)
-      this.date = new TuiDayRange(day, day);
-    this.date = TuiDayRange.sort(this.date.from, day);
+  protected onDayClick(day: TuiDay): void {
+    if (this.date() === null || !this.date()!.isSingleDay) {
+      this.date.set(new TuiDayRange(day, day));
+    }
+    this.date.set(TuiDayRange.sort(this.date()!.from, day));
     const dateFrom = {
-      year: this.date.from.year,
-      month: this.date.from.month + 1,
-      day: this.date.from.day,
+      year: this.date()!.from.year,
+      month: this.date()!.from.month + 1,
+      day: this.date()!.from.day,
     };
     const dateTo = {
-      year: this.date.to.year,
-      month: this.date.to.month + 1,
-      day: this.date.to.day,
+      year: this.date()!.to.year,
+      month: this.date()!.to.month + 1,
+      day: this.date()!.to.day,
     };
     this.chartService.changeDate(dateFrom, dateTo);
   }
 
-  onMonthChangeFirst(month: TuiMonth): void {
-    this.firstMonth = month;
-    this.middleMonth = month.append({ month: 1 });
+  protected onMonthChangeFirst(month: TuiMonth): void {
+    this.firstMonth.set(month);
+    this.middleMonth.set(month.append({ month: 1 }));
   }
 
-  onMonthChangeMiddle(month: TuiMonth): void {
-    this.firstMonth = month.append({ month: -1 });
-    this.middleMonth = month;
+  protected onMonthChangeMiddle(month: TuiMonth): void {
+    this.firstMonth.set(month.append({ month: -1 }));
+    this.middleMonth.set(month);
   }
 
   // =================================================================================================
 
-  isItemActiveRU(index: number): boolean {
+  protected isItemActiveRU(index: number): boolean {
     return this.activeIndexRU === index;
   }
 
-  onHoverRU(index: number, hovered: boolean): void {
+  protected onHoverRU(index: number, hovered: boolean): void {
     this.activeIndexRU = hovered ? index : 0;
   }
 
-  getColor(index: number): string {
+  protected getColor(index: number): string {
     return `var(--tui-chart-categorical-0${index})`;
   }
 
-  sumArrayValues(arr: number[]): number {
+  protected sumArrayValues(arr: number[]): number {
     let sum = 0;
     for (let i = 0; i < arr.length; i++) sum += arr[i];
     return +sum.toFixed(2);
-  }
-
-  ngOnDestroy(): void {
-    this.allSubscription.forEach((sub) => {
-      if (sub) sub.unsubscribe();
-    });
   }
 }

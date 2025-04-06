@@ -10,4 +10,8 @@
       <app-years-list></app-years-list>
     }
   }
+
+  @if (budgetLoading()) {
+    <tui-loader [showLoader]="budgetLoading()" [inheritColor]="true" [overlay]="true" [size]="'xxl'"> </tui-loader>
+  }
 </div>

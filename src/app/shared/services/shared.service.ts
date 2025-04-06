@@ -1,7 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, OnDestroy, Signal, WritableSignal, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, map } from 'rxjs';
-import { Router } from '@angular/router';
+import { Observable, Subject, finalize, takeUntil } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 
@@ -9,20 +8,30 @@ import { AuthService } from '../../auth/services/auth.service';
 import { DayDataI, ItemDataI, MonthDataI, YearDataI } from '../interfaces';
 
 @Injectable({ providedIn: 'root' })
-export class SharedService {
-  router = inject(Router);
-  http = inject(HttpClient);
-  authService = inject(AuthService);
-  monthlyBudget$: BehaviorSubject<number>;
-  popularItems$: BehaviorSubject<ItemDataI[]>;
-  currentYearUid: string | null;
-  categories: string[];
+export class SharedService implements OnDestroy {
+  private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
+
+  readonly monthlyBudget: WritableSignal<number>;
+  readonly popularItems: WritableSignal<ItemDataI[]>;
+  readonly categories: WritableSignal<string[]>;
+  readonly budget: WritableSignal<YearDataI[] | null>;
+  readonly currentYear: Signal<YearDataI | null>;
+  readonly currentMonth: Signal<MonthDataI | null>;
+  readonly currentDay: Signal<DayDataI | null>;
+  readonly budgetLoading: WritableSignal<boolean>;
+  private readonly currentYearUid: WritableSignal<string | null>;
+  private readonly destroy$: Subject<void>;
 
   constructor() {
-    this.monthlyBudget$ = new BehaviorSubject<number>(0);
-    this.popularItems$ = new BehaviorSubject<ItemDataI[]>([]);
-    this.currentYearUid = null;
-    this.categories = [
+    this.budget = signal<YearDataI[] | null>(null);
+    this.currentYear = computed<YearDataI | null>(() => this.getCurrentYear());
+    this.currentMonth = computed<MonthDataI | null>(() => this.getCurrentMonth());
+    this.currentDay = computed<DayDataI | null>(() => this.getCurrentDay());
+    this.monthlyBudget = signal<number>(0);
+    this.popularItems = signal<ItemDataI[]>([]);
+    this.currentYearUid = signal<string | null>(null);
+    this.categories = signal<string[]>([
       'Еда',
       'Автомобиль',
       'Медицинское',
@@ -34,33 +43,60 @@ export class SharedService {
       'Учеба',
       'Прочее',
       'Отдых',
-    ];
+    ]);
+    this.budgetLoading = signal<boolean>(false);
+    this.destroy$ = new Subject<void>();
   }
 
-  updateMonthlyBudget(
-    newMonthlyBudget: number,
-    bool: boolean,
-  ): Observable<any> {
-    const value = bool
-      ? this.monthlyBudget$.value - newMonthlyBudget
-      : newMonthlyBudget;
-    this.monthlyBudget$.next(value);
+  private getCurrentYear(): YearDataI | null {
+    const budget = this.budget();
+    if (!budget) {
+      return null;
+    }
+    const currentYearNumber = new Date().getFullYear();
+    return budget.find((year) => year.year === currentYearNumber) || null;
+  }
+
+  private getCurrentMonth(): MonthDataI | null {
+    const currentYear = this.currentYear();
+    if (!currentYear) {
+      return null;
+    }
+    const currentMonthNumber = new Date().getMonth() + 1;
+    return currentYear.months.find((month) => month.month === currentMonthNumber) || null;
+  }
+
+  private getCurrentDay(): DayDataI | null {
+    const currentMonth = this.currentMonth();
+    if (!currentMonth) {
+      return null;
+    }
+    const currentDayNumber = new Date().getDate();
+    return currentMonth.days.find((day) => day.day === currentDayNumber) || null;
+  }
+
+  updateMonthlyBudget(newMonthlyBudget: number, bool: boolean): Observable<any> {
+    const value = bool ? this.monthlyBudget() - newMonthlyBudget : newMonthlyBudget;
+    this.monthlyBudget.set(value);
     const uid = this.authService.localId;
-    const route = `${environment.firebaseConfig.databaseURL}/years/${uid}/${this.currentYearUid}/monthlyBudget.json`;
+    const route = `${environment.firebaseConfig.databaseURL}/years/${uid}/${this.currentYearUid()}/monthlyBudget.json`;
     return this.http.put(route, { monthlyBudget: value });
   }
 
-  getBudget(): Observable<any> {
+  getBudget(): void {
+    this.budgetLoading.set(true);
     const uid = this.authService.localId;
     const path = `${environment.firebaseConfig.databaseURL}/years/${uid}.json`;
-    return this.http.get<any>(path).pipe(
-      map((response: any) => {
-        return this.parseData(response);
-      }),
-    );
+    this.http
+      .get<any>(path)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.budgetLoading.set(false)),
+      )
+      .subscribe((data: { [key: string]: any }) => this.budget.set(this.parseData(data)));
   }
 
-  parseData(data: { [key: string]: any }): YearDataI[] {
+  private parseData(data: { [key: string]: any }): YearDataI[] {
     const result: YearDataI[] = [];
 
     if (data) {
@@ -72,62 +108,60 @@ export class SharedService {
         const currentDate: Date = new Date();
         const currentYear: number = currentDate.getFullYear();
         if (year === currentYear) {
-          this.currentYearUid = id;
-          this.monthlyBudget$.next(data[id].monthlyBudget.monthlyBudget);
+          this.currentYearUid.set(id);
+          this.monthlyBudget.set(data[id].monthlyBudget?.monthlyBudget);
         }
 
         if (monthsData) {
-          const months: MonthDataI[] = Object.keys(monthsData).map(
-            (monthName) => {
-              const daysData = monthsData[monthName].days;
-              let totalPriceMonth = 0;
-              let days: DayDataI[] = [];
+          const months: MonthDataI[] = Object.keys(monthsData).map((monthName) => {
+            const daysData = monthsData[monthName].days;
+            let totalPriceMonth = 0;
+            let days: DayDataI[] = [];
 
-              if (daysData) {
-                days = Object.keys(daysData).map((dayName) => {
-                  const dayData = daysData[dayName];
-                  let totalPriceDay = 0;
-                  let items: ItemDataI[] = [];
+            if (daysData) {
+              days = Object.keys(daysData).map((dayName) => {
+                const dayData = daysData[dayName];
+                let totalPriceDay = 0;
+                let items: ItemDataI[] = [];
 
-                  if (dayData?.items) {
-                    items = Object.keys(dayData?.items).map((itemId) => {
-                      const itemData = dayData.items[itemId];
-                      const item: ItemDataI = {
-                        id: itemId,
-                        name: itemData.name,
-                        category: itemData.category,
-                        priceRu: itemData.priceRu,
-                      };
+                if (dayData?.items) {
+                  items = Object.keys(dayData?.items).map((itemId) => {
+                    const itemData = dayData.items[itemId];
+                    const item: ItemDataI = {
+                      id: itemId,
+                      name: itemData.name,
+                      category: itemData.category,
+                      priceRu: itemData.priceRu,
+                    };
 
-                      totalPriceDay += itemData.priceRu;
-                      return item;
-                    });
-                  }
+                    totalPriceDay += itemData.priceRu;
+                    return item;
+                  });
+                }
 
-                  const day: DayDataI = {
-                    id: dayName,
-                    day: dayData.day,
-                    date: dayData.date,
-                    totalPriceDay: totalPriceDay,
-                    items: items,
-                  };
+                const day: DayDataI = {
+                  id: dayName,
+                  day: dayData.day,
+                  date: dayData.date,
+                  totalPriceDay: totalPriceDay,
+                  items: items,
+                };
 
-                  totalPriceMonth += totalPriceDay;
-                  return day;
-                });
-              }
+                totalPriceMonth += totalPriceDay;
+                return day;
+              });
+            }
 
-              const month: MonthDataI = {
-                id: monthName,
-                month: monthsData[monthName].month,
-                totalPriceMonth: totalPriceMonth,
-                days: days,
-              };
+            const month: MonthDataI = {
+              id: monthName,
+              month: monthsData[monthName].month,
+              totalPriceMonth: totalPriceMonth,
+              days: days,
+            };
 
-              totalPriceYear += totalPriceMonth;
-              return month;
-            },
-          );
+            totalPriceYear += totalPriceMonth;
+            return month;
+          });
 
           const resultData: YearDataI = {
             id: id,
@@ -143,22 +177,21 @@ export class SharedService {
     return this.sortData(result);
   }
 
-  sortData(data: YearDataI[]): YearDataI[] {
+  private sortData(data: YearDataI[]): YearDataI[] {
     if (data) {
       data.sort((a, b) => a.year - b.year);
       for (const year of data) {
         year.months.sort((a, b) => a.month - b.month);
-        for (const month of year.months)
-          month.days.sort((a, b) => a.day - b.day);
+        for (const month of year.months) month.days.sort((a, b) => a.day - b.day);
       }
     }
 
     this.createMostPopularItems(data);
-    this.popularItems$.next(this.createPopularItemList(data));
+    this.popularItems.set(this.createPopularItemList(data));
     return data;
   }
 
-  createPopularItemList(data: YearDataI[]): ItemDataI[] {
+  private createPopularItemList(data: YearDataI[]): ItemDataI[] {
     let itemsMap = new Map<string, ItemDataI>();
 
     for (const year of data) {
@@ -180,7 +213,7 @@ export class SharedService {
     return popularItems;
   }
 
-  createMostPopularItems(data: YearDataI[]): ItemDataI[] {
+  private createMostPopularItems(data: YearDataI[]): ItemDataI[] {
     let itemCounts = new Map<string, { count: number; item: ItemDataI }>();
 
     for (const year of data) {
@@ -202,9 +235,7 @@ export class SharedService {
     }
 
     // Преобразование Map в массив и сортировка по количеству
-    let sortedItems = Array.from(itemCounts.values()).sort(
-      (a, b) => b.count - a.count,
-    );
+    let sortedItems = Array.from(itemCounts.values()).sort((a, b) => b.count - a.count);
 
     // Вывод в консоль для проверки
     // sortedItems.forEach(entry => {
@@ -226,8 +257,8 @@ export class SharedService {
   //   return this.http.get<YearEntity>(path)
   // }
 
-  errorProcessing(error: any): void {
-    console.log('error', error);
-    if (error.status === 401) this.router.navigate(['/auth']);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

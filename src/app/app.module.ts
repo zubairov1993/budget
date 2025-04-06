@@ -8,17 +8,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 
 import { AppComponent } from './app.component';
 import { AuthGuard, AuthInterceptor, SharedModule } from './shared';
 import { NavMenuComponent } from './nav-menu';
-import {
-  BudgetCalculatorComponent,
-  ChangeMountlyBudgetDialogComponent,
-} from './budget-calculator';
+import { BudgetCalculatorComponent, ChangeMouthyBudgetDialogComponent } from './budget-calculator';
 
 const INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -26,12 +20,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
   useClass: AuthInterceptor,
 };
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavMenuComponent,
-    BudgetCalculatorComponent,
-    ChangeMountlyBudgetDialogComponent,
-  ],
+  declarations: [AppComponent, NavMenuComponent, BudgetCalculatorComponent, ChangeMouthyBudgetDialogComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -44,13 +33,6 @@ const INTERCEPTOR_PROVIDER: Provider = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
-    StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: !isDevMode(),
-      connectInZone: true,
-    }),
-    EffectsModule.forRoot([]),
   ],
   providers: [
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },

@@ -1,61 +1,64 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, WritableSignal, inject, signal } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TuiComparator } from '@taiga-ui/addon-table';
 import { TuiDay, TuiDayRange } from '@taiga-ui/cdk';
 import { startWith, switchMap } from 'rxjs';
-import { FilteredItemI, SharedService, YearDataI } from 'src/app/shared';
+import { FilteredItemI, ItemDataI, SharedService, YearDataI } from 'src/app/shared';
 
 @Component({
-    selector: 'app-search-list',
-    templateUrl: './search-list.component.html',
-    styleUrls: ['./search-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-search-list',
+  templateUrl: './search-list.component.html',
+  styleUrls: ['./search-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class SearchListComponent implements OnInit {
+export class SearchListComponent {
   private readonly sharedService = inject(SharedService);
-  private readonly cdr = inject(ChangeDetectorRef);
 
-  protected readonly columns = ['name', 'category', 'priceRu', 'date'];
+  protected readonly columns: string[];
+  protected filteredItems: WritableSignal<FilteredItemI[]>;
+  protected sortedItems: WritableSignal<FilteredItemI[]>;
+  protected totalSpent: WritableSignal<number>;
 
-  filteredItems: FilteredItemI[] = [];
-  sortedItems: FilteredItemI[] = [];
-  categories: string[] = [];
-  totalSpent: number = 0;
-
-  // Создаем компараторы
-  protected readonly nameComparator: TuiComparator<FilteredItemI> = (a, b) =>
-    a.name.localeCompare(b.name);
-  protected readonly categoryComparator: TuiComparator<FilteredItemI> = (
-    a,
-    b,
-  ) => a.category.localeCompare(b.category);
-  protected readonly priceComparator: TuiComparator<FilteredItemI> = (a, b) =>
-    a.priceRu - b.priceRu;
-  protected readonly dateComparator: TuiComparator<FilteredItemI> = (a, b) =>
-    new Date(a.date).getTime() - new Date(b.date).getTime();
-  currentSorter: TuiComparator<FilteredItemI> = (a, b) => 0; // Дефолтный компаратор
-  sortDirection: 1 | -1 = 1; // Обновили тип
+  protected readonly nameComparator: TuiComparator<FilteredItemI>;
+  protected readonly categoryComparator: TuiComparator<FilteredItemI>;
+  protected readonly priceComparator: TuiComparator<FilteredItemI>;
+  protected readonly dateComparator: TuiComparator<FilteredItemI>;
+  protected currentSorter: TuiComparator<FilteredItemI>;
+  protected sortDirection: 1 | -1;
   readonly testForm = new FormGroup({
     name: new FormControl(''),
     category: new FormControl(''),
     date: new FormControl(null),
   });
 
-  constructor() {
-    this.categories = this.sharedService.categories;
+  private get budget(): WritableSignal<YearDataI[] | null> {
+    return this.sharedService.budget;
   }
 
-  ngOnInit(): void {}
+  protected get categories(): WritableSignal<string[]> {
+    return this.sharedService.categories;
+  }
+
+  protected get popularItems(): WritableSignal<ItemDataI[]> {
+    return this.sharedService.popularItems;
+  }
+
+  constructor() {
+    this.columns = ['name', 'category', 'priceRu', 'date'];
+    this.filteredItems = signal<FilteredItemI[]>([]);
+    this.sortedItems = signal<FilteredItemI[]>([]);
+    this.totalSpent = signal<number>(0);
+    this.nameComparator = (a, b) => a.name.localeCompare(b.name);
+    this.categoryComparator = (a, b) => a.category.localeCompare(b.category);
+    this.priceComparator = (a, b) => a.priceRu - b.priceRu;
+    this.dateComparator = (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime();
+    this.currentSorter = this.nameComparator;
+    this.sortDirection = 1;
+  }
 
   getNamesPopular(): string[] {
-    return this.sharedService.popularItems$.getValue().map((item) => item.name);
+    return this.popularItems().map((item) => item.name);
   }
 
   filterItemsByNameAndCategoryWithDate(): void {
@@ -64,43 +67,37 @@ export class SearchListComponent implements OnInit {
     const filteredItems: FilteredItemI[] = [];
     let totalSpent = 0;
 
-    this.sharedService.getBudget().subscribe((data) => {
-      if (data?.length !== 0) {
-        data.forEach((year: YearDataI) => {
-          year.months.forEach((month) => {
-            month.days.forEach((day) => {
-              day.items.forEach((item) => {
-                const matchesName = name
-                  ? item.name?.toLowerCase().includes(name?.toLowerCase())
-                  : false;
-                const matchesCategory = category
-                  ? item.category?.toLowerCase() === category?.toLowerCase()
-                  : false;
+    if (!this.budget()) {
+      return;
+    }
 
-                if (matchesName || matchesCategory) {
-                  filteredItems.push({
-                    id: item.id,
-                    name: item.name,
-                    category: item.category,
-                    priceRu: item.priceRu,
-                    date: day.date,
-                  });
-                  totalSpent += item.priceRu; // Увеличиваем сумму
-                }
+    this.budget()!.forEach((year: YearDataI) => {
+      year.months.forEach((month) => {
+        month.days.forEach((day) => {
+          day.items.forEach((item) => {
+            const matchesName = name ? item.name?.toLowerCase().includes(name?.toLowerCase()) : false;
+            const matchesCategory = category ? item.category?.toLowerCase() === category?.toLowerCase() : false;
+
+            if (matchesName || matchesCategory) {
+              filteredItems.push({
+                id: item.id,
+                name: item.name,
+                category: item.category,
+                priceRu: item.priceRu,
+                date: day.date,
               });
-            });
+              totalSpent += item.priceRu;
+            }
           });
         });
-      }
-
-      this.filteredItems = filteredItems;
-      this.totalSpent = totalSpent;
-      this.sortItems(); // Применяем сортировку
-      this.cdr.detectChanges();
+      });
     });
+
+    this.filteredItems.set(filteredItems);
+    this.totalSpent.set(totalSpent);
+    this.sortItems();
   }
 
-  // Устанавливаем текущий сортировщик
   setSorter(sorter: TuiComparator<FilteredItemI>): void {
     if (this.currentSorter === sorter) {
       this.sortDirection = this.sortDirection === 1 ? -1 : 1; // Меняем направление
@@ -111,11 +108,19 @@ export class SearchListComponent implements OnInit {
     this.sortItems();
   }
 
-  // Логика сортировки
   sortItems(): void {
-    this.sortedItems = [...this.filteredItems].sort((a, b) =>
-      this.currentSorter ? this.currentSorter(a, b) * this.sortDirection : 0,
-    );
+    const items = this.filteredItems();
+    if (items.length === 0) {
+      this.sortedItems.set([]);
+      return;
+    }
+
+    if (this.currentSorter(items[0], items[0]) === 0) {
+      this.sortedItems.set(items);
+      return;
+    }
+
+    this.sortedItems.set(items.sort((a, b) => this.currentSorter(a, b) * this.sortDirection));
   }
 
   trackById(index: number, item: FilteredItemI): string {
@@ -133,9 +138,6 @@ export class SearchListComponent implements OnInit {
   }
 
   selectedDate(): void {
-    console.log(
-      'this.testForm.controls.name: ',
-      this.testForm.controls.date.value,
-    );
+    console.log('this.testForm.controls.name: ', this.testForm.controls.date.value);
   }
 }

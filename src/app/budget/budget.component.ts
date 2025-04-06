@@ -1,19 +1,20 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core'
-import { Router } from '@angular/router'
-import { Store } from '@ngrx/store';
-import { BudgetStateI, getBudgetAction } from '../shared';
+import { Component, ChangeDetectionStrategy, inject, WritableSignal } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { SharedService } from '../shared';
 
 @Component({
-    selector: 'app-budget',
-    templateUrl: './budget.component.html',
-    styleUrls: ['./budget.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-budget',
+  templateUrl: './budget.component.html',
+  styleUrls: ['./budget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BudgetComponent {
-  router = inject(Router)
-  private store = inject(Store<BudgetStateI>)
-  constructor() {
-    this.store.dispatch(getBudgetAction())
+  protected readonly router = inject(Router);
+  private readonly sharedService = inject(SharedService);
+
+  protected get budgetLoading(): WritableSignal<boolean> {
+    return this.sharedService.budgetLoading;
   }
 }

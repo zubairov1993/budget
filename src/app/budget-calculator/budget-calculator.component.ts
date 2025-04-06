@@ -1,65 +1,56 @@
-import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit, inject } from '@angular/core';
-import { SharedService } from '../shared';
+import { Component, Injector, OnDestroy, WritableSignal, inject, signal } from '@angular/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService } from '@taiga-ui/core';
-import { ChangeMountlyBudgetDialogComponent } from './components';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+
+import { SharedService } from '../shared';
+import { ChangeMouthyBudgetDialogComponent } from './components';
 
 @Component({
-    selector: 'app-budget-calculator',
-    templateUrl: './budget-calculator.component.html',
-    styleUrl: './budget-calculator.component.scss',
-    standalone: false
+  selector: 'app-budget-calculator',
+  templateUrl: './budget-calculator.component.html',
+  styleUrl: './budget-calculator.component.scss',
+  standalone: false,
 })
-export class BudgetCalculatorComponent implements OnInit, OnDestroy {
-  sharedService = inject(SharedService)
-  cdr = inject(ChangeDetectorRef)
-  dialogs = inject(TuiDialogService)
-  injector = inject(Injector)
+export class BudgetCalculatorComponent implements OnDestroy {
+  private readonly sharedService = inject(SharedService);
+  private readonly dialogs = inject(TuiDialogService);
+  private readonly injector = inject(Injector);
 
-  monthlyBudget: number = 0;
-  daysInMonth: number;
-  dailyBudget: number;
-  allSubscription: Subscription[] = []
+  protected readonly dailyBudget: WritableSignal<number>;
+  private readonly destroy$: Subject<void>;
 
   private readonly dialog = this.dialogs.open<number>(
-    new PolymorpheusComponent(ChangeMountlyBudgetDialogComponent, this.injector),
+    new PolymorpheusComponent(ChangeMouthyBudgetDialogComponent, this.injector),
     {
       data: 237,
       dismissible: true,
-      label: 'Изменение суммы, расчитанной на месяц',
+      label: 'Изменение суммы, рассчитанной на месяц',
     },
-  )
+  );
 
-  constructor() {
-    this.daysInMonth = 0;
-    this.dailyBudget = 0;
+  protected get monthlyBudget(): WritableSignal<number> {
+    return this.sharedService.monthlyBudget;
   }
 
-  ngOnInit(): void {
-    this.sharedService.monthlyBudget$.subscribe(count => {
-      this.monthlyBudget = count;
-      this.daysInMonth = this.getRemainingDaysInCurrentMonth(); // Используем новый метод
-      this.dailyBudget = this.monthlyBudget / this.daysInMonth;
-      this.cdr.detectChanges();
-    });
+  constructor() {
+    this.dailyBudget = signal<number>(this.monthlyBudget() / this.getRemainingDaysInCurrentMonth());
+    this.destroy$ = new Subject<void>();
   }
 
   private getRemainingDaysInCurrentMonth(): number {
     const now = new Date();
     const end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
     const remainingDays = (end.getTime() - now.getTime()) / (1000 * 3600 * 24);
-    return Math.ceil(remainingDays); // Округление в большую сторону, если остаток дня.
+    return Math.ceil(remainingDays);
   }
 
-  onDoubleClick(): void {
-    const dialog = this.dialog.subscribe()
-    this.allSubscription.push(dialog)
+  protected onDoubleClick(): void {
+    this.dialog.pipe(takeUntil(this.destroy$)).subscribe();
   }
 
   ngOnDestroy(): void {
-    this.allSubscription.forEach(sub => {
-      if (sub) sub.unsubscribe()
-    })
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

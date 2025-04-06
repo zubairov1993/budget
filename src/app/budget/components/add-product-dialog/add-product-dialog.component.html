@@ -14,7 +14,7 @@
       <input tuiTextfieldLegacy />
       <tui-data-list-wrapper
         *tuiDataList
-        [items]="sharedService.categories"></tui-data-list-wrapper>
+        [items]="categories()"></tui-data-list-wrapper>
     </tui-select>
   </div>
 
@@ -31,7 +31,7 @@
     <div [tuiHint]="tooltip" tuiHintAppearance="dark" tuiHintDirection="left">
       <tui-loader
         class="loader"
-        [showLoader]="(isLoading$ | async)!"
+        [showLoader]="loading()"
         [inheritColor]="true"
         [overlay]="true">
         <button

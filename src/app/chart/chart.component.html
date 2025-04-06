@@ -1,36 +1,33 @@
 <div class="calendars">
   <tui-calendar
     [(hoveredItem)]="hoveredItem"
-    [value]="date"
+    [value]="date()"
     [showAdjacent]="false"
-    [maxViewedMonth]="firstMonth"
-    [month]="firstMonth"
+    [maxViewedMonth]="firstMonth()"
+    [month]="firstMonth()"
     (monthChange)="onMonthChangeFirst($event)"
     (dayClick)="onDayClick($event)"></tui-calendar>
   <tui-calendar
     [(hoveredItem)]="hoveredItem"
-    [value]="date"
+    [value]="date()"
     [showAdjacent]="false"
-    [month]="middleMonth"
-    [minViewedMonth]="middleMonth"
+    [month]="middleMonth()"
+    [minViewedMonth]="middleMonth()"
     (monthChange)="onMonthChangeMiddle($event)"
     (dayClick)="onDayClick($event)"></tui-calendar>
 </div>
 
-<div class="charts" *ngIf="values.length">
+<div class="charts" *ngIf="totalPrice().length">
   <div class="charts__chart">
-    <tui-ring-chart
-      [(activeItemIndex)]="activeIndexRU"
-      [size]="'xl'"
-      [value]="values">
+    <tui-ring-chart [(activeItemIndex)]="activeIndexRU" [size]="'xl'" [value]="totalPrice()">
       <div>
         Общее
-        {{ sumArrayValues(values) | number: '1.0-0' }} &#8381;
+        {{ sumArrayValues(totalPrice()) | number: '1.0-0' }} &#8381;
       </div>
     </tui-ring-chart>
 
     <div class="charts__chart_legend">
-      @for (label of categories; track label; let index = $index) {
+      @for (label of categories(); track label; let index = $index) {
         <tui-legend-item
           class="charts__chart_legend-item"
           [color]="getColor(index)"
@@ -38,7 +35,7 @@
           [active]="isItemActiveRU(index)"
           (tuiHoveredChange)="onHoverRU(index, $event)"
           size="s">
-          <div>{{ values[index] | number: '1.0-0' }} &#8381;</div>
+          <div>{{ totalPrice()[index] | number: '1.0-0' }} &#8381;</div>
         </tui-legend-item>
       }
     </div>

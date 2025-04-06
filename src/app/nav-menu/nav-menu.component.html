@@ -1,22 +1,17 @@
 <nav class="nav">
-  <div class="nav-item" (click)="showDialog()">Добавить</div>
+  <div class="nav-item" [class.disabled]="!budget()" (click)="showDialog()">Добавить</div>
 
-  <div class="nav-item" [routerLink]="['/list/actual']">Сегодня</div>
+  <div class="nav-item" [routerLink]="['/list/actual']" [class.disabled]="!budget()">Сегодня</div>
 
-  <div class="nav-item" [routerLink]="['/list']">Список</div>
+  <div class="nav-item" [routerLink]="['/list']" [class.disabled]="!budget()">Список</div>
 
-  <div class="nav-item" [routerLink]="['/list/search']">Поиск</div>
+  <div class="nav-item" [routerLink]="['/list/search']" [class.disabled]="!budget()">Поиск</div>
 
-  <div class="nav-item" [routerLink]="['/chart']">Диаграмма</div>
+  <div class="nav-item" [routerLink]="['/chart']" [class.disabled]="!budget()">Диаграмма</div>
 
-  <app-budget-calculator></app-budget-calculator>
+  <!-- <app-budget-calculator></app-budget-calculator> -->
 
   @if (authService.isAuthenticated()) {
-    <div
-      class="nav-item"
-      [routerLink]="['/auth']"
-      (click)="authService.logout()">
-      Выйти
-    </div>
+    <div class="nav-item" [routerLink]="['/auth']" (click)="authService.logout()">Выйти</div>
   }
 </nav>

@@ -4,7 +4,7 @@
   "tabWidth": 2,
   "trailingComma": "all",
   "endOfLine": "lf",
-  "printWidth": 80,
+  "printWidth": 120,
   "plugins": ["prettier-plugin-organize-attributes"],
   "bracketSpacing": true,
   "bracketSameLine": true

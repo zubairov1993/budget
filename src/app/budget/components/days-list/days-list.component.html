@@ -1,4 +1,4 @@
-@for (day of days; track day) {
+@for (day of days(); track day) {
   <div>
     <tui-accordion class="days">
       <tui-accordion-item [open]="isCurrentDay(day.day)">
@@ -37,9 +37,7 @@
                       </div>
 
                       <div>
-                        <button (click)="openDialogDelete(item)" type="button">
-                          Удалить
-                        </button>
+                        <button (click)="openDialogDelete(item)" type="button">Удалить</button>
                       </div>
                     </div>
                   </ng-template>
@@ -52,33 +50,10 @@
             <table [columns]="columns" tuiTable>
               <thead>
                 <tr tuiThGroup>
-                  <th
-                    *tuiHead="'name'"
-                    [resizable]="true"
-                    [sticky]="true"
-                    [sorter]="null"
-                    tuiTh>
-                    Наименование
-                  </th>
-                  <th
-                    *tuiHead="'category'"
-                    [sticky]="true"
-                    [sorter]="null"
-                    tuiTh>
-                    Категория
-                  </th>
-                  <th
-                    *tuiHead="'priceRu'"
-                    [sticky]="true"
-                    [sorter]="null"
-                    tuiTh>
-                    Цена в Рублях
-                  </th>
-                  <th
-                    *tuiHead="'other'"
-                    [sticky]="true"
-                    [sorter]="null"
-                    tuiTh></th>
+                  <th *tuiHead="'name'" [resizable]="true" [sticky]="true" [sorter]="null" tuiTh>Наименование</th>
+                  <th *tuiHead="'category'" [sticky]="true" [sorter]="null" tuiTh>Категория</th>
+                  <th *tuiHead="'priceRu'" [sticky]="true" [sorter]="null" tuiTh>Цена в Рублях</th>
+                  <th *tuiHead="'other'" [sticky]="true" [sorter]="null" tuiTh></th>
                 </tr>
               </thead>
 
@@ -91,13 +66,9 @@
                     <td *tuiCell="'category'" tuiTd>
                       {{ item.category }}
                     </td>
-                    <td *tuiCell="'priceRu'" tuiTd>
-                      {{ item.priceRu | number: '1.0-0' }} &#8381;
-                    </td>
+                    <td *tuiCell="'priceRu'" tuiTd>{{ item.priceRu | number: '1.0-0' }} &#8381;</td>
                     <td *tuiCell="'other'" tuiTd>
-                      <button (click)="openDialogDelete(item)" type="button">
-                        Удалить
-                      </button>
+                      <button (click)="openDialogDelete(item)" type="button">Удалить</button>
                     </td>
                   </tr>
                 }
@@ -114,28 +85,10 @@
             }">
             <div class="dialog">
               <div class="dialog__btns">
-                <button
-                  (click)="closeDialogDelete()"
-                  tuiButton
-                  type="button"
-                  appearance="outline"
-                  size="m">
-                  Нет
-                </button>
+                <button (click)="closeDialogDelete()" tuiButton type="button" appearance="outline" size="m">Нет</button>
 
-                <tui-loader
-                  class="loader"
-                  [showLoader]="(isLoading$ | async)!"
-                  [inheritColor]="true"
-                  [overlay]="true">
-                  <button
-                    (click)="deleteItem(day.id!, day.day!)"
-                    tuiButton
-                    type="button"
-                    appearance="accent"
-                    size="m">
-                    Да
-                  </button>
+                <tui-loader class="loader" [showLoader]="loading()" [inheritColor]="true" [overlay]="true">
+                  <button (click)="deleteItem(day.id!)" tuiButton type="button" appearance="accent" size="m">Да</button>
                 </tui-loader>
               </div>
             </div>

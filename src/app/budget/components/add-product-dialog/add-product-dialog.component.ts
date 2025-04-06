@@ -3,105 +3,85 @@ import {
   Component,
   Inject,
   OnInit,
-  inject,
   OnDestroy,
+  inject,
+  WritableSignal,
+  signal,
+  Signal,
 } from '@angular/core';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { Router } from '@angular/router';
-import { select, Store } from '@ngrx/store';
-import { Observable, Subscription, take } from 'rxjs';
-import { Actions, ofType } from '@ngrx/effects';
+import { Observable, Subject, of } from 'rxjs';
+import { switchMap, map, finalize, takeUntil } from 'rxjs/operators';
 
-import {
-  BudgetStateI,
-  CreateDayActionI,
-  CreateItemActionI,
-  CreateMonthActionI,
-  CreateYearActionI,
-  DayDataI,
-  ItemDataI,
-  MonthDataI,
-  SharedService,
-  YearDataI,
-  budgetSelector,
-  createDayAction,
-  createItemAction,
-  createItemSuccessAction,
-  createMonthAction,
-  createYearAction,
-  isLoadingSelector,
-  yearSelector,
-} from 'src/app/shared';
+import { SharedService } from 'src/app/shared/services/shared.service';
+import { DayDataI, ItemDataI, MonthDataI, YearDataI } from 'src/app/shared/interfaces';
+import { BudgetService } from '../../services';
 
 @Component({
-    selector: 'app-add-product-dialog',
-    templateUrl: './add-product-dialog.component.html',
-    styleUrls: ['./add-product-dialog.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-add-product-dialog',
+  templateUrl: './add-product-dialog.component.html',
+  styleUrls: ['./add-product-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AddProductDialogComponent implements OnInit, OnDestroy {
-  router = inject(Router);
-  sharedService = inject(SharedService);
-  formBuilder = inject(FormBuilder);
-  private store = inject(Store<BudgetStateI>);
-  private actions$ = inject(Actions);
+  private readonly sharedService = inject(SharedService);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly budgetService = inject(BudgetService);
 
-  budgets$!: Observable<YearDataI[] | null>;
-  currentYear: YearDataI | null | undefined = null;
-  isLoading$!: Observable<boolean>;
-  allSubscription: Subscription[] = [];
+  protected readonly loading: WritableSignal<boolean>;
+  private readonly destroy$: Subject<void>;
 
-  form: FormGroup = this.formBuilder.group({
+  protected readonly form: FormGroup = this.formBuilder.group({
     name: [null, [Validators.required]],
     category: [null, [Validators.required]],
     priceRu: [null, [Validators.required]],
   });
 
+  private get currentYear(): Signal<YearDataI | null> {
+    return this.sharedService.currentYear;
+  }
+
+  protected get categories(): WritableSignal<string[]> {
+    return this.sharedService.categories;
+  }
+
+  protected get popularItems(): WritableSignal<ItemDataI[]> {
+    return this.sharedService.popularItems;
+  }
+
   constructor(
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly context: TuiDialogContext<number, number>,
-  ) {}
+  ) {
+    this.loading = signal<boolean>(false);
+    this.destroy$ = new Subject<void>();
+  }
 
   ngOnInit(): void {
-    const currentDate: Date = new Date();
-    const year: number = currentDate.getFullYear();
-    this.budgets$ = this.store.pipe(select(budgetSelector));
-    this.isLoading$ = this.store.pipe(select(isLoadingSelector));
-
-    const selectedYearSubscribe = this.store
-      .pipe(select(yearSelector(year)))
-      .subscribe((selectedYear) => (this.currentYear = selectedYear));
-
-    this.form.controls['name'].valueChanges.subscribe((data) => {
-      if (this.getCategory(data)) {
-        this.form.controls['category'].setValue(
-          this.getCategory(data).category,
-        );
-        this.form.controls['priceRu'].setValue(this.getCategory(data).priceRu);
+    this.form.controls['name'].valueChanges.pipe(takeUntil(this.destroy$)).subscribe((data) => {
+      const categoryData = this.getCategory(data);
+      if (categoryData) {
+        this.form.controls['category'].setValue(categoryData.category);
+        this.form.controls['priceRu'].setValue(categoryData.priceRu);
       }
     });
-
-    const actions = this.actions$
-      .pipe(ofType(createItemSuccessAction), take(1))
-      .subscribe(() => this.context.completeWith(this.form.value));
-
-    this.allSubscription.push(selectedYearSubscribe, actions);
   }
 
-  getNamesPopular(): string[] {
-    return this.sharedService.popularItems$.getValue().map((item) => item.name);
+  protected getNamesPopular(): string[] {
+    return this.popularItems().map((item) => item.name);
   }
 
-  getCategory(name: string): ItemDataI {
-    return this.sharedService.popularItems$.value.filter(
-      (item) => item.name === name,
-    )[0];
+  private getCategory(name: string): ItemDataI | undefined {
+    return this.popularItems()
+      .slice()
+      .reverse()
+      .find((item) => item.name === name);
   }
 
-  getItem(): ItemDataI {
+  private getItem(): ItemDataI {
     return {
       id: null as any,
       name: this.form.value.name,
@@ -110,151 +90,141 @@ export class AddProductDialogComponent implements OnInit, OnDestroy {
     };
   }
 
-  submit(): void {
-    const currentDate: Date = new Date();
-    const year: number = currentDate.getFullYear();
-    const month: number = currentDate.getMonth() + 1;
-    let day: number = currentDate.getDate();
-    let date: Date = new Date();
-    const isoDate = date.toISOString();
+  /**
+   * Метод submit теперь становится лаконичным — он просто запускает цепочку:
+   * 1. Получаем или создаем год.
+   * 2. Получаем или создаем месяц.
+   * 3. Получаем или создаем день.
+   * 4. Создаем товар.
+   */
+  protected submit(): void {
+    const currentDate = new Date();
+    const item = this.getItem();
 
-    if (this.currentYear) {
-      const currentMonth: MonthDataI = this.currentYear.months.find(
-        (item) => item.month === month,
-      )!;
-      if (currentMonth) {
-        const selectedDay: DayDataI = currentMonth.days.find(
-          (item) => item.day === day,
-        )!;
-        if (selectedDay) {
-          this.createItem(
-            this.currentYear?.id!,
-            this.currentYear?.year,
-            currentMonth?.id!,
-            currentMonth?.month,
-            selectedDay?.id!,
-            selectedDay.day,
-          );
-        } else {
-          this.createDay(
-            this.currentYear?.id!,
-            this.currentYear?.year,
-            currentMonth?.id!,
-            currentMonth.month,
-            day,
-            isoDate,
-          );
-        }
-      } else {
-        this.createMonth(this.currentYear?.id!, year, month, day, isoDate);
-      }
+    this.loading.set(true);
+
+    this.getOrCreateYear(currentDate)
+      .pipe(
+        switchMap((year) => this.getOrCreateMonth(year!, currentDate)),
+        switchMap(([year, month]) => this.getOrCreateDay(year, month, currentDate)),
+        switchMap(([year, month, day]) => this.budgetService.createItem(year.id, month.id, day.id, item)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe({
+        next: () => {
+          this.context.completeWith(this.form.value);
+          this.sharedService.getBudget();
+        },
+        error: (error) => console.error('Ошибка при создании данных:', error),
+      });
+  }
+
+  /**
+   * Если текущего года нет, создаем его, иначе возвращаем существующий.
+   */
+  private getOrCreateYear(date: Date): Observable<YearDataI | null> {
+    const yearNumber = date.getFullYear();
+    if (!this.currentYear()) {
+      return this.budgetService
+        .createYear({
+          id: '',
+          year: yearNumber,
+          totalPriceYear: null,
+          monthlyBudget: 500,
+          months: [],
+        })
+        .pipe(
+          map((yearResponse: { name: string }) => {
+            const year: YearDataI = {
+              id: yearResponse.name,
+              year: yearNumber,
+              totalPriceYear: null,
+              monthlyBudget: 500,
+              months: [],
+            };
+            return year;
+          }),
+        );
     } else {
-      this.createYear(year, month, day, isoDate);
+      return of(this.currentYear());
     }
   }
 
-  createYear(year: number, month: number, day: number, isoDate: string): void {
-    const yearObj = {
-      id: null as any,
-      year: year,
-      totalPriceYear: null,
-      monthlyBudget: 500,
-      months: [],
-    };
-
-    const data: CreateYearActionI = {
-      yearObj: yearObj,
-      month: month,
-      day: day,
-      isoDate: isoDate,
-      itemObj: this.getItem(),
-    };
-
-    this.store.dispatch(createYearAction(data));
+  /**
+   * Получаем или создаем месяц для указанного года.
+   */
+  private getOrCreateMonth(year: YearDataI, date: Date): Observable<[YearDataI, MonthDataI]> {
+    const monthNumber = date.getMonth() + 1;
+    let month = year.months.find((m) => m.month === monthNumber);
+    if (!month) {
+      return this.budgetService
+        .createMonth(year.id, {
+          id: '',
+          month: monthNumber,
+          totalPriceMonth: null,
+          days: [],
+        })
+        .pipe(
+          map((monthResponse: { name: string }) => {
+            const newMonth: MonthDataI = {
+              id: monthResponse.name,
+              month: monthNumber,
+              totalPriceMonth: null,
+              days: [],
+            };
+            year.months.push(newMonth);
+            return [year, newMonth] as [YearDataI, MonthDataI];
+          }),
+        );
+    } else {
+      return of([year, month] as [YearDataI, MonthDataI]);
+    }
   }
 
-  createMonth(
-    yearName: string,
-    year: number,
-    month: number,
-    day: number,
-    isoDate: string,
-  ): void {
-    const months = {
-      id: null as any,
-      month: month,
-      totalPriceMonth: null,
-      days: [],
-    };
-
-    const data: CreateMonthActionI = {
-      yearName: yearName,
-      year: year,
-      monthsObj: months,
-      month: month,
-      day: day,
-      isoDate: isoDate,
-      itemObj: this.getItem(),
-    };
-
-    this.store.dispatch(createMonthAction(data));
+  /**
+   * Получаем или создаем день для указанного месяца.
+   */
+  private getOrCreateDay(
+    year: YearDataI,
+    month: MonthDataI,
+    date: Date,
+  ): Observable<[YearDataI, MonthDataI, DayDataI]> {
+    const dayNumber = date.getDate();
+    const isoDate = date.toISOString();
+    let day = month.days.find((d) => d.day === dayNumber);
+    if (!day) {
+      return this.budgetService
+        .createDay(year.id, month.id, {
+          id: '',
+          day: dayNumber,
+          date: isoDate,
+          totalPriceDay: null,
+          items: [],
+        })
+        .pipe(
+          map((dayResponse: { name: string }) => {
+            const newDay: DayDataI = {
+              id: dayResponse.name,
+              day: dayNumber,
+              date: isoDate,
+              totalPriceDay: null,
+              items: [],
+            };
+            month.days.push(newDay);
+            return [year, month, newDay] as [YearDataI, MonthDataI, DayDataI];
+          }),
+        );
+    } else {
+      return of([year, month, day] as [YearDataI, MonthDataI, DayDataI]);
+    }
   }
 
-  createDay(
-    yearName: string,
-    year: number,
-    monthName: string,
-    month: number,
-    day: number,
-    isoDate: string,
-  ): void {
-    const dayObj = {
-      id: null as any,
-      day: day,
-      date: isoDate,
-      totalPriceDay: null,
-      items: [],
-    };
-
-    const data: CreateDayActionI = {
-      yearName: yearName,
-      year,
-      monthName: monthName,
-      month,
-      dayObj: dayObj,
-      isoDate: isoDate,
-      itemObj: this.getItem(),
-    };
-    this.store.dispatch(createDayAction(data));
-  }
-
-  createItem(
-    yearName: string,
-    year: number,
-    monthName: string,
-    month: number,
-    dayName: string,
-    day: number,
-  ): void {
-    const data: CreateItemActionI = {
-      itemObj: this.getItem(),
-      yearName: yearName,
-      year,
-      monthName: monthName,
-      month,
-      dayName: dayName,
-      day,
-    };
-    this.store.dispatch(createItemAction(data));
-  }
-
-  clear(): void {
+  protected clear(): void {
     this.form.reset();
   }
 
   ngOnDestroy(): void {
-    this.allSubscription.forEach((sub) => {
-      if (sub) sub.unsubscribe();
-    });
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -14,12 +14,8 @@
     <tui-select class="search_list__fields_search" formControlName="category">
       Выберите категорию продукта
       <input tuiTextfieldLegacy />
-      <tui-data-list-wrapper
-        *tuiDataList
-        [items]="categories"
-        (itemClick)="
-          filterItemsByNameAndCategoryWithDate()
-        "></tui-data-list-wrapper>
+      <tui-data-list-wrapper *tuiDataList [items]="categories()" (itemClick)="filterItemsByNameAndCategoryWithDate()">
+      </tui-data-list-wrapper>
     </tui-select>
 
     <!-- <tui-input-date
@@ -30,67 +26,71 @@
     </tui-input-date> -->
   </form>
 
-  <div *ngIf="filteredItems.length">
-    <div>Найдено элементов: {{ filteredItems.length }}</div>
-    <div>Затрачено денег: {{ totalSpent | number: '1.0-0' }} &#8381;</div>
+  <div *ngIf="filteredItems().length">
+    <div>Найдено элементов: {{ filteredItems().length }}</div>
+    <div>Затрачено денег: {{ totalSpent() | number: '1.0-0' }} &#8381;</div>
   </div>
 
   <div class="search_list__table">
-    <table
-      [columns]="columns"
-      [sorter]="currentSorter"
-      [direction]="sortDirection"
-      tuiTable>
+    <cdk-virtual-scroll-viewport itemSize="50" style="height: calc(100vh - 300px); display: block; overflow: auto">
+      <table
+        [columns]="columns"
+        [sorter]="currentSorter"
+        [direction]="sortDirection"
+        tuiTable
+        style="table-layout: fixed; width: 100%">
+        <thead>
+          <tr tuiThGroup>
+            <th *tuiHead="'name'" [resizable]="true" (click)="setSorter(nameComparator)" tuiTh>Наименование</th>
+            <th *tuiHead="'category'" (click)="setSorter(categoryComparator)" tuiTh>Категория</th>
+            <th *tuiHead="'priceRu'" (click)="setSorter(priceComparator)" tuiTh>Цена в Рублях</th>
+            <th *tuiHead="'date'" (click)="setSorter(dateComparator)" tuiTh>Дата</th>
+          </tr>
+        </thead>
+        <tbody tuiTbody>
+          <tr *cdkVirtualFor="let item of sortedItems(); trackBy: trackById" tuiTr>
+            <td *tuiCell="'name'" tuiTd>
+              {{ item.name }}
+            </td>
+            <td *tuiCell="'category'" tuiTd>
+              {{ item.category }}
+            </td>
+            <td *tuiCell="'priceRu'" tuiTd>{{ item.priceRu | number: '1.0-0' }} &#8381;</td>
+            <td *tuiCell="'date'" tuiTd>
+              {{ item.date | date: 'dd.MM.yyyy HH:mm:ss' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </cdk-virtual-scroll-viewport>
+
+    <!-- <table [columns]="columns" [sorter]="currentSorter" [direction]="sortDirection" tuiTable>
       <thead>
         <tr tuiThGroup>
-          <th
-            *tuiHead="'name'"
-            [resizable]="true"
-            [sticky]="true"
-            (click)="setSorter(nameComparator)"
-            tuiTh>
+          <th *tuiHead="'name'" [resizable]="true" [sticky]="true" (click)="setSorter(nameComparator)" tuiTh>
             Наименование
           </th>
-          <th
-            *tuiHead="'category'"
-            [sticky]="true"
-            (click)="setSorter(categoryComparator)"
-            tuiTh>
-            Категория
-          </th>
-          <th
-            *tuiHead="'priceRu'"
-            [sticky]="true"
-            (click)="setSorter(priceComparator)"
-            tuiTh>
-            Цена в Рублях
-          </th>
-          <th
-            *tuiHead="'date'"
-            [sticky]="true"
-            (click)="setSorter(dateComparator)"
-            tuiTh>
-            Дата
-          </th>
+          <th *tuiHead="'category'" [sticky]="true" (click)="setSorter(categoryComparator)" tuiTh>Категория</th>
+          <th *tuiHead="'priceRu'" [sticky]="true" (click)="setSorter(priceComparator)" tuiTh>Цена в Рублях</th>
+          <th *tuiHead="'date'" [sticky]="true" (click)="setSorter(dateComparator)" tuiTh>Дата</th>
         </tr>
       </thead>
-
-      <tbody [data]="sortedItems" tuiTbody>
-        <tr *ngFor="let item of sortedItems; trackBy: trackById" tuiTr>
-          <td *tuiCell="'name'" tuiTd>
-            {{ item.name }}
-          </td>
-          <td *tuiCell="'category'" tuiTd>
-            {{ item.category }}
-          </td>
-          <td *tuiCell="'priceRu'" tuiTd>
-            {{ item.priceRu | number: '1.0-0' }} &#8381;
-          </td>
-          <td *tuiCell="'date'" tuiTd>
-            {{ item.date | date: 'dd.MM.yyyy HH:mm:ss' }}
-          </td>
-        </tr>
+      <tbody tuiTbody>
+        <cdk-virtual-scroll-viewport class="viewport" itemSize="50" style="height: 400px; overflow: auto">
+          <tr *cdkVirtualFor="let item of sortedItems(); trackBy: trackById" tuiTr>
+            <td *tuiCell="'name'" tuiTd>
+              {{ item.name }}
+            </td>
+            <td *tuiCell="'category'" tuiTd>
+              {{ item.category }}
+            </td>
+            <td *tuiCell="'priceRu'" tuiTd>{{ item.priceRu | number: '1.0-0' }} &#8381;</td>
+            <td *tuiCell="'date'" tuiTd>
+              {{ item.date | date: 'dd.MM.yyyy HH:mm:ss' }}
+            </td>
+          </tr>
+        </cdk-virtual-scroll-viewport>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </div>
