@@ -6,13 +6,7 @@
       "name": "app",
       "installMode": "prefetch",
       "resources": {
-        "files": [
-          "/favicon.ico",
-          "/index.html",
-          "/manifest.webmanifest",
-          "/*.css",
-          "/*.js"
-        ]
+        "files": ["/favicon.ico", "/index.html", "/*.css", "/*.js"]
       }
     },
     {
@@ -20,20 +14,14 @@
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
-        "files": [
-          "/assets/**",
-          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
-        ]
+        "files": ["/assets/**", "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
       }
     }
   ],
   "dataGroups": [
     {
       "name": "budget",
-      "urls": [
-        "https://budget-6336f-default-rtdb.firebaseio.com/**",
-        "https://v6.exchangerate-api.com/v6/"
-      ],
+      "urls": ["https://budget-6336f-default-rtdb.firebaseio.com/**", "https://v6.exchangerate-api.com/v6/"],
       "cacheConfig": {
         "maxSize": 5,
         "maxAge": "3600"
