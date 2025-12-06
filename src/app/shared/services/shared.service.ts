@@ -36,6 +36,7 @@ export class SharedService implements OnDestroy {
       'Автомобиль',
       'Медицинское',
       'Аренда',
+      'Дом',
       'Детское',
       'Дорога',
       'Вещи',
